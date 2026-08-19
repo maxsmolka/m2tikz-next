@@ -11,7 +11,7 @@ Preparing your environment
 ==========================
 
 Before you can run the tests, you need to make sure that you have all relevant
-functions available on your path. From within the `/test` directory run the 
+functions available on your path. From within the `/test` directory run the
 following code in your MATLAB/Octave console:
 
 ```matlab
@@ -22,6 +22,16 @@ addpath(fullfile(pwd,'suites'));    % for the test suites
 
 Running the tests
 =================
+
+From the repository root, the portable legacy entry point is:
+
+```sh
+./runtests.sh octave-cli
+```
+
+The runner also searches for `octave-cli` and `octave` when no command is
+provided. On Windows, Git Bash may be given the full executable path; paths with
+spaces are supported. No local installation path is embedded in the repository.
 
 We have two kinds of tests runners available that each serve a slightly different
 purpose.
@@ -56,7 +66,7 @@ There are some caveats for this method of testing:
  * The MD5 hash is extremely brittle to small details in the output: e.g.
    extra whitespace or some other characters will change the hash.
  * This automated test does NOT test whether the output is desirable or not.
-   It only checks whether the previous output is not altered! 
+   It only checks whether the previous output is not altered!
  * Hence, when structural changes are made, the reference hash should be changed.
    This SHOULD be motivated in the pull request (e.g. with a picture)!
 
@@ -99,3 +109,135 @@ Automated Tests
 The automated tests run on [Travis-CI](https://travis-ci.org) for Octave and on a [personal Jenkins server](https://github.com/matlab2tikz/matlab2tikz/wiki/Jenkins) for MATLAB.
 These are effectively the "headless" tests that get called by the  `runMatlab2TikzTests` function.
 Without verification of those automated tests, a pull request is unlikely to get merged.
+
+M1A compatibility and TeX tests
+===============================
+
+The three golden-independent runtime regressions can be run from Octave with:
+
+```matlab
+addpath('test');
+runM1ARegressionTests;
+```
+
+The selected standalone compilation matrix (line, scatter, log axis, image,
+surface, and Unicode with pdfLaTeX and LuaLaTeX) is run on PowerShell with:
+
+```powershell
+test/runM1ATexCompileTests.ps1
+```
+
+Use `-OctaveCommand` and `-LatexmkCommand` to supply commands not on `PATH`.
+Generated files, captured TeX logs, and TSV summaries remain below
+`test/output/m1a-tex/`. A raw-Unicode pdfLaTeX failure is classified as an
+expected engine limitation; all other engine failures fail the script.
+
+M1B compatibility and Golden review
+====================================
+
+Focused public-camera regressions are run with:
+
+```matlab
+addpath(fullfile(pwd, 'test'));
+runM1B3DRegressionTests;
+```
+
+`test/runM1BGoldenReview.ps1` performs two complete ACID exports, bytewise TeX
+and asset determinism checks, structural metadata extraction, and LuaLaTeX plus
+pdfLaTeX compilation. It writes the traceable review set below
+`.audit/m1b-golden-review/`. Successful automation remains
+`MANUAL_REVIEW_REQUIRED` until a case-specific semantic/visual approval exists.
+
+The Octave `signal` package is an optional developer dependency. ACID loads an
+installed package for the current process only. Tests requiring unavailable
+capabilities (notably MATLAB's `dfilt` namespace) are explicitly skipped with a
+reason; the harness never installs packages.
+
+M3 scientific export workflow
+=============================
+
+The public workflow and compiler layers are tested separately. Both commands
+require `lualatex` on `PATH`; generated products remain below `.audit/`:
+
+```matlab
+addpath('test');
+runM3WorkflowTests(fullfile('.audit', 'm3-workflow'));
+runM3CompilerTests(fullfile('.audit', 'm3-compiler'));
+runM31ProfileTests(fullfile('.audit', 'm31-profile'));
+runM32FigureSetTests(fullfile('.audit', 'm32-figure-set'));
+runM33ImageTests(fullfile('.audit', 'm33-image'));
+runM34HybridImageTests(fullfile('.audit', 'm34-hybrid-image'));
+runM35BackendPlannerTests(fullfile('.audit', 'm35-backend-planner'));
+runM40MatlabPreparationTests(fullfile('.audit', 'm40-matlab-preparation'));
+runM51AnnotationIrTests(fullfile('.audit', 'm51-annotation-ir'));
+runM52GroupedBarIrTests(fullfile('.audit', 'm52-bar-ir'));
+runM53BoxplotIrTests(fullfile('.audit', 'm53-boxplot-ir'));
+runM54SurfaceIrTests(fullfile('.audit', 'm54-surface-ir'));
+runPublicationProfileTests(fullfile('.audit', 'publication-profile'));
+```
+
+`runM3WorkflowTests` covers W1-W10, including space-containing, relative, and
+absolute paths, unsupported content, missing compiler discovery, overwrite
+policy, and deterministic TeX. `runM3CompilerTests` uses known-good and
+known-invalid standalone TeX without constructing a figure.
+`runM31ProfileTests` covers 13 synthetic cases, PDF widths within 0.05 pt, semantic and
+relative-layout preservation, deterministic TeX, and both outputs of the
+publication example. It requires `pdfinfo` in addition to LuaLaTeX.
+`runM32FigureSetTests` covers S1-S16: mixed successful sets, profile
+inheritance and overrides, complete preflight, continue/skip behavior,
+collisions, aggregate counts, paths with spaces, deterministic TeX/manifest,
+and M3.0 `Profile='none'` compatibility. Hosted CI uses the compact
+`runM32FigureSetSmokeTest` to compile three entries and validate its manifest.
+`runM33ImageTests` covers H1-H18: exact matrix/coordinate semantics, both Y
+directions, CLim/colormap/colorbar ownership, profiles, multiple axes,
+`exportSet`, NaN, determinism, JSON replay, practical sizes, and explicit
+RGB/alpha/Inf diagnostics. Hosted CI uses `runM33ImageSmokeTest` for a compact
+20x20 export.
+`runM34HybridImageTests` covers R1-R24: explicit selection, vector compatibility,
+RGBA semantics, coordinate/direction parity, profiles, mixed vector content,
+figure-set inheritance, deterministic assets, lifecycle, paths, and dense
+compilation. Hosted CI uses `runM34HybridSmokeTest` for a 50x50 hybrid export.
+`runM35BackendPlannerTests` covers P1-P24: explicit precedence, auto boundaries,
+rectangular matrices, no-image and mixed figures, profile independence,
+figure-set/manifest metadata, unsupported image semantics, determinism, and
+architecture. Hosted CI compiles one small auto/vector and one dense
+auto/hybrid export through `runM35BackendPlannerSmokeTest`.
+`runM40MatlabPreparationTests` covers MP1-MP12 without MATLAB: privacy-safe
+runtime metadata, the F01-F26 registry, L0-L11 layers, semantic comparison,
+report generation, pending support truthfulness, and architecture. A future
+licensed run uses `matlab -batch "addpath('test'); runMatlabValidation"`.
+
+`runM51AnnotationIrTests` is the runtime-neutral GNU Octave lane for explicit
+text/arrow IR, deterministic JSON replay, handle-free TikZ output, older v2
+defaulting, and invalid ownership/coordinate/head diagnostics. Licensed MATLAB
+R2026a runs `runM51AnnotationTests`, which covers generic text, arrow,
+double-arrow, dense-line, and overlay fixtures, negative controls, profiles, figure
+sets, lifecycle, determinism, and LuaLaTeX compilation.
+
+`runM52GroupedBarIrTests` covers native Octave grouped-bar recognition plus
+runtime-neutral BarSeriesIR geometry, JSON replay, mixed signs, old FigureIR,
+and negative mode/group/style diagnostics. MATLAB R2026a runs
+`runM52GroupedBarTests` for grouped and multi-panel synthetic matrices,
+negative compound controls, profiles, figure sets, lifecycle, determinism, and
+LuaLaTeX compilation. `auditM52GroupedBarRuntime` captures privacy-safe MATLAB
+and Octave object-model evidence below ignored `.audit/` paths.
+
+`runM53BoxplotIrTests` is the runtime-neutral GNU Octave lane for explicit
+BoxplotSeriesIR validation, rendering, JSON replay, and malformed-statistics
+controls; it does not claim native Octave boxplot reading. Licensed MATLAB
+R2026a runs `runM53BoxplotTests` for styles, outliers, layouts,
+profiles, figure sets, lifecycle, determinism, negative compounds, and
+LuaLaTeX compilation. `auditM53BoxplotRuntime` captures privacy-safe HG2 roles
+and MATLAB-resolved statistics below ignored `.audit/` paths.
+
+`runM54SurfaceIrTests` is the runtime-neutral GNU Octave lane for explicit
+Axes3D, SurfaceIR, Line3IR, Patch3IR, JSON replay, deterministic native
+PGFPlots output, and malformed-data controls. Licensed MATLAB R2026a runs
+`runM54SurfaceTests` for synthetic surfaces, profiles, figure sets, lifecycle,
+negative 3-D controls, and LuaLaTeX.
+
+`runPublicationProfileTests` covers 20 deterministic profile cases: the
+normative 85/170 mm widths and text roles, style preservation, both aspect
+clamps, simple/legend/heatmap/annotation/inset/bar/boxplot/3-D representatives,
+JSON and figure-set replay, exact compiled widths, and caller lifecycle. It
+requires LuaLaTeX and `pdfinfo`.

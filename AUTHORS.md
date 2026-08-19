@@ -1,4 +1,12 @@
-# Maintainer
+# Attribution note
+
+This file preserves the authorship and contributor record inherited from the
+original matlab2tikz repository. The people listed here are not thereby
+maintainers of, or endorsers of, the independent m2tikz-next modernization.
+Future m2tikz-next-specific contributor records must be added without replacing
+this inherited history.
+
+# Original matlab2tikz maintainers
   * [Egon Geerardyn](https://github.com/egeerardyn) is the current maintainer (2015 - now).
   * [Nico Schlömer](https://github.com/nschloe) designed and implemented the intial version and was the first maintainer (2008 - 2015).
 

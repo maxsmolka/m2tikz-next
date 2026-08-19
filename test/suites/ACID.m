@@ -537,6 +537,14 @@ function [stat] = colorbarLogplot()
   stat.unreliable = isOctave; % FIXME: investigate (Travis differs from Linux/Mac octave)
   % https://github.com/matlab2tikz/matlab2tikz/pull/641#issuecomment-120481564
 
+  if isOctave
+    stat.skip = true;
+    stat.skipReason = ['UNSUPPORTED TEST FIXTURE IN OCTAVE: ', ...
+                       'nonlinear colorbars cannot be created.'];
+    fprintf('%s\n\n', stat.skipReason);
+    return
+  end
+
   imagesc([1 10 100]);
   try
     set(colorbar(), 'YScale', 'log');
@@ -748,7 +756,7 @@ end
 function [stat] = quiveroverlap ()
   stat.description = 'Quiver plot with avoided overlap.';
   stat.issues = [679];
-  % TODO: As indicated in #679, the native quiver scaling algorithm still isn't 
+  % TODO: As indicated in #679, the native quiver scaling algorithm still isn't
   % perfect. As such, in MATLAB the arrow heads may appear extremely tiny.
   % In Octave, they look fine though. Once the scaling has been done decently,
   % this reminder can be removed.
@@ -860,7 +868,7 @@ function [stat] = subplot2x2b ()
   % using `ACID(97)` and then manually slightly modify the window size.
   % We should not set the axis limits explicitly rather find a better way.
   % #591
-  
+
   x = (1:5);
 
   subplot(2,2,1);
@@ -1131,12 +1139,11 @@ function [stat] = zplanePlot1()
   stat.description = 'Representation of the complex plane with zplane.';
   stat.unreliable = isMATLAB('<', [8,4]); % FIXME: investigate
 
-  % check of the signal processing toolbox is installed
-  verInfo = ver('signal');
-  if isempty(verInfo) || isempty(verInfo.Name)
-      fprintf( 'Signal toolbox not found. Skip.\n\n' );
+  [available, reason] = requireSignalCapabilities({'ellip', 'zplane'});
+  if ~available
+      fprintf('%s\n\n', reason);
       stat.skip = true;
-
+      stat.skipReason = reason;
       return
   end
 
@@ -1150,11 +1157,11 @@ function [stat] = zplanePlot2()
   stat.unreliable = isMATLAB; % FIXME: #604; only difference is `width`
   stat.closeall = true;
 
-  % check of the signal processing toolbox is installed
-  verInfo = ver('signal');
-  if isempty(verInfo) || isempty(verInfo.Name)
-      fprintf( 'Signal toolbox not found. Skip.\n\n' );
+  [available, reason] = requireSignalCapabilities({'ellip', 'zplane', 'dfilt'});
+  if ~available
+      fprintf('%s\n\n', reason);
       stat.skip = true;
+      stat.skipReason = reason;
       return
   end
 
@@ -1171,17 +1178,51 @@ function [stat] = freqResponsePlot()
   % See also: https://github.com/matlab2tikz/matlab2tikz/pull/759#issuecomment-138477207
   % and https://gist.github.com/PeterPablo/b01cbe8572a9e5989037 (R2014b)
 
-  % check of the signal processing toolbox is installed
-  verInfo = ver('signal');
-  if isempty(verInfo) || isempty(verInfo.Name)
-      fprintf( 'Signal toolbox not found. Skip.\n\n' );
+  [available, reason] = requireSignalCapabilities( ...
+      {'kaiser', 'fir1', 'freqz', 'dfilt'});
+  if ~available
+      fprintf('%s\n\n', reason);
       stat.skip = true;
+      stat.skipReason = reason;
       return
   end
 
   b  = fir1(80,0.5,kaiser(81,8));
   hd = dfilt.dffir(b);
   freqz(hd); % FIXME: This opens a new figure that doesn't get closed automatically
+end
+% =========================================================================
+function [available, reason] = requireSignalCapabilities(requiredFunctions)
+  % Octave packages can be installed but not loaded. Loading is local to the
+  % current process and is not a system-wide installation or mutation.
+  if isOctave
+    packageInfo = ver('signal');
+    if isempty(packageInfo) || isempty(packageInfo.Name)
+      available = false;
+      reason = 'OPTIONAL DEPENDENCY MISSING: Octave signal package.';
+      return
+    end
+    pkg('load', 'signal');
+  end
+
+  missing = {};
+  for k = 1:numel(requiredFunctions)
+    name = requiredFunctions{k};
+    if exist(name, 'file') == 0 && exist(name, 'class') == 0
+      missing{end+1} = name; %#ok<AGROW>
+    end
+  end
+  available = isempty(missing);
+  if available
+    reason = '';
+  else
+    missingText = missing{1};
+    for k = 2:numel(missing)
+      missingText = [missingText, ', ', missing{k}]; %#ok<AGROW>
+    end
+    reason = ['OPTIONAL DEPENDENCY CAPABILITY MISSING: ', ...
+              missingText, '.'];
+  end
 end
 % =========================================================================
 function [stat] = axesLocation()
@@ -1439,10 +1480,12 @@ function [stat] = spectro()
 
   % In the original test case, this is 0:0.001:2, but that takes forever
   % for LaTeX to process.
-  if isempty(which('chirp'))
-      fprintf( 'chirp() not found. Skipping.\n\n' );
+  [available, reason] = requireSignalCapabilities({'chirp', 'spectrogram'});
+  if ~available
+      fprintf('%s\n\n', reason);
       stat.description = [];
       stat.skip = true;
+      stat.skipReason = reason;
       return
   end
 
@@ -1910,7 +1953,7 @@ end
 % =========================================================================
 function [stat] = herrorbarPlot()
   stat.description = 'herrorbar plot.';
-  % FIXME: octave is missing the legend 
+  % FIXME: octave is missing the legend
 
   hold on;
   X = 1:10;
@@ -2703,20 +2746,20 @@ function [stat] = removeOutsideMarker()
   % Create the data and plot it
   xdata          = -1 : 0.5 : 1.5;
   ydata_marker   = 1.5 * ones(size(xdata));
-  ydata_line     = 1   * ones(size(xdata));  
+  ydata_line     = 1   * ones(size(xdata));
   ydata_combined = 0.5 * ones(size(xdata));
   plot(xdata, ydata_marker, '*', ...
        xdata, ydata_line, '-', ...
        xdata, ydata_combined, '*-');
-  title('Markers at -1 and 0.5 should be removed, the line shortened'); 
+  title('Markers at -1 and 0.5 should be removed, the line shortened');
 
   % Change the limits, so one marker is outside the box
   ylim([0, 2]);
   xlim([0, 2]);
-  
+
   % Remove it
   cleanfigure;
-  
+
   % Change the limits back to check result
   xlim([-1, 2]);
 end
@@ -2732,7 +2775,7 @@ function [stat] = colorbars()
   for iAx = 1:4
     hAx(iAx) = subplot(2,2,iAx);
     axPos    = get(hAx(iAx), 'Position');
-    cbPos    = [axPos(1)+shift(iAx)*axPos(3), axPos(2), 0.02, 0.2]; 
+    cbPos    = [axPos(1)+shift(iAx)*axPos(3), axPos(2), 0.02, 0.2];
 
     hCb(iAx) = colorbar('Position', cbPos);
     try
@@ -2752,7 +2795,7 @@ function [stat] = colorbarManualLocationRightOut()
   figPos     = [1  , 1, 11  ,10];
   axPos(1,:) = [1  , 1,  8  , 3];
   axPos(2,:) = [1  , 5,  8  , 3];
-  cbPos      = [9.5, 1,  0.5, 7]; 
+  cbPos      = [9.5, 1,  0.5, 7];
 
   colorbarManualLocationHelper_(figPos, axPos, cbPos, axLoc);
 end
@@ -2761,10 +2804,10 @@ function [stat] = colorbarManualLocationRightIn()
   stat.issues      = [933 937];
 
   axLoc      = 'in';
-  figPos     = [ 1  , 1, 11  ,10]; 
+  figPos     = [ 1  , 1, 11  ,10];
   axPos(1,:) = [ 1  , 1,  8  , 3];
   axPos(2,:) = [ 1  , 5,  8  , 3];
-  cbPos      = [10.5, 1,  0.5, 7]; 
+  cbPos      = [10.5, 1,  0.5, 7];
 
   colorbarManualLocationHelper_(figPos, axPos, cbPos, axLoc);
 end
@@ -2772,11 +2815,11 @@ function [stat] = colorbarManualLocationLeftOut()
   stat.description = 'Manual positioning of colorbars - Left Out';
   stat.issues      = [933 937];
 
-  axLoc      = 'out'; 
+  axLoc      = 'out';
   figPos     = [1  , 1, 11  , 10];
   axPos(1,:) = [2.5, 1,  8  ,  3];
   axPos(2,:) = [2.5, 5,  8  ,  3];
-  cbPos      = [1.5, 1,  0.5,  7]; 
+  cbPos      = [1.5, 1,  0.5,  7];
 
   colorbarManualLocationHelper_(figPos, axPos, cbPos, axLoc);
 end
@@ -2784,11 +2827,11 @@ function [stat] = colorbarManualLocationLeftIn()
   stat.description = 'Manual positioning of colorbars - Left In';
   stat.issues      = [933 937];
 
-  axLoc      = 'in'; 
+  axLoc      = 'in';
   figPos     = [1  , 1, 11  , 10];
   axPos(1,:) = [2.5, 1,  8  ,  3];
   axPos(2,:) = [2.5, 5,  8  ,  3];
-  cbPos      = [0.5, 1,  0.5,  7]; 
+  cbPos      = [0.5, 1,  0.5,  7];
 
   colorbarManualLocationHelper_(figPos, axPos, cbPos, axLoc);
 end
@@ -2808,7 +2851,7 @@ function colorbarManualLocationHelper_(figPos, axPos, cbPos, axLoc)
       %TODO: check if there are HG1 / Octave counterparts for this property
       set(hCb, 'AxisLocation', axLoc);
   end
-  
+
   labelProperty = {'Label', 'YLabel'}; %YLabel as fallback for
   idxLabel      = find(cellfun(@(p) isprop(hCb, p), labelProperty), 1);
   if ~isempty(idxLabel)

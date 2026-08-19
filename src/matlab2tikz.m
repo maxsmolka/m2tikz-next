@@ -681,7 +681,7 @@ function [m2t, pgfEnvironments] = handleAllChildren(m2t, h)
 
             case 'line'
                 [m2t, str] = handleObject(m2t, child, @drawLine);
-                
+
             case 'constantline'
                 [m2t, str] = handleObject(m2t, child, @drawConstantLine);
 
@@ -715,10 +715,10 @@ function [m2t, pgfEnvironments] = handleAllChildren(m2t, h)
 
             case 'rectangle'
                 [m2t, str] = handleObject(m2t, child, @drawRectangle);
-		
+
 	    case 'doubleendarrowshape'
                 [m2t, str] = handleObject(m2t, child, @drawArrow);
-	
+
 	    case 'arrowshape'
                 [m2t, str] = handleObject(m2t, child, @drawArrow);
 
@@ -1052,8 +1052,49 @@ function m2t = add3DOptionsOfAxes(m2t, handle)
         m2t.axes{end}.options = opts_merge(m2t.axes{end}.options, zopts);
 
         VIEWFORMAT = ['{' m2t.ff '}{' m2t.ff '}'];
-        m2t = m2t_addAxisOption(m2t, 'view', sprintf(VIEWFORMAT, get(handle, 'View')));
+        viewAngles = getPgfplotsViewAngles(handle);
+        m2t = m2t_addAxisOption(m2t, 'view', sprintf(VIEWFORMAT, viewAngles));
     end
+end
+% ==============================================================================
+function viewAngles = getPgfplotsViewAngles(handle)
+    viewAngles = get(handle, 'View');
+    if ~strcmp(getEnvironment(), 'Octave')
+        return;
+    end
+
+    required = {'CameraPosition', 'CameraTarget', 'DataAspectRatio', ...
+                'CameraPositionMode', 'CameraTargetMode', ...
+                'XDir', 'YDir', 'ZDir'};
+    if ~hasProperties(handle, required, {})
+        return;
+    end
+    manualCamera = strcmpi(get(handle, 'CameraPositionMode'), 'manual') || ...
+                   strcmpi(get(handle, 'CameraTargetMode'), 'manual');
+    if ~manualCamera
+        return;
+    end
+
+    % Octave does not update the public View angles after manual camera
+    % properties are assigned. Convert the target-to-camera vector into the
+    % physically scaled axes coordinate system and derive PGFPlots azimuth and
+    % elevation. Camera roll is outside PGFPlots' two-angle view model.
+    % MATLAB VALIDATION REQUIRED: MATLAB retains its existing View path above.
+    directionSigns = [axisDirectionSign(handle, 'XDir'), ...
+                      axisDirectionSign(handle, 'YDir'), ...
+                      axisDirectionSign(handle, 'ZDir')];
+    cameraVector = (get(handle, 'CameraPosition') - ...
+                    get(handle, 'CameraTarget')) ./ ...
+                   get(handle, 'DataAspectRatio') .* directionSigns;
+    horizontal = hypot(cameraVector(1), cameraVector(2));
+    if norm(cameraVector) <= eps
+        error('matlab2tikz:degenerateCamera', ...
+              'Cannot derive view angles from coincident camera and target.');
+    end
+    azimuth = atan2(cameraVector(2), cameraVector(1)) * 180 / pi + 90;
+    azimuth = mod(azimuth + 180, 360) - 180;
+    elevation = atan2(cameraVector(3), horizontal) * 180 / pi;
+    viewAngles = [azimuth, elevation];
 end
 % ==============================================================================
 function legendhandle = getAssociatedLegend(m2t, axisHandle)
@@ -1448,7 +1489,7 @@ function m2t = drawBoxAndLineLocationsOfAxes(m2t, h)
     if strcmpi(yLoc, 'origin')
         yLoc = 'middle';
     end
-    
+
     % Only flip the labels to the other side if not at the default
     % left/bottom positions
     if isBoxOn
@@ -1487,7 +1528,18 @@ function m2t = handleColorbar(m2t, handle)
     end
 
     % Find the axes environment that this colorbar belongs to.
-    parentAxesHandle = double(get(handle,'axes'));
+    parentAxesHandle = getOrDefault(handle, 'Axes', []);
+    if isempty(parentAxesHandle)
+        % GNU Octave exposes the associated plot axes as an internal
+        % capability instead of MATLAB's public ColorBar.Axes property.
+        parentAxesHandle = getOrDefault(handle, '__axes_handle__', []);
+    end
+    if isempty(parentAxesHandle)
+        warning('matlab2tikz:parentAxesOfColorBarNotFound', ...
+                'Could not determine parent axes for color bar. Skipping.');
+        return;
+    end
+    parentAxesHandle = double(parentAxesHandle);
     parentFound = false;
     for k = 1:length(m2t.axes)
         if m2t.axes{k}.handle == parentAxesHandle
@@ -1813,7 +1865,7 @@ function [m2t, str] = drawLine(m2t, h, custom)
     data       = getXYZDataFromLine(m2t, h);
     xDeviation = getXDeviations(h);
     yDeviation = getYDeviations(h);
-    
+
     errDir = '';
     if ~isempty(xDeviation)
         data = [data, xDeviation];
@@ -2320,12 +2372,12 @@ end
 % ==============================================================================
 function [m2t, str] = drawConstantLine(m2t, h, custom)
     % Draws a 'constantline' object such as those produced by 'yline()'
-    
+
     interceptaxis = get(h, 'InterceptAxis');
     value = get(h, 'Value');
     xLim = get(h.Parent, 'XLim');
     yLim = get(h.Parent, 'Ylim');
-    
+
     % create line from object properties
     switch interceptaxis
         case 'x'
@@ -2339,12 +2391,12 @@ function [m2t, str] = drawConstantLine(m2t, h, custom)
             return
     end
     l = line(xdata, ydata);
-    
+
     % Pass on color and line options
     l.Color = h.Color;
     l.LineStyle = h.LineStyle;
     l.LineWidth = h.LineWidth;
-    
+
     [m2t, str] = drawLine(m2t, l, custom);
 end
 % ==============================================================================
@@ -2454,7 +2506,7 @@ function [m2t, str] = drawPatch(m2t, handle, custom)
     % Plot the actual data.
     [m2t, verticesTable, tableOptions] = makeTable(m2t, columnNames, Vertices);
     tableOptions = opts_merge(tableOptions, verticesTableOptions);
-    
+
     % Add custom options
     drawOptions = opts_append_userdefined(drawOptions, custom.extraOptions);
 
@@ -3168,7 +3220,7 @@ function [m2t, str] = handleObject(m2t, h, actualHandler)
     if isfield(custom, 'customHandler')
         actualHandler = custom.customHandler;
     end
-    
+
     [m2t, str] = feval(actualHandler, m2t, h, custom);
     str = [texcomment(custom.commentsBefore), custom.codeBefore, ...
            str, ...
@@ -3284,7 +3336,7 @@ function m2t = drawAnnotationsHelper(m2t,h)
             % Text box
         case {'scribe.textbox','matlab.graphics.shape.TextBox'}
             [m2t, str] = handleObject(m2t, h, @drawText);
-            
+
             % Arrow
         case {'matlab.graphics.shape.Arrow','matlab.graphics.shape.DoubleEndArrow'}
             [m2t, str] = handleObject(m2t, h, @drawArrow);
@@ -3300,10 +3352,10 @@ function m2t = drawAnnotationsHelper(m2t,h)
             % Rectangle
         case {'scribe.scriberect', 'matlab.graphics.shape.Rectangle'}
             [m2t, str] = handleObject(m2t, h, @drawRectangle);
-            
+
         case guitypes()
             % don't do anything for GUI objects and their children
-            [m2t, str] = handleObject(m2t, h, @drawNothing);                
+            [m2t, str] = handleObject(m2t, h, @drawNothing);
 
         otherwise
             userWarning(m2t, 'Don''t know annotation ''%s''.', cl);
@@ -3319,7 +3371,7 @@ function [m2t, str] = drawArrow(m2t, handle, custom)
     if ~isLineVisible(handle)
         return; % there is nothing to plot
     end
-    
+
     m2t = signalDependency(m2t, 'tikzlibrary', 'arrows.meta');
     % Arrow Style
     if isa(handle,'matlab.graphics.shape.DoubleEndArrow')
@@ -3327,14 +3379,14 @@ function [m2t, str] = drawArrow(m2t, handle, custom)
     else
         arrowSpec = '-{Stealth}';
     end
-    
+
     % Color
     color         = get(handle, 'Color');
     [m2t, xcolor] = getColor(m2t, handle, color, 'patch');
-    
+
     % Line options
     [m2t, lineOptions]   = getLineOptions(m2t, handle);
-    
+
     drawOptions = opts_new();
     drawOptions = opts_add(drawOptions, arrowSpec);
     drawOptions = opts_add(drawOptions, 'color', xcolor);
@@ -3352,10 +3404,10 @@ function [m2t, pos1, pos2] = getPositionOfArrow(m2t, h)
     % makes the tikz position string of an arrow
     posX   = get(h, 'X');
     posY   = get(h, 'Y');
-    
+
     type    = 'axis cs:';
     fmtUnit = '';
-    
+
     pos1{1} = formatDim(posX(1), fmtUnit);
     pos1{2} = formatDim(posY(1), fmtUnit);
     pos2{1} = formatDim(posX(2), fmtUnit);
@@ -3534,7 +3586,7 @@ function [m2t, str] = drawText(m2t, handle, custom)
     % Not that, in Pgfplots, long texts get cut off at the axes. This is
     % Different from the default MATLAB behavior. To fix this, one could use
     % /pgfplots/after end axis/.code.
-    
+
     if ~exist('custom','var') || isempty(custom)
         custom = m2tcustom([]); %FIXME: adjust at all call sites instead
     end
@@ -3562,9 +3614,9 @@ function [m2t, str] = drawText(m2t, handle, custom)
 
     EdgeColor = get(handle, 'EdgeColor');
     [m2t, style] = setColor(m2t, handle, style, 'draw', EdgeColor);
-    
+
     style = opts_append_userdefined(style, custom.extraOptions);
-    
+
     % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     % plot the thing
     [m2t, posString] = getPositionOfText(m2t, handle);
@@ -3597,14 +3649,14 @@ function [style] = getXYAlignmentOfText(handle, style)
     if strcmp(VerticalAlignment, 'middle') && strcmp(HorizontalAlignment, 'center')
         alignment = 'centered';
     end
-    
+
     if ~isempty(alignment)
         style = opts_add(style, alignment);
     end
 
     % Set 'align' option that is needed for multiline text
     style = opts_add(style, 'align', HorizontalAlignment);
-    
+
     style = opts_add(style, 'inner sep', '0');
 end
 % ==============================================================================
@@ -3715,7 +3767,7 @@ function [m2t, str] = drawRectangle(m2t, h, custom)
     [m2t, lineOptions] = getRectangleFaceOptions(m2t, h, lineOptions);
     [m2t, lineOptions] = getRectangleEdgeOptions(m2t, h, lineOptions);
     lineOptions = opts_append_userdefined(lineOptions, custom.extraOptions);
-    
+
     pos = pos2dims(get(h, 'Position'));
     % plot the thing
     lineOpts = opts_print(lineOptions);
@@ -4035,7 +4087,7 @@ function [m2t, str] = drawScatterPlot(m2t, h, custom)
 
         if numel(dataInfo.Size) == 1
             drawOptions = opts_add(drawOptions, 'mark size', ...
-                sprintf('%.4fpt', dataInfo.Size)); % FIXME: investigate whether to use `m2t.ff` 
+                sprintf('%.4fpt', dataInfo.Size)); % FIXME: investigate whether to use `m2t.ff`
         else
             %TODO: warn the user about this. It is not currently supported.
         end
@@ -4059,12 +4111,12 @@ function [m2t, str] = drawScatterPlot(m2t, h, custom)
     end
     % Add forget plot
     drawOptions = maybeShowInLegend(m2t.currentHandleHasLegend, drawOptions);
-    
+
     % The actual printing.
     [m2t, table, tableOptions] = makeTable(m2t, columns, data);
     tableOptions = opts_merge(tableOptions, metaPart);
     drawOptions = opts_append_userdefined(drawOptions, custom.extraOptions);
-    
+
     % Print
     drawOpts = opts_print(drawOptions);
     tabOpts  = opts_print(tableOptions);
@@ -4200,7 +4252,7 @@ function [m2t, str] = drawHistogram(m2t, h, custom)
     % Get the draw options for the bars
     [m2t, drawOptions] = getPatchDrawOptions(m2t, h, drawOptions);
     drawOptions = opts_append_userdefined(drawOptions, custom.extraOptions);
-    
+
     % Make table
     [m2t, table, tableOptions] = makeTable(m2t, {'x','y'},data);
 
@@ -4469,7 +4521,7 @@ function [m2t, str] = drawAreaSeries(m2t, h, custom)
     [m2t, table, tableOptions] = makeTable(m2t, '', xData, '', yData);
 
     drawOptions = opts_append_userdefined(drawOptions, custom.extraOptions);
-    
+
     % Print out
     drawOpts = opts_print(drawOptions);
     tabOpts  = opts_print(tableOptions);
@@ -4760,7 +4812,7 @@ function [m2t, str] = drawEllipse(m2t, handle, custom)
     end
     drawOptions = opts_merge(drawOptions, lineOptions);
     drawOptions = opts_append_userdefined(drawOptions, custom.extraOptions);
-    
+
     opt = opts_print(drawOptions);
 
     str = sprintf('%s [%s] (axis cs:%g,%g) ellipse [x radius=%g, y radius=%g];\n', ...
@@ -4785,10 +4837,18 @@ function [m2t, drawOptions] = getPatchDrawOptions(m2t, h, drawOptions)
     % a patch/area/bar. These include EdgeColor, LineType, FaceColor/Alpha
 
     % Get object for color;
-    if ~isempty(allchild(h))
+    children = allchild(h);
+    childWithFaceColor = [];
+    for k = 1:numel(children)
+        if hasProperties(children(k), {'FaceColor'}, {})
+            childWithFaceColor = children(k);
+            break;
+        end
+    end
+    if ~isempty(childWithFaceColor)
         % quite oddly, before MATLAB R2014b this value is stored in a child
         % patch and not in the object itself
-        obj = allchild(h);
+        obj = childWithFaceColor;
     else % R2014b and newer
         obj = h;
     end
@@ -5146,7 +5206,16 @@ function [cbarTemplate, cbarStyleOptions] = getColorbarPosOptions(handle, cbarSt
             cbarTemplate = 'horizontal';
         case 'manual'
             origUnits = get(handle,'Units');
-            assocAxes = get(handle,'Axes');
+            assocAxes = getOrDefault(handle, 'Axes', []);
+            if isempty(assocAxes)
+                assocAxes = getOrDefault(handle, '__axes_handle__', []);
+            end
+            if isempty(assocAxes)
+                warning('matlab2tikz:parentAxesOfColorBarNotFound', ...
+                        ['Could not determine parent axes for manually ', ...
+                         'positioned color bar. Keeping default placement.']);
+                return;
+            end
             origAxesUnits = get(assocAxes,'Units');
             set(handle,'Units','centimeters');        % Make sure we have
             set(assocAxes,'Units','centimeters');     % same units
@@ -5179,11 +5248,11 @@ function [cbarTemplate, cbarStyleOptions] = getColorbarPosOptions(handle, cbarSt
             end
 
             % Using positions relative to associated axes
-            calcRelPos = @(pos1,pos2,ext2) (pos1-pos2)/ext2; 
+            calcRelPos = @(pos1,pos2,ext2) (pos1-pos2)/ext2;
             cbarRelPosX = calcRelPos(cbarDim.left,cbarAxesDim.left,cbarAxesDim.width);
             cbarRelPosY = calcRelPos(cbarDim.bottom,cbarAxesDim.bottom,cbarAxesDim.height);
             cbarRelHeight = cbarDim.height/cbarAxesDim.height;
-            
+
             cbarStyleOptions = opts_add(cbarStyleOptions, 'anchor',...
                 'south west');
             cbarStyleOptions = opts_add(cbarStyleOptions, 'at',...
@@ -5648,7 +5717,7 @@ function pTickLabels = formatPgfTickLabels(m2t, plotLabelsNecessary, ...
             % If the axis is logscaled, MATLAB does not store the labels,
             % but the exponents to 10
             if isLogAxis && strcmpi(tickLabelMode,'auto')
-                tickLabels{k} = sprintf('$10^{%s}$', str);
+                tickLabels{k} = sprintf('$10^{%s}$', tickLabels{k});
             end
         end
         tickLabels = cellfun(@(l)(sprintf('{%s}',l)), tickLabels, ...
@@ -5999,11 +6068,16 @@ function [position] = getRelativeAxesPosition(m2t, axesHandles, axesBoundingBox)
                     projection = view(axesHandle);
 
                 case 'Octave'
-                    % Unfortunately, Octave does not have the full `view`
-                    % interface implemented, but the projection matrices are
-                    % available: http://octave.1599824.n4.nabble.com/Implementing-view-td3032041.html
-
-                    projection = get(axesHandle, 'x_viewtransform');
+                    if hasProperties(axesHandle, {'x_viewtransform'}, {})
+                        % Older Octave versions exposed the internal matrix.
+                        projection = get(axesHandle, 'x_viewtransform');
+                    else
+                        % Current Octave no longer exposes that undocumented
+                        % property. Reconstruct the orthographic projection
+                        % from public camera, limits, direction, and plot-box
+                        % capabilities instead. MATLAB VALIDATION REQUIRED.
+                        projection = deriveOrthographicViewTransform(axesHandle);
+                    end
 
                 otherwise
                     errorUnknownEnvironment();
@@ -6059,6 +6133,69 @@ function [position] = getRelativeAxesPosition(m2t, axesHandles, axesBoundingBox)
         position(:,[1 3]) = position(:,[1 3]) / max(axesBoundingBox([3 4]));
         position(:,[2 4]) = position(:,[2 4]) / max(axesBoundingBox([3 4]));
     end
+end
+% ==============================================================================
+function projection = deriveOrthographicViewTransform(axesHandle)
+    % Return a 4x4 transform whose first two rows project the normalized
+    % plot-box cube onto the camera plane. For an orthographic camera, the
+    % projected width/height of an axis-aligned box is determined solely by
+    % the camera right/up unit vectors and the physical plot-box side lengths.
+    required = {'CameraPosition', 'CameraTarget', 'CameraUpVector', ...
+                'XLim', 'YLim', 'ZLim', 'XDir', 'YDir', 'ZDir', ...
+                'PlotBoxAspectRatio'};
+    if ~hasProperties(axesHandle, required, {})
+        error('matlab2tikz:missingCameraCapabilities', ...
+              'Cannot derive the axes projection from public camera properties.');
+    end
+
+    limits = [get(axesHandle, 'XLim'); ...
+              get(axesHandle, 'YLim'); ...
+              get(axesHandle, 'ZLim')];
+    ranges = limits(:,2)' - limits(:,1)';
+    if any(~isfinite(ranges)) || any(ranges == 0)
+        error('matlab2tikz:invalidAxesLimits', ...
+              'Cannot derive a projection for degenerate or non-finite axes limits.');
+    end
+
+    plotBox = get(axesHandle, 'PlotBoxAspectRatio');
+    directionSigns = [axisDirectionSign(axesHandle, 'XDir'), ...
+                      axisDirectionSign(axesHandle, 'YDir'), ...
+                      axisDirectionSign(axesHandle, 'ZDir')];
+    dataToBoxScale = directionSigns .* plotBox ./ ranges;
+
+    cameraPosition = get(axesHandle, 'CameraPosition');
+    cameraTarget = get(axesHandle, 'CameraTarget');
+    cameraUp = get(axesHandle, 'CameraUpVector');
+    forward = (cameraTarget - cameraPosition) .* dataToBoxScale;
+    upHint = cameraUp .* dataToBoxScale;
+    forward = normalizeProjectionVector(forward, 'camera direction');
+    right = normalizeProjectionVector(cross(forward, upHint), 'camera right vector');
+    screenUp = normalizeProjectionVector(cross(right, forward), 'camera up vector');
+
+    % A normalized plot-box vertex q has physical coordinates q .* plotBox.
+    % Translation and depth do not affect the bounding-box dimensions used by
+    % getRelativeAxesPosition, so only the two screen-basis rows are required.
+    projection = eye(4);
+    projection(1,1:3) = right .* plotBox;
+    projection(2,1:3) = screenUp .* plotBox;
+    projection(1:2,4) = 0;
+end
+% ==============================================================================
+function signValue = axisDirectionSign(axesHandle, property)
+    if strcmpi(get(axesHandle, property), 'reverse')
+        signValue = -1;
+    else
+        signValue = 1;
+    end
+end
+% ==============================================================================
+function vector = normalizeProjectionVector(vector, description)
+    vectorLength = norm(vector);
+    if ~isfinite(vectorLength) || vectorLength <= eps
+        error('matlab2tikz:degenerateCamera', ...
+              'Cannot derive projection: degenerate %s.', description);
+    end
+    vector = vector ./ vectorLength;
 end
 % ==============================================================================
 function aspectRatio = getPlotBoxAspectRatio(axesHandle)
@@ -7153,7 +7290,7 @@ function [formatted,treeish] = VersionControlIdentifier()
 end
 % ==============================================================================
 function bool = isCategoricalType(data)
-    % This is a wrapper function for iscategorical(), which (as February 2018) 
+    % This is a wrapper function for iscategorical(), which (as February 2018)
     % is not available on GNU Octave.
     switch getEnvironment()
         case 'MATLAB'

@@ -4,3 +4,11 @@ test/*.test.*
 *.asv
 *.m~
 octave-workspace
+benchmarks/output/
+
+# Local validation evidence. Curated reports, test sources, and deliberately
+# reviewed fixtures belong outside this generated working directory.
+/.audit/
+/build/
+/tmp/pdfs/
+/.confidentiality-denylist.local.txt

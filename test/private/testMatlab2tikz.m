@@ -63,13 +63,13 @@ function [status, parameters] = testMatlab2tikz(varargin)
           setenv ('PRINTF_EXPONENT_DIGITS', '2')
       end
   end
-  
+
   % copy output template into output directory
   if ~exist(ipp.Results.output,'dir')
       mkdir(ipp.Results.output);
   end
   template = m2troot('test','template');
-  copyfile(fullfile(template,'*'), ipp.Results.output);
+  copyDirectoryContents(template, ipp.Results.output);
 
   % start overall timing
   elapsedTimeOverall = tic;
@@ -79,6 +79,19 @@ function [status, parameters] = testMatlab2tikz(varargin)
   elapsedTimeOverall = toc(elapsedTimeOverall);
   stdout = 1;
   fprintf(stdout, 'overall time: %4.2fs\n\n', elapsedTimeOverall);
+end
+% ==============================================================================
+function copyDirectoryContents(source, destination)
+% Copy directory contents without relying on wildcard expansion. Octave on
+% Windows does not expand the trailing '*' passed to copyfile consistently.
+  entries = dir(source);
+  for k = 1:numel(entries)
+      name = entries(k).name;
+      if strcmp(name, '.') || strcmp(name, '..')
+          continue;
+      end
+      copyfile(fullfile(source, name), fullfile(destination, name));
+  end
 end
 % INPUT VALIDATION =============================================================
 function bool = isFunction(f)
@@ -138,7 +151,12 @@ function status = runIndicatedTests(ipp)
         status{k}.elapsedTime = elapsedTime;
         fprintf(stdout, '%s ', status{k}.function);
         if status{k}.skip
-            fprintf(stdout, 'skipped (%4.2fs).\n\n', elapsedTime);
+            if isempty(status{k}.skipReason)
+                fprintf(stdout, 'skipped (%4.2fs).\n\n', elapsedTime);
+            else
+                fprintf(stdout, 'skipped (%4.2fs): %s\n\n', ...
+                    elapsedTime, status{k}.skipReason);
+            end
         else
             fprintf(stdout, 'done (%4.2fs).\n\n', elapsedTime);
         end

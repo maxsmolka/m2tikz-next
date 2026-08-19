@@ -1,0 +1,16 @@
+function lines = renderPatch3(node, colorName)
+%RENDERPATCH3 Render one explicit opaque triangular Fill3 decoration.
+    bs = char(92); edge = 'draw=none';
+    if node.edgeVisible, edge = ['draw=' colorName 'edge']; end
+    options = {'patch','patch type=triangle',['fill=' colorName],edge, ...
+        ['line width=' m2t2.util.formatNumber(node.lineWidth) 'pt'], ...
+        m2t2.render.lineStyleName(node.lineStyle),'forget plot'};
+    points = cell(1, 3);
+    for k = 1:3
+        points{k} = ['(' m2t2.util.formatNumber(node.vertices(k, 1)) ',' ...
+            m2t2.util.formatNumber(node.vertices(k, 2)) ',' ...
+            m2t2.util.formatNumber(node.vertices(k, 3)) ')'];
+    end
+    lines = {[bs 'addplot3[' m2t2.util.joinCell(options, ',') '] coordinates {' ...
+        m2t2.util.joinCell(points, ' ') '};']};
+end

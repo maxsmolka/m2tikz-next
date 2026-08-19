@@ -1,0 +1,9 @@
+function value = markerName(name)
+%MARKERNAME Map canonical marker names to PGFPlots marks.
+    source = {'none','circle','plus','asterisk','point','x','square','diamond', ...
+              'triangle_up','triangle_down','triangle_right','triangle_left', ...
+              'pentagram','hexagram'};
+    target = {'none','o','+','asterisk','*','x','square','diamond', ...
+              'triangle','triangle','triangle','triangle','star','star'};
+    value = target{find(strcmp(name, source), 1)};
+end

@@ -1,0 +1,75 @@
+name: Bug report
+description: Report a reproducible export, diagnostic, or compilation problem
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Use synthetic or minimized data; do not upload private research or publication data.
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Runtime
+      options:
+        - GNU Octave
+        - MATLAB (not yet validated)
+    validations:
+      required: true
+  - type: input
+    id: runtime_version
+    attributes:
+      label: Octave or MATLAB version
+      placeholder: "GNU Octave 11.3"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "Windows 11, Ubuntu 24.04, ..."
+    validations:
+      required: true
+  - type: input
+    id: tex
+    attributes:
+      label: TeX engine and version
+      placeholder: "LuaHBTeX / TeX Live 2026"
+    validations:
+      required: true
+  - type: input
+    id: pgfplots
+    attributes:
+      label: PGFPlots version
+      placeholder: "1.18.x"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: m2tikz-next commit or version
+      placeholder: "git rev-parse --short HEAD"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal plotting code
+      description: Remove private data and provide the smallest self-contained reproducer.
+      render: matlab
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostic
+    attributes:
+      label: Diagnostic or error
+      description: Include the full m2tikz-next diagnostic identifier and relevant TeX error lines.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true

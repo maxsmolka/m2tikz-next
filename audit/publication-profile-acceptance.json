@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "profileApiIdentifier": "publication",
+  "publicName": "publication profile",
+  "environment": {
+    "portableRuntime": "GNU Octave 11.3",
+    "compiler": "LuaLaTeX",
+    "texDistribution": "TeX Live 2026",
+    "pgfplots": "1.18.x"
+  },
+  "canonicalWidthsMillimeters": {
+    "singleColumn": 85,
+    "doubleColumn": 170
+  },
+  "typographyPoints": {
+    "base": 9,
+    "axesLabel": 9,
+    "title": 10,
+    "tickLabel": 8,
+    "legend": 8,
+    "colorbarLabel": 9,
+    "colorbarTickLabel": 8
+  },
+  "syntheticCoverage": [
+    "line",
+    "legend",
+    "scalar-image-colorbar",
+    "annotations",
+    "multiple-axes",
+    "grouped-bars",
+    "boxplots",
+    "narrow-3d"
+  ],
+  "decision": "accepted-with-public-synthetic-fixtures"
+}

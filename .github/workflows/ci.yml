@@ -1,0 +1,115 @@
+name: Public preview CI
+
+on:
+  pull_request:
+  push:
+    branches: ["main", "release/**"]
+
+permissions:
+  contents: read
+
+env:
+  OCTAVE_IMAGE: docker.io/gnuoctave/octave:11.3.0@sha256:b22abbe607c15ed821521ab9cf8a7c466dc47506730a0de9503bd554731b3e32
+
+jobs:
+  repository-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check changed-file whitespace
+        shell: bash
+        run: git diff --check HEAD^ HEAD
+      - name: Check renderer architecture invariant
+        shell: pwsh
+        run: |
+          ./test/checkRendererInvariant.ps1
+          ./test/checkProfileInvariant.ps1
+          ./test/checkFigureSetInvariant.ps1
+          ./test/checkHybridInvariant.ps1
+          ./test/checkPlannerInvariant.ps1
+          ./test/checkMatlabValidationInvariant.ps1
+      - name: Check documentation links
+        shell: pwsh
+        run: ./test/checkDocumentationLinks.ps1
+      - name: Check public-tree confidentiality
+        shell: pwsh
+        run: ./test/checkConfidentiality.ps1
+      - name: Validate citation metadata
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes python3-yaml
+          python3 test/validateCitation.py CITATION.cff
+
+  octave-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Provision GNU Octave 11.3.0 and metadata validator
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes python3-yaml
+          docker pull "$OCTAVE_IMAGE"
+          mkdir -p "$RUNNER_TEMP/octave-11.3-bin"
+          cat > "$RUNNER_TEMP/octave-11.3-bin/octave-cli" <<'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          exec docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            --env HOME=/tmp \
+            --volume "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" \
+            --workdir "$GITHUB_WORKSPACE" \
+            "$OCTAVE_IMAGE" octave "$@"
+          EOF
+          chmod +x "$RUNNER_TEMP/octave-11.3-bin/octave-cli"
+          echo "$RUNNER_TEMP/octave-11.3-bin" >> "$GITHUB_PATH"
+      - name: Run M2 through M2.3 and smoke generation
+        shell: pwsh
+        run: ./test/runPublicPreviewValidation.ps1 -PythonCommand python3 -SkipTexCompilation
+      - name: Validate MATLAB preparation and portable milestone IR
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM40MatlabPreparationTests(fullfile('.audit','m40-preparation')); runM51AnnotationIrTests(fullfile('.audit','m51-annotation-ir')); runM52GroupedBarIrTests(fullfile('.audit','m52-bar-ir')); runM53BoxplotIrTests(fullfile('.audit','m53-boxplot-ir')); runM54SurfaceIrTests(fullfile('.audit','m54-surface-ir'));"
+
+  tex-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Provision GNU Octave 11.3.0, LuaLaTeX, and PGFPlots
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes latexmk texlive-latex-extra texlive-latex-recommended texlive-luatex texlive-pictures python3-yaml
+          docker pull "$OCTAVE_IMAGE"
+          mkdir -p "$RUNNER_TEMP/m3-octave-tex-image"
+          cat > "$RUNNER_TEMP/m3-octave-tex-image/Dockerfile" <<EOF
+          FROM $OCTAVE_IMAGE
+          RUN apt-get update \
+              && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+                 poppler-utils texlive-latex-extra texlive-luatex texlive-pictures \
+              && rm -rf /var/lib/apt/lists/*
+          EOF
+          docker build --tag m2tikz-next-ci:octave-tex \
+            "$RUNNER_TEMP/m3-octave-tex-image"
+          mkdir -p "$RUNNER_TEMP/octave-11.3-bin"
+          cat > "$RUNNER_TEMP/octave-11.3-bin/octave-cli" <<'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          exec docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            --env HOME=/tmp \
+            --volume "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" \
+            --workdir "$GITHUB_WORKSPACE" \
+            m2tikz-next-ci:octave-tex octave "$@"
+          EOF
+          chmod +x "$RUNNER_TEMP/octave-11.3-bin/octave-cli"
+          echo "$RUNNER_TEMP/octave-11.3-bin" >> "$GITHUB_PATH"
+      - name: Generate and compile curated preview examples
+        shell: pwsh
+        run: ./test/runPublicPreviewValidation.ps1 -PythonCommand python3 -SkipCoreTests
+      - name: Run M3 scientific export workflow
+        shell: bash
+        run: |
+          octave-cli --quiet --eval "addpath('test'); runM3WorkflowTests(fullfile('.audit','m3-workflow')); runM3CompilerTests(fullfile('.audit','m3-compiler')); runM31ProfileTests(fullfile('.audit','m31-profile')); runM32FigureSetSmokeTest(fullfile('.audit','m32-set-smoke')); runM33ImageSmokeTest(fullfile('.audit','m33-image-smoke')); runM34HybridSmokeTest(fullfile('.audit','m34-hybrid-smoke')); runM35BackendPlannerSmokeTest(fullfile('.audit','m35-planner-smoke')); runPublicationProfileTests(fullfile('.audit','publication-profile'));"

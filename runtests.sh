@@ -36,7 +36,11 @@ function exitIfError {
 Runner=$1
 Switches=$2
 if [ -z "$Runner" ] ; then
-	Runner="octave"
+	if command -v octave-cli >/dev/null 2>&1; then
+		Runner="octave-cli"
+	else
+		Runner="octave"
+	fi
 fi
 if [ -z "$Switches" ] ; then
 	case "$Runner" in
@@ -63,9 +67,21 @@ export CI=true
 ## Actually run the test suite
 cd test
 TESTDIR=`pwd`
+TESTDIR_FOR_RUNNER="$TESTDIR"
+# Native Windows MATLAB/Octave executables do not understand Git Bash's
+# /c/... paths. Use forward-slash Windows form without hardcoding a drive.
+case "$Runner" in
+	*.exe )
+		if command -v cygpath >/dev/null 2>&1; then
+			TESTDIR_FOR_RUNNER=`cygpath -m "$TESTDIR"`
+		elif pwd -W >/dev/null 2>&1; then
+			TESTDIR_FOR_RUNNER=`pwd -W`
+		fi
+		;;
+esac
 # also CD in MATLAB/Octave to make sure that startup files
 # cannot play any role in setting the path
-${Runner} ${Switches} "cd('${TESTDIR}'); runMatlab2TikzTests"
+"${Runner}" ${Switches} "cd('${TESTDIR_FOR_RUNNER}'); runMatlab2TikzTests"
 exitIfError $?
 cd ..
 

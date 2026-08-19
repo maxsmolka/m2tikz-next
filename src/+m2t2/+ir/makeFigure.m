@@ -1,0 +1,19 @@
+function ir = makeFigure(axesItems, elements, annotations)
+%MAKEFIGURE Construct the root node of the M2 normalized IR.
+    if nargin < 1
+        axesItems = {};
+    end
+    if nargin < 2
+        elements = {};
+    end
+    if nargin < 3
+        annotations = {};
+    end
+    ir = struct('kind', 'm2t2.figure', ...
+                'version', 2, ...
+                'size', zeros(1, 0), ...
+                'layout', m2t2.ir.makeLayout(), ...
+                'axes', {axesItems}, ...
+                'elements', {elements}, ...
+                'annotations', {annotations});
+end

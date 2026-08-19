@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use m2tikz-next, cite this software and retain the matlab2tikz attribution described in NOTICE.md."
+title: "m2tikz-next"
+type: software
+version: "0.1.0-preview.1"
+authors:
+  - name: "m2tikz-next contributors"
+abstract: "A modern, validated scientific figure export pipeline derived from matlab2tikz."
+license: BSD-2-Clause
+repository-code: "https://github.com/maxsmolka/m2tikz-next"
+notes: >-
+  This preview candidate is independently developed from matlab2tikz and retains
+  its Git history and attribution. The top-level repository-code identifies the
+  current m2tikz-next project; the reference below identifies the original
+  matlab2tikz project. Retained provenance does not imply that the original
+  project publishes or endorses m2tikz-next.
+references:
+  - type: software
+    title: "matlab2tikz"
+    authors:
+      - name: "matlab2tikz contributors"
+    repository-code: "https://github.com/matlab2tikz/matlab2tikz"

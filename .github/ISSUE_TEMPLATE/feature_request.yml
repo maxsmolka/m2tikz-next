@@ -1,0 +1,47 @@
+name: Feature request
+description: Propose an evidence-backed export or workflow improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the scientific publishing need without attaching private data. Preview support is intentionally narrower than inherited matlab2tikz coverage.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and scientific use case
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Minimal synthetic plotting example
+      render: matlab
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Desired PGFPlots behavior
+      description: Link relevant public PGFPlots documentation when possible.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Runtime, OS, TeX, and PGFPlots versions
+    validations:
+      required: true
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Likely architecture layer
+      options:
+        - Reader / runtime normalization
+        - Intermediate representation
+        - Handle-free renderer
+        - Validation / documentation
+        - Unsure
+    validations:
+      required: true

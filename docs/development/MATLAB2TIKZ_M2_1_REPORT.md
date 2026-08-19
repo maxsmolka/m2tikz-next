@@ -1,4 +1,4 @@
-# matlab2tikz 2.0 — M2.1 IR Schema & Axes Foundation
+# m2tikz-next — M2.1 IR Schema & Axes Foundation
 
 ## Executive Summary
 

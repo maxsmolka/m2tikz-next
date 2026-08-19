@@ -24,8 +24,8 @@ lualatex .audit/public-preview/examples/01-line.tex
 ```
 
 `test/runPublicPreviewValidation.ps1` regenerates and compiles the five
-low-level preview examples in an isolated output directory. The M3.1 profile
-suite runs the sixth example's public workflow and validates its default,
+core examples in an isolated output directory. The profile suite runs the
+sixth example's public workflow and validates its default,
 single-column 85 mm, and double-column 170 mm outputs. The seventh example rebuilds four publication figures
 through one `m2t.exportSet` call. Generated TeX and PDFs are not source files.
 The eighth example exports a scalar Gaussian-residual heatmap through the
@@ -36,6 +36,7 @@ hybrid backends so their output-size and rebuild-cost tradeoff is visible.
 The tenth example opts a 25x25 and 100x100 field into `auto`, then reports the
 vector/small and hybrid/dense decisions returned by policy `default-v1`.
 
-The `m2t2.*` API and IR schema remain experimental. The modern pipeline is
-validated with MATLAB R2026a Update 4 on Windows; that release-specific result
-does not imply compatibility with all MATLAB versions.
+The public workflow uses `m2t.export` and `m2t.exportSet`. The `m2t2.*`
+implementation interfaces and IR schema remain internal/experimental. The
+modern pipeline is validated with MATLAB R2026a Update 4 on Windows; that
+release-specific result does not imply compatibility with all MATLAB versions.

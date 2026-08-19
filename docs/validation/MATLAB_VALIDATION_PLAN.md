@@ -74,7 +74,8 @@ byte-for-byte, reject an `Inf`-bearing IR, and replay
 `test/fixtures/ir/line-v1.json` to identical TeX. Static inspection must confirm
 that `src/+m2t2/+render` contains no graphics-handle access or `get` call.
 
-Export all ten figures with legacy `matlab2tikz` and `m2t2.export`. Retain the
+Export all ten figures with legacy `matlab2tikz` and the current `m2t.export`
+workflow. Retain the
 semantic signature table, compile all 20 standalone documents with LuaLaTeX,
 rasterize each PDF pair, and retain the informational pixel metrics and visual
 review. Repeat the 100/10,000/100,000 point benchmark without data reduction,

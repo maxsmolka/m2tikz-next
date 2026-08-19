@@ -1,11 +1,11 @@
-# Audit and generated-artifact policy
+# Release artifact policy
 
 ## Source-controlled public material
 
 - production source under `src/`;
 - test and benchmark source;
-- ADRs, design documents, validation plans, support/release policies, and
-  milestone reports;
+- user and contributor documentation, ADRs, validation plans, and release
+  policies;
 - small deterministic fixtures needed to reproduce a test;
 - curated human-readable result summaries when they materially support a public
   claim and contain no local paths or personal data.
@@ -16,25 +16,22 @@
 - generated PDFs, TeX, PNG assets, rasters, and difference images;
 - benchmark output and machine timing tables;
 - local TeX/font caches and temporary test products;
-- `.audit/m2.1/`, `.audit/m2.2/`, `.audit/m2.3/`, and future equivalent working
-  directories unless a particular small artifact is explicitly curated.
+- `.audit/`, `build/`, and equivalent local working directories unless a
+  particular small artifact is explicitly curated.
 
 Rules must be path-specific. TeX, PDF, PNG, and TSV formats are not globally
 ignored because examples and reviewed fixtures may legitimately use them.
 
-## Historical evidence already tracked
+## Future GitHub release contents
 
-The inherited/modernization history tracks extensive `.audit` evidence,
-including hundreds of PDFs, logs, auxiliary files, TeX files, and tables. Its
-original role was milestone auditability and Golden review. M2.4B moved the
-required version-1 JSON migration fixture to `test/fixtures/ir/line-v1.json` and
-relocated two source audit harnesses to `benchmarks/runLegacyRuntimeAudit.m` and
-`benchmarks/runLegacyPerformanceAudit.m`. No generated `.audit` path is consumed
-as test input. Durable summaries remain under `docs/development/`; all 2,497
-tracked `.audit` paths were removed from the current tip through deletions or
-these reviewed moves. Git history was not rewritten.
+A GitHub release should be source-first: the reviewed repository source,
+license and attribution files, user documentation, tests, examples, and small
+required fixtures. A source archive generated from the approved tag is the
+preferred release artifact unless a separately reviewed package format is
+introduced.
 
-The complete `.audit/` working directory is now ignored. New validation runs
-write there, and reports cite stable summaries rather than checked-in compiler
-caches. A generated artifact becomes public only through an intentional review
-decision, never merely because a validation script produced it.
+Do not bundle generated local build directories, private or external validation
+inputs, private data, MATLAB license/runtime material, TeX caches, compiler
+intermediates, or unnecessary generated test output. A generated artifact
+becomes public only through an intentional review decision, never merely
+because a validation script produced it.

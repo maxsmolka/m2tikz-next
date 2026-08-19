@@ -1,7 +1,7 @@
 # Scientific export workflow
 
-> M3 development / next release. This API is not part of
-> `v0.1.0-preview.1` and does not carry a pre-1.0 stability promise.
+> `m2t.export` is the primary public workflow for the 0.5.0 target. It is a
+> pre-1.0 API and does not yet carry a long-term stability promise.
 
 This public workflow is validated locally with MATLAB R2026a Update 4 on
 Windows without MATLAB-specific API expectations. The claim is limited to that
@@ -128,7 +128,7 @@ the TeX installation must provide TikZ, PGFPlots 1.18 compatibility, and the
 - Unsupported modern-reader content remains explicit and never falls back to
   the legacy exporter.
 - RGB/alpha images, direct-indexed or nonlinear image color mapping,
-  `tiledlayout`, `yyaxis`, polar plots, arbitrary annotations, migrated 3-D
+  `tiledlayout`, `yyaxis`, polar plots, arbitrary annotations, general 3-D
   rendering, and unsupported per-point scatter styling remain out of scope.
 - Visual/raster comparison remains a development validation concern and is not
   part of the normal user call.

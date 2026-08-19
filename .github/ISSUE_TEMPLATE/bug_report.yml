@@ -13,7 +13,7 @@ body:
       label: Runtime
       options:
         - GNU Octave
-        - MATLAB (not yet validated)
+        - MATLAB
     validations:
       required: true
   - type: input

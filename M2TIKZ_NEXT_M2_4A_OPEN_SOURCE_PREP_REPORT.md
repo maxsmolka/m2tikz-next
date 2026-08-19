@@ -9,7 +9,7 @@ All required verification runs passed. Publication itself is not yet approved: l
 ## Repository Identity
 
 - Public project name: `m2tikz-next`.
-- Positioning: an independent modernization derived from `matlab2tikz`; it is not an official `matlab2tikz 2.0` release and is not presented as endorsed by the original maintainers.
+- Positioning: an independent modernization derived from `matlab2tikz`; it is not an official matlab2tikz release or successor and is not presented as endorsed by the original maintainers.
 - Short description: “A modern, validated scientific figure export pipeline derived from matlab2tikz.”
 - Experimental namespace: `m2t2.*` remains unchanged for the preview-preparation phase and may receive a stable public name before 1.0.
 - `m2t2.export(...)` is experimental. `matlab2tikz(...)` remains the legacy API and has not been redirected.

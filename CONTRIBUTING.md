@@ -5,8 +5,10 @@ and explicit about unsupported behavior.
 
 ## Architecture
 
-The modern pipeline is split into runtime readers, normalized/versioned IR, and
-a deterministic PGFPlots renderer under `src/+m2t2/`.
+The public workflow is exposed through `m2t.export` and `m2t.exportSet`. Its
+implementation is split into runtime readers, normalized/versioned IR, and a
+deterministic PGFPlots renderer. The `m2t2.*` namespace contains internal and
+experimental interfaces, not recommended end-user entry points.
 
 Two rules are non-negotiable:
 
@@ -51,10 +53,11 @@ Describe the user-visible behavior, tests, documentation changes, IR/schema
 impact, and any compatibility risk. Keep unrelated refactors separate. Confirm
 that the renderer remains handle-free and runtime logic remains reader-side.
 
-MATLAB compatibility is not yet validated. Every change touching graphics
-objects, properties, layout, or diagnostics must document its MATLAB-validation
-implications and update `docs/validation/MATLAB_VALIDATION_PLAN.md` when the gate
-changes. An Octave pass alone is not a MATLAB support claim.
+The current MATLAB boundary is MATLAB R2026a Update 4 on Windows. Every change
+touching graphics objects, properties, layout, or diagnostics must document its
+MATLAB-validation implications and update the validation plan when the gate
+changes. An Octave pass alone is not a MATLAB support claim, and the recorded
+MATLAB run does not generalize to other releases or platforms.
 
 The inherited contributor guide remains available through Git history for
 historical project workflow context; it does not define the m2tikz-next process.

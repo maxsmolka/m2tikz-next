@@ -1,79 +1,52 @@
 # Support status
 
-This matrix describes evidence for the future first m2tikz-next preview. It is
-not a claim of full matlab2tikz replacement coverage.
+m2tikz-next uses evidence-based capability claims. A supported figure should
+export deterministically; content outside the documented boundary should
+produce structured diagnostics rather than plausible but incomplete scientific
+output.
 
-## Validated
+## Validated environments
 
-Environment:
+- GNU Octave 11.3 in hosted Linux CI and local validation;
+- MATLAB R2026a Update 4 on Windows;
+- TeX Live 2026, LuaLaTeX, and PGFPlots compatibility 1.18.x.
 
-- GNU Octave 11.3 on the recorded Windows validation host;
-- MATLAB R2026a Update 4 (`26.1.0.3312084`, `win64`) on Windows;
-- TeX Live 2026;
-- PGFPlots compatibility level 1.18.x;
-- LuaLaTeX for all M2 fixture matrices;
-- pdfLaTeX for the selected legacy matrix, except the documented raw-Unicode
-  engine limitation.
+The MATLAB statement is exact: it does not imply validation of other releases
+or platforms. See [MATLAB validation](MATLAB_VALIDATION_MATRIX.md) and
+[MATLAB/Octave differences](MATLAB_OCTAVE_DIFFERENCES.md).
 
-Modern architecture capabilities validated in those environments:
+## Capability matrix
 
-- line, constant-style scatter, and symmetric/asymmetric errorbar series;
-- limits, scales, directions, ticks, interpreted text, grids, and per-axes
-  legends;
-- multiple axes, subplot-style/freeform layouts, manual positions, and overlays;
-- axes-owned and multiple independent colorbars;
-- shared legends and shared X/Y/title labels from hand-built IR;
-- versioned JSON migration, roundtrip, deterministic replay, and handle-free
-  PGFPlots rendering.
-- scalar images, publication profiles, figure sets, hybrid PNG layers, and
-  deterministic automatic backend planning.
-- axes-owned 2-D user text in data coordinates and figure-owned normalized
-  arrow/double-arrow annotations, with explicit ownership and vector rendering.
-- grouped vertical `bar(...)` series with numeric categories, shared finite
-  baseline, constant face/edge styles, legends, and single/multiple axes.
-- vertical legacy `boxplot(...)` compounds in the validated traditional,
-  filled, line-median scope, including resolved quartiles, whiskers, outliers,
-  styles, legends, and multiple axes. Creating these source figures requires
-  MATLAB's optional Statistics and Machine Learning Toolbox; exporting reads
-  public graphics/appdata semantics and does not call toolbox statistics APIs.
+| Classification | Capability boundary |
+| --- | --- |
+| **Supported** | 2-D line plots and multiline styling; markers; symmetric/asymmetric error bars; legends; linear/logarithmic and reversed axes; custom ticks; multiple/manual axes; axes-owned colorbars; deterministic IR migration/replay; publication profiles; explicit figure sets; scalar images/heatmaps with vector output; axes-owned free 2-D text; figure-owned arrows and double arrows. |
+| **Supported with limitations** | Scatter with one constant style per series; grouped vertical bars with numeric categories and constant styles; traditional vertical `boxplot(...)` compounds in the documented narrow form; explicit hybrid image layers and opt-in deterministic `auto` planning; shared labels/title models where runtime ownership is recognized; Line3; orthographic Cartesian scalar surfaces and narrowly recognized Patch3 decoration. |
+| **Experimental** | The pre-1.0 `m2t.export` and `m2t.exportSet` contracts; publication-profile tuning; FigureIR v2 and JSON/manifest schemas; internal `m2t2.*` interfaces. Tested experimental behavior is not a long-term compatibility promise. |
+| **Unsupported** | Per-point/mapped/filled scatter semantics; `tiledlayout`/`nexttile`; `yyaxis`; polar plots; arbitrary annotations; stacked, horizontal, or categorical bar families; broad `boxchart` semantics; general patch compounds; general 3-D scenes; mesh, scatter3, and contour3; perspective, lighting, and material semantics; broad transparency; RGB/alpha and unsupported image mappings; general downsampling. |
 
-M3 development adds a user-facing `m2t.export(...)` workflow. Its complete
-line/scatter/errorbar/multiple-axes/colorbar compilation matrix is validated in
-Linux CI with GNU Octave 11.3 and LuaLaTeX; the Windows analysis, path, and
-structured-failure paths are also exercised locally.
+## Important narrow boundaries
 
-## Experimental
+Scatter supports constant series-level marker, size, and color only. Image
+support preserves scalar matrix data and explicit colormaps; hybrid output is a
+deliberate backend choice, not a general raster fallback. Bar, boxplot, surface,
+and Patch3 recognition is semantic and narrow: arbitrary compound graphics are
+not accepted merely because they share a runtime object type.
 
-- `m2t.export(...)`, `m2t2.export(...)`, and all pre-1.0 namespaces;
-- FigureIR v2 and its JSON representation;
-- shared colorbar/legend/label models pending runtime validation;
-- publication scripts, benchmark thresholds, and preview packaging.
+Labels and titles represented as semantic axes properties are distinct from
+free annotations. Free 2-D text is supported only in the documented axes-owned
+data-coordinate form; arbitrary annotation shapes remain unsupported.
 
-Experimental means tested in the stated environment but not yet a stable public
-compatibility contract.
+The inherited `matlab2tikz(...)` API has broader historical behavior. Its
+presence does not expand the evidence-based m2tikz-next support claim.
 
-## Not yet supported or validated
+## Diagnostics and future work
 
-- MATLAB releases other than R2026a Update 4 and MATLAB operating systems other
-  than Windows;
-- `tiledlayout`/`nexttile`, spans, spacing, and padding;
-- `yyaxis`, polar plots, 3-D annotations, arbitrary annotation shapes
-  (`textarrow`, rectangle, ellipse, textbox, line, and brace), and migrated 3-D
-  rendering;
-- per-point scatter size/color, filled scatter, and other diagnosed unsupported
-  properties;
-- stacked/horizontal bars, histogram objects, categorical arrays, per-bar or
-  mapped bar colors/alpha, and arbitrary patch/group compounds;
-- horizontal/notched/outline boxplots, `boxchart`, violin/swarm charts,
-  arbitrary per-group box styles, and generic statistical compounds;
-- a stable installer/package and post-M3 public API stability guarantee.
+Unsupported objects, properties, or ownership relationships are expected to
+fail explicitly with stable structured diagnostics. Silently dropping data or
+decoration can create scientifically misleading output and is treated as a
+product risk. Broader graphics coverage will be added through specific reader,
+IR, renderer, and regression contracts rather than catch-all acceptance.
 
-The inherited `matlab2tikz(...)` legacy API has broader historical behavior, but
-its presence does not expand the evidence-based m2tikz-next support claim.
-
-## Planned
-
-- hosted GNU Octave confirmation after the M4.1 branch is reviewed and pushed;
-- validation against additional explicitly selected MATLAB releases;
-- continued API stabilization;
-- later feature milestones chosen from documented unsupported gaps.
+Pre-1.0 work includes selecting additional runtime validation targets and
+stabilizing the public APIs. It does not imply that every unsupported MATLAB
+graphics family is planned for the next release.

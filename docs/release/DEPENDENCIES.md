@@ -4,8 +4,8 @@ No minimum version is inferred where the repository has not established one.
 
 | Dependency | Role | Evidence/status |
 |---|---|---|
-| GNU Octave | Export runtime, tests, development | M2 architecture validated on 11.3 |
-| MATLAB | Intended reader/runtime validation target | Not currently validated or claimed supported |
+| GNU Octave | Export runtime, tests, development | Version 11.3 validated in hosted Linux CI |
+| MATLAB | Export runtime and reader validation | MATLAB R2026a Update 4 validated on Windows; no broader release/platform claim |
 | PGFPlots | Generated TeX rendering | M2 renderer emits `compat=1.18`; validation used 1.18.x |
 | TikZ/PGF | Generated TeX rendering | Required by PGFPlots and inherited exporter output |
 | TeX Live | Validation tool distribution | Validation performed with TeX Live 2026 |
@@ -13,7 +13,7 @@ No minimum version is inferred where the repository has not established one.
 | pdfLaTeX | Compatibility validation compiler | Validated with documented raw-Unicode limitation |
 | `standalone` | M3 workflow and standalone test/PDF documents | Required by current standalone renderer output |
 | `amsmath`, `grffile`, TikZ/PGFPlots libraries | Legacy export compilation | Emitted by inherited exporter as needed |
-| PowerShell | Windows validation orchestration | Development/validation only |
+| PowerShell | Portable validation orchestration | Development/validation only |
 | Bash and Git | Legacy ACID harness and repository operations | Test/development only |
 | Python | Geometry and raster-comparison utilities | Validation only |
 | Pillow | Pixel comparison (`m2VisualCompare.py`) | Validation only |

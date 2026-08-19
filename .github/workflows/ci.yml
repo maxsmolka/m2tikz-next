@@ -1,4 +1,4 @@
-name: Public preview CI
+name: Public CI
 
 on:
   pull_request:
@@ -33,6 +33,9 @@ jobs:
       - name: Check documentation links
         shell: pwsh
         run: ./test/checkDocumentationLinks.ps1
+      - name: Validate GitHub Actions workflow
+        shell: bash
+        run: docker run --rm --volume "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.7
       - name: Check public-tree confidentiality
         shell: pwsh
         run: ./test/checkConfidentiality.ps1

@@ -1,32 +1,44 @@
 # Changelog
 
-This file records user-visible m2tikz-next development. The complete inherited
-matlab2tikz release history remains available in Git history and in the original
-upstream repository; those releases are not m2tikz-next releases.
+This file records user-visible m2tikz-next changes. Original matlab2tikz
+release history remains in Git history and the upstream repository; those
+versions are not m2tikz-next releases.
 
-## m2tikz-next preview development
+## [Unreleased] — target 0.5.0
 
-### Unreleased — target `v0.1.0-preview.1`
+### Added
 
-#### User-visible changes
+- Public `m2t.export` workflow for analysis, deterministic TeX export,
+  LuaLaTeX compilation, PDF validation, and structured results.
+- `m2t.exportSet` for deterministic multi-figure builds and manifests.
+- Opt-in `publication` profile with single- and double-column sizing.
+- Versioned normalized IR, JSON migration/roundtrip, and handle-free PGFPlots
+  rendering.
+- Evidence-backed support for core line, constant-style scatter, error-bar,
+  axes/layout, legend, colorbar, scalar-image, annotation, grouped-bar,
+  traditional boxplot, and narrow scientific 3-D workflows.
+- Vector, hybrid, and opt-in deterministic automatic image-backend planning.
+- Generic examples, portable validation commands, and hosted Octave/TeX CI.
 
-- Added the experimental `m2t2.export(...)` path with versioned normalized IR,
-  deterministic PGFPlots rendering, and explicit diagnostics.
-- Added line, constant-style scatter, errorbar, multiple-axes/layout, colorbar,
-  shared-element IR/renderer, and JSON migration/replay foundations.
-- Added Octave/TeX validation, curated examples, portable validation commands,
-  and public-preview repository checks.
-- Kept the inherited `matlab2tikz(...)` API separate and unchanged in routing.
-- Documented that MATLAB compatibility remains unvalidated.
+### Changed
 
-#### Development milestones
+- End-user documentation now presents `m2t.*` as the public workflow and
+  classifies `m2t2.*` as internal/experimental implementation interfaces.
+- Unsupported scientific content is documented and diagnosed explicitly rather
+  than being silently omitted.
+- The inherited `matlab2tikz(...)` entry point remains separate and is not
+  redirected to the modern pipeline.
 
-- M1 stabilized the inherited runtime and established Octave/Golden baselines.
-- M2 introduced the line IR architecture and handle-free renderer.
-- M2.1 added heterogeneous series and axes semantics.
-- M2.2 added multiple-axes and layout foundations.
-- M2.3 added colorbars and figure-level elements.
-- M2.4 prepared identity, licensing, repository hygiene, documentation, CI, and
-  preview validation.
+### Validation
 
-Detailed milestone reports are retained under `docs/development/`.
+- GNU Octave 11.3 is exercised in hosted Linux CI.
+- MATLAB validation is limited to MATLAB R2026a Update 4 on Windows.
+- TeX preview validation uses TeX Live 2026, LuaLaTeX, and PGFPlots 1.18.x.
+
+### Known limitations
+
+- Version 0.5.0 is pre-1.0; public APIs and schemas may still change.
+- Unsupported areas include per-point scatter semantics, tiled layouts,
+  `yyaxis`, polar plots, broad annotation/patch/bar/boxchart behavior, general
+  3-D scenes, broad transparency, and general downsampling.
+- Runtime validation outside the exact environments above is not yet claimed.

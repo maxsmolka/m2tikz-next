@@ -1,29 +1,32 @@
 # Versioning policy
 
-## Recommendation
+m2tikz-next uses Semantic Versioning for public repository releases. The
+working first public release target is `0.5.0`; no tag is created by this
+readiness work.
 
-The first public preview should use:
+## Pre-1.0 interpretation
 
-```text
-v0.1.0-preview.1
-```
+- `0.x` means the public API, diagnostics, manifests, and schemas may still
+  change as evidence and use cases develop.
+- A minor version (`0.x.0`) marks a meaningful user-visible feature or support
+  milestone.
+- A patch version (`0.x.y`) contains compatible bug, documentation, packaging,
+  or validation fixes within the stated minor-version contract.
+- `1.0.0` will require an explicit stable API and support commitment; it is not
+  implied by broad workflow usability.
 
-This is a SemVer-compatible prerelease that communicates an unstable public API
-and distinguishes public m2tikz-next versions from inherited matlab2tikz releases
-and internal architecture tags.
+Version `0.5.0` therefore means a usable scientific-export preview/beta with a
+functional broad core workflow, known unsupported MATLAB graphics, and no
+pretense of production-complete 1.0 maturity.
 
-Do not create this tag in M2.4A. Tag it only after M2.4B documentation, CI,
-publication review, and a clean reproducible validation run.
+## Independent version domains
 
-## Tag classes
+The repository release, FigureIR schema, deterministic manifest schema, and
+internal implementation namespace evolve independently. A schema version is
+not a repository release number. The public entry points are `m2t.export` and
+`m2t.exportSet`; `m2t2.*` remains internal/experimental and has no separate
+public version promise.
 
-- inherited tags (`0.x`, `1.0.0`, `v1.1.0`, and similar) identify original
-  matlab2tikz history;
-- `m2t-2.0-*` tags identify internal modernization milestones;
-- future `v0.x.y-preview.n` tags identify m2tikz-next public previews;
-- a stable `v1.0.0` requires explicit API/support commitments and is not implied
-  by the experimental IR version number.
-
-The IR schema version, repository release version, and experimental namespace
-name evolve independently. `m2t2.export(...)` remains experimental through the
-first preview; `matlab2tikz(...)` remains the inherited legacy API.
+Inherited matlab2tikz tags identify original upstream history. New public
+m2tikz-next releases use ordinary `vMAJOR.MINOR.PATCH` tags only when an actual
+release is approved.

@@ -44,9 +44,8 @@ representation and are not equality goldens.
 
 ## Remaining qualification
 
-- Hosted GNU Octave CI has not run against this unpushed branch. Full
-  cross-platform confirmation therefore remains conditional on a green hosted
-  run after review and push.
+- GNU Octave 11.3 is the hosted Linux CI baseline; results on other Octave
+  releases or platforms are not implied.
 - The installed MATLAB trial exposed many optional MathWorks products. No
   optional-toolbox API was observed in the modern call paths, but a base-only
   installation was not available to prove the stronger phrase "Validated with

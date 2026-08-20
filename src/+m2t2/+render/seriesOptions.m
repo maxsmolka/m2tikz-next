@@ -6,10 +6,14 @@ function options = seriesOptions(node, colorName)
         case 'm2t2.patch3'
             options = {['fill=' colorName], 'area legend', 'forget plot'};
         case 'm2t2.scatter'
-            options = {['color=' colorName], 'only marks', ...
-                       ['mark=' m2t2.render.markerName(node.marker)], ...
-                       ['mark size=' m2t2.util.formatNumber(node.markerSize / 2) 'pt'], ...
-                       'mark options={solid}','forget plot'};
+            filled = ~strcmp(node.faceMode, 'none');
+            edge = roleColor(node.edgeMode, [colorName 'edge'], colorName);
+            face = roleColor(node.faceMode, [colorName 'face'], colorName);
+            options = {'only marks', ...
+                       ['mark=' m2t2.render.scatterMarkerName(node.marker, filled)], ...
+                       ['mark size=' m2t2.util.formatNumber(node.markerSize(1) / 2) 'pt'], ...
+                       ['mark options={solid,draw=' edge ',fill=' face '}'], ...
+                       'forget plot'};
         case 'm2t2.errorbar'
             options = lineOptions(node, colorName);
         case 'm2t2.bar'
@@ -18,6 +22,13 @@ function options = seriesOptions(node, colorName)
             options={['color=' colorName 'box'],['line width=' m2t2.util.formatNumber(node.boxLineWidth) 'pt'],'forget plot'};
         otherwise
             error('M2T2:E003:InvalidIR', 'M2T2-E003 InvalidIR: unknown series kind %s', node.kind);
+    end
+end
+
+function value = roleColor(mode, constantName, dataName)
+    if strcmp(mode, 'none'), value = 'none';
+    elseif strcmp(mode, 'constant'), value = constantName;
+    else, value = dataName;
     end
 end
 

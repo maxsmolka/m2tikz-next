@@ -22,7 +22,10 @@ function lines = renderAxes(node, axesIndex, figureSize, config, annotations)
             m2t2.util.formatNumber(color(1)) ',' ...
             m2t2.util.formatNumber(color(2)) ',' ...
             m2t2.util.formatNumber(color(3)) '}']; %#ok<AGROW>
-        if strcmp(node.series{s}.kind,'m2t2.bar')
+        if strcmp(node.series{s}.kind,'m2t2.scatter')
+            lines{end+1}=rgbDefinition([name 'edge'],node.series{s}.edgeColor); %#ok<AGROW>
+            lines{end+1}=rgbDefinition([name 'face'],node.series{s}.faceColor); %#ok<AGROW>
+        elseif strcmp(node.series{s}.kind,'m2t2.bar')
             edge=node.series{s}.edgeColor;
             lines{end+1}=[bs 'definecolor{' name 'edge}{rgb}{' ...
                 m2t2.util.formatNumber(edge(1)) ',' m2t2.util.formatNumber(edge(2)) ',' ...
@@ -38,7 +41,9 @@ function lines = renderAxes(node, axesIndex, figureSize, config, annotations)
         end
     end
     hasScalarColor = any(cellfun(@(item) any(strcmp(item.kind, ...
-        {'m2t2.image','m2t2.surface'})), node.series));
+        {'m2t2.image','m2t2.surface'})) || ...
+        (strcmp(item.kind,'m2t2.scatter') && strcmp(item.colorMode,'scalar_mapped')), ...
+        node.series));
     if hasScalarColor
         lines{end + 1} = colormapDefinition(node.colorMapping.colormap, ...
                                             colormapName(axesIndex));
@@ -125,6 +130,14 @@ function lines = renderAxes(node, axesIndex, figureSize, config, annotations)
         lines = [lines, annotationLines]; %#ok<AGROW>
     end
     lines{end + 1} = [bs 'end{axis}'];
+end
+
+function line = rgbDefinition(name, color)
+    bs=char(92);
+    line=[bs 'definecolor{' name '}{rgb}{' ...
+        m2t2.util.formatNumber(color(1)) ',' ...
+        m2t2.util.formatNumber(color(2)) ',' ...
+        m2t2.util.formatNumber(color(3)) '}'];
 end
 
 function line = colormapDefinition(map, name)

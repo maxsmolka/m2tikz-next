@@ -37,3 +37,22 @@ unknown programming errors must not be hidden. Tests should assert codes and
 context rather than full prose, with MATLAB and Octave coverage.
 
 M1A defines this contract only. It does not change runtime diagnostics.
+
+## Rich-scatter reader diagnostics
+
+M6.1 assigns focused, stable failures before normalized IR is constructed:
+
+- `M2T2:E040:MalformedScatterData` — X/Y are empty, malformed, unequal, or nonfinite.
+- `M2T2:E041:UnsupportedScatterSize` — `SizeData` is not one finite nonnegative
+  area or one such area per point.
+- `M2T2:E042:UnsupportedScatterColor` — active `CData` is neither constant RGB,
+  N-by-3 RGB, nor N finite scalar values.
+- `M2T2:E043:UnsupportedScatterTransparency` — edge or face alpha is not the
+  opaque scalar value one.
+- `M2T2:E044:UnsupportedScatterMarkerStyle` — marker edge/face ownership cannot
+  be represented by the narrow `none`, `flat`, or constant-RGB contract.
+- `M2T2:E045:UnsupportedScatterDimensionality` — a scatter has nonempty ZData.
+- `M2T2:E046:UnsupportedScatterColorMapping` — scalar point metadata depends on
+  an unsupported axes color-mapping interaction.
+
+All cases fail rather than dropping points or collapsing size/color arrays.

@@ -611,11 +611,43 @@ function validateLine(node, path)
 end
 
 function validateScatter(node, path)
-    requireFields(node, {'x','y','color','marker','markerSize'}, path);
+    requireFields(node, {'x','y','color','colorMode','colorData','marker', ...
+        'sizeMode','markerSize','edgeMode','edgeColor','faceMode','faceColor'}, path);
     validateXY(node.x, node.y, path); validateColor(node.color, [path '.color']);
+    if isempty(node.x) || any(~isfinite(node.x(:))) || any(~isfinite(node.y(:)))
+        invalid(path, 'scatter coordinates must be nonempty and finite');
+    end
     validateMarker(node.marker, [path '.marker']);
     if strcmp(node.marker, 'none'), invalid([path '.marker'], 'scatter marker may not be none'); end
-    nonnegativeScalar(node.markerSize, [path '.markerSize']);
+    enum(node.sizeMode, {'constant','per_point'}, [path '.sizeMode']);
+    numericVector(node.markerSize, [path '.markerSize']);
+    if any(~isfinite(node.markerSize(:))) || any(node.markerSize(:) < 0)
+        invalid([path '.markerSize'], 'marker diameters must be finite and nonnegative');
+    end
+    if strcmp(node.sizeMode, 'constant') && numel(node.markerSize) ~= 1
+        invalid([path '.markerSize'], 'constant size mode requires one marker diameter');
+    elseif strcmp(node.sizeMode, 'per_point') && numel(node.markerSize) ~= numel(node.x)
+        invalid([path '.markerSize'], 'per-point size mode requires one marker diameter per point');
+    end
+    enum(node.colorMode, {'constant_rgb','per_point_rgb','scalar_mapped'}, [path '.colorMode']);
+    if strcmp(node.colorMode, 'constant_rgb')
+        if ~isempty(node.colorData), invalid([path '.colorData'], 'constant RGB mode has no point color data'); end
+    elseif strcmp(node.colorMode, 'per_point_rgb')
+        if ~(isnumeric(node.colorData) && isequal(size(node.colorData), [numel(node.x) 3]) && ...
+                all(isfinite(node.colorData(:))) && all(node.colorData(:) >= 0) && ...
+                all(node.colorData(:) <= 1))
+            invalid([path '.colorData'], 'per-point RGB mode requires an N-by-3 matrix in [0,1]');
+        end
+    else
+        numericVector(node.colorData, [path '.colorData']);
+        if numel(node.colorData) ~= numel(node.x) || any(~isfinite(node.colorData(:)))
+            invalid([path '.colorData'], 'scalar mapped mode requires one finite value per point');
+        end
+    end
+    enum(node.edgeMode, {'none','constant','data'}, [path '.edgeMode']);
+    enum(node.faceMode, {'none','constant','data'}, [path '.faceMode']);
+    validateColor(node.edgeColor, [path '.edgeColor']);
+    validateColor(node.faceColor, [path '.faceColor']);
 end
 
 function validateErrorbar(node, path)

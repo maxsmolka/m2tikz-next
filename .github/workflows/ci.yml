@@ -71,7 +71,7 @@ jobs:
           echo "$RUNNER_TEMP/octave-11.3-bin" >> "$GITHUB_PATH"
       - name: Run M2 through M2.3 and smoke generation
         shell: pwsh
-        run: ./test/runPublicPreviewValidation.ps1 -PythonCommand python3 -SkipTexCompilation
+        run: ./test/runPublicPreviewValidation.ps1 -PythonCommand python3 -SkipTexCompilation -SkipRichExample
       - name: Validate MATLAB preparation and portable milestone IR
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM40MatlabPreparationTests(fullfile('.audit','m40-preparation')); runM51AnnotationIrTests(fullfile('.audit','m51-annotation-ir')); runM52GroupedBarIrTests(fullfile('.audit','m52-bar-ir')); runM53BoxplotIrTests(fullfile('.audit','m53-boxplot-ir')); runM54SurfaceIrTests(fullfile('.audit','m54-surface-ir'));"
@@ -115,4 +115,7 @@ jobs:
       - name: Run M3 scientific export workflow
         shell: bash
         run: |
-          octave-cli --quiet --eval "addpath('test'); runM3WorkflowTests(fullfile('.audit','m3-workflow')); runM3CompilerTests(fullfile('.audit','m3-compiler')); runM31ProfileTests(fullfile('.audit','m31-profile')); runM32FigureSetSmokeTest(fullfile('.audit','m32-set-smoke')); runM33ImageSmokeTest(fullfile('.audit','m33-image-smoke')); runM34HybridSmokeTest(fullfile('.audit','m34-hybrid-smoke')); runM35BackendPlannerSmokeTest(fullfile('.audit','m35-planner-smoke')); runPublicationProfileTests(fullfile('.audit','publication-profile'));"
+          octave-cli --quiet --eval "addpath('test'); runM3WorkflowTests(fullfile('.audit','m3-workflow')); runM3CompilerTests(fullfile('.audit','m3-compiler')); runM31ProfileTests(fullfile('.audit','m31-profile')); runM32FigureSetSmokeTest(fullfile('.audit','m32-set-smoke')); runM33ImageSmokeTest(fullfile('.audit','m33-image-smoke')); runM34HybridSmokeTest(fullfile('.audit','m34-hybrid-smoke')); runM35BackendPlannerSmokeTest(fullfile('.audit','m35-planner-smoke')); runPublicationProfileTests(fullfile('.audit','publication-profile')); runM61RichScatterFigureSetTest(fullfile('.audit','m61-rich-scatter-set'));"
+      - name: Compile focused rich-scatter modes
+        shell: pwsh
+        run: ./test/runM61RichScatterTexValidation.ps1 -OctaveCommand octave-cli -LatexmkCommand latexmk

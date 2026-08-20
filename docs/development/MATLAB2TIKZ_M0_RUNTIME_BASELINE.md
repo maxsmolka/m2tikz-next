@@ -1,4 +1,4 @@
-# M0 – Laufzeitbaseline für matlab2tikz 2.0
+# M0 – Laufzeitbaseline für m2tikz-next
 
 Audit-Datum: 2026-08-08
 Repository: <https://github.com/matlab2tikz/matlab2tikz>

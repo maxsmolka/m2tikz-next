@@ -1,4 +1,4 @@
-# matlab2tikz 2.0 — M2.2 Layout & Multiple Axes Foundation
+# m2tikz-next — M2.2 Layout & Multiple Axes Foundation
 
 ## Executive Summary
 

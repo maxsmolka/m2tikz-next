@@ -1,4 +1,4 @@
-# matlab2tikz 2.0 — M2 Line IR Prototype Report
+# m2tikz-next — M2 Line IR Prototype Report
 
 ## Executive Summary
 

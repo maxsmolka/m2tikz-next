@@ -16,15 +16,16 @@ in [`AUTHORS.md`](AUTHORS.md) and in the Git history.
 
 ## m2tikz-next modernization
 
-m2tikz-next is independently developed and adds an experimental, versioned
-export architecture and validation work on top of the inherited project. It is
-not an official matlab2tikz 2.0 release. The original matlab2tikz authors and
-maintainers are not represented as maintainers of, contributors to, or endorsers
-of m2tikz-next merely because their work and history are retained here.
+m2tikz-next is independently developed and adds a modern, versioned export
+architecture and validation work on top of the inherited project. It is not an
+official release or successor of matlab2tikz. The original matlab2tikz authors
+and maintainers are not represented as maintainers of, contributors to, or
+endorsers of m2tikz-next merely because their work and history are retained
+here.
 
-The public project/repository identity is `m2tikz-next`. The experimental
-MATLAB/Octave namespace remains `m2t2.*` during preview development to avoid a
-large mechanical rename before API stabilization.
+The public project/repository identity is `m2tikz-next`. The public workflow is
+exposed through `m2t.*`; `m2t2.*` remains an internal/experimental
+implementation namespace without a public compatibility promise.
 
 See [`docs/release/LICENSE_AUDIT.md`](docs/release/LICENSE_AUDIT.md) for the
 repository-based licensing inventory and unresolved human-review items.

@@ -1,4 +1,4 @@
-# matlab2tikz 2.0 - M2.3 Colorbar & Figure-Level Elements
+# m2tikz-next - M2.3 Colorbar & Figure-Level Elements
 
 ## Executive Summary
 

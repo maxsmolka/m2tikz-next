@@ -6,7 +6,7 @@ Bewerteter Default-Branch/Commit: `master` / `806c97d99f87f8a1e99a7c54e853c25c82
 
 ## 1. Executive Summary
 
-**CONDITIONAL GO** für ein Projekt „matlab2tikz 2.0“.
+**CONDITIONAL GO** für das Projekt „m2tikz-next“.
 
 Der Default-Branch ist für klassische MATLAB-Grafiken weiterhin grundsätzlich plausibel verwendbar: Linien, Achsen, Scatter, Balken, Error Bars, Histogramme, Bilder, Konturen, Flächen, Text und externe Tabellen besitzen explizite Renderer (`src/matlab2tikz.m:679-726`). Das ist keine aktuelle Laufzeitbestätigung: Auf dem Audit-Rechner fehlen MATLAB, Octave und TeX.
 
@@ -207,7 +207,7 @@ Statische Suchung fand 43 TODO- und 11 FIXME-Zeilen unter `src`. MATLAB `checkco
 | Performance großer Daten | mittel | mittel | P2 | Tabellenloop; nicht profiliert |
 | Rewrite verliert Legacy-Semantik | hoch | hoch | P1 | ACID-Umfang / Spezialfälle |
 
-## 12. Empfohlene Prioritäten für matlab2tikz 2.0
+## 12. Empfohlene Prioritäten für m2tikz-next
 
 **P0 – blockierend**
 

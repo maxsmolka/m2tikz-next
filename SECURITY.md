@@ -2,29 +2,34 @@
 
 ## Reporting a vulnerability
 
-Do not report suspected vulnerabilities, live credentials, or sensitive data in
-a public issue.
+Do not report suspected vulnerabilities, credentials, or sensitive data in a
+public issue.
 
-The intended private reporting channel is **GitHub Private Vulnerability
-Reporting**. This repository is not public yet, so that channel does not yet
-exist. The repository owner must enable it when the public GitHub repository is
-created and before any public announcement.
-
-Until that channel is enabled, publication remains gated and this repository
-does not claim to offer an active private intake address.
+Use GitHub Private Vulnerability Reporting from the repository's **Security**
+page when that option is available. If the private reporting form is not
+available, contact the repository owner through their GitHub profile before
+sharing details; do not substitute a public issue or discussion.
 
 ## Supported versions
 
-No public m2tikz-next version has been released. A supported-version table will
-be added with the first release and updated as preview versions are superseded.
+| Version | Security updates |
+| --- | --- |
+| 0.5.x | Planned current public preview line |
+| Earlier m2tikz-next development versions | Not supported |
+| Original matlab2tikz releases | Refer to the upstream project |
 
-## Release checklist
+The 0.5.0 target is pre-1.0. Security fixes will be evaluated for the current
+public minor line; this policy does not promise indefinite maintenance of old
+preview versions.
 
-- Enable GitHub Private Vulnerability Reporting before public announcement.
-- Verify the private reporting workflow from the repository Security page.
-- Repeat the current-tree secret and publication-path scans.
+## Release checks
+
+- Verify the private reporting path from the repository Security page.
+- Run current-tree confidentiality, secret, and publication-path scans.
 - Review security-sensitive dependency and CI changes.
+- Keep generated local validation output and credentials out of release
+  artifacts.
 
-The inherited Git history is retained for provenance. The disposition of the
-historical upstream CI finding is documented in
-`docs/release/SECURITY_REVIEW.md` without reproducing credential material.
+The inherited Git history is retained for provenance. The historical upstream
+CI review is summarized without credential material in
+`docs/release/SECURITY_REVIEW.md`.

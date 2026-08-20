@@ -1,4 +1,4 @@
-# matlab2tikz 2.0 – M1B Report
+# m2tikz-next – M1B Report
 
 ## Executive Summary
 

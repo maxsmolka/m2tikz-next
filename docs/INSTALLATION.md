@@ -1,59 +1,95 @@
 # Installation
 
-m2tikz-next currently uses a source checkout; no package-manager release exists.
-The validated preview path is Windows first, but all documented commands use
-`PATH` discovery and avoid machine-specific installation directories.
+m2tikz-next is currently distributed as a source checkout. There is no package
+manager release or installer.
 
-## Prerequisites
+## Validated runtime boundary
 
-- Git
-- GNU Octave
-- a TeX distribution containing TikZ/PGF, PGFPlots, and LuaLaTeX
-- PowerShell 7 for the consolidated validation script
-- `latexmk`, Python, Poppler, Pillow, and `pdfplumber` for the complete visual
-  validation matrices
+Choose one figure runtime:
 
-The recorded baseline is GNU Octave 11.3, TeX Live 2026, PGFPlots 1.18.x, and
-LuaLaTeX. These are validated versions, not invented minimum-version bounds.
+- **GNU Octave:** version 11.3 is exercised by hosted Linux CI and local
+  validation.
+- **MATLAB:** validated with MATLAB R2026a Update 4 on Windows. No other MATLAB
+  release or operating system is implied by that statement.
 
-## Windows setup
+Both runtimes use the same public `m2t.*` workflow. Platform packages or vendor
+installers may be used, but the commands must be discoverable on `PATH` for the
+portable validation scripts.
 
-Install Git, GNU Octave, and TeX Live using their normal vendor-supported
-installers, then start a new PowerShell session so their command directories are
-on `PATH`. Clone the future public repository URL and enter the checkout:
+## TeX toolchain
 
-```powershell
-git clone https://github.com/maxsmolka/m2tikz-next.git
-Set-Location m2tikz-next
-```
+Successful `m2t.export` calls compile standalone PGFPlots documents. The
+validated toolchain is:
 
-Verify tool discovery:
+- TeX Live 2026;
+- LuaLaTeX;
+- TikZ/PGF and PGFPlots 1.18.x;
+- the LaTeX `standalone` class.
 
-```powershell
-git --version
-octave-cli --version
+LuaLaTeX is the workflow compiler, not a MATLAB or Octave dependency. Verify the
+required commands and packages independently:
+
+```console
 lualatex --version
 kpsewhich pgfplots.sty
+kpsewhich standalone.cls
 ```
 
-Add the source directory for the current Octave session:
+## Optional validation tools
+
+Git and PowerShell 7 are needed for checkout and the consolidated repository
+gate. Some extended visual or legacy validation paths additionally use
+`latexmk`, Python, Poppler, Pillow, and `pdfplumber`; they are not required for
+an ordinary single-figure export.
+
+## Install from source
+
+```console
+git clone https://github.com/maxsmolka/m2tikz-next.git
+cd m2tikz-next
+```
+
+Add the checkout's `src` directory in the MATLAB or Octave session:
 
 ```matlab
 addpath('src');
-disp(which('m2t2.export'));
+assert(~isempty(which('m2t.export')));
 ```
 
-For a persistent local setup, add the checkout's `src` directory through your
-own Octave startup configuration. Do not commit that machine-specific path.
+For persistent use, add that absolute `src` directory through your local MATLAB
+or Octave startup configuration. Do not copy or commit a machine-specific path
+into the repository.
 
-## Other operating systems
+## Verify with a minimal export
 
-Use the platform package or TeX distribution that provides the same command-line
-tools, then run the verification commands above. CI exercises a Linux path, but
-the first recorded end-to-end preview baseline remains Windows; this is not yet a
-broad operating-system support commitment.
+Start MATLAB or Octave in the repository root after confirming that LuaLaTeX is
+on `PATH`, then run:
 
-## Verify the checkout
+```matlab
+addpath('src');
+x = linspace(0, 2*pi, 200);
+figure;
+plot(x, sin(x));
+result = m2t.export(gcf, 'build/installation-check');
+assert(result.success, result.status);
+disp(result.texPath);
+disp(result.pdfPath);
+```
+
+The output base determines where generated files go. This example creates
+`build/installation-check.tex`, `build/installation-check.pdf`, and compiler
+diagnostics beside them. Existing products are preserved by default; pass
+`'Overwrite', true` only when replacement is intended.
+
+## Platform notes
+
+Hosted CI validates GNU Octave 11.3 on Linux. The recorded MATLAB validation is
+MATLAB R2026a Update 4 on Windows. File discovery and export paths are designed
+to be portable, but these evidence boundaries do not claim validation for every
+operating system or runtime release. See [Support status](SUPPORT.md) and the
+[MATLAB validation matrix](MATLAB_VALIDATION_MATRIX.md).
+
+## Repository validation
 
 From PowerShell 7 at the repository root:
 
@@ -61,14 +97,6 @@ From PowerShell 7 at the repository root:
 ./test/runPublicPreviewValidation.ps1
 ```
 
-Generated validation files are written below ignored `.audit/public-preview/`.
-See `docs/SUPPORT.md` for the evidence-backed feature boundary. The modern path
-is validated with MATLAB R2026a Update 4 on Windows; no other MATLAB release is
-implied.
-## MATLAB validation status
-
-M4.1 executed the noninteractive M4 harness with MATLAB R2026a Update 4 on
-Windows. The evidence command and prerequisite checks are documented in
-[MATLAB_TRIAL_EXECUTION_PLAN.md](MATLAB_TRIAL_EXECUTION_PLAN.md), and actual
-results are grouped in [MATLAB_VALIDATION_MATRIX.md](MATLAB_VALIDATION_MATRIX.md).
-The exact detected release - not "MATLAB" generally - is the support scope.
+The script writes generated validation products only below ignored `.audit/`
+directories. It is broader than the minimal installation check and exercises
+repository policy, readers, renderers, examples, and TeX preview compilation.

@@ -1,4 +1,4 @@
-# Test strategy for matlab2tikz 2.0
+# Test strategy for m2tikz-next
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # m2tikz-next
 
-> Working release target: 0.5.0 — usable pre-1.0 scientific-export preview/beta
+> Version 0.5.0 — public pre-1.0 scientific-export preview/beta
 
 m2tikz-next is a modern, validated scientific figure export pipeline derived
 from [matlab2tikz](https://github.com/matlab2tikz/matlab2tikz). It converts
@@ -121,7 +121,7 @@ plans and text.
 
 ## Current limitations
 
-The 0.5.0 target is pre-1.0: APIs and schemas may still change. Unsupported or
+Version 0.5.0 is pre-1.0: APIs and schemas may still change. Unsupported or
 non-general areas include per-point scatter semantics, `tiledlayout`/`nexttile`,
 `yyaxis`, polar plots, arbitrary annotations and patch semantics, stacked or
 horizontal/categorical bars, broad modern `boxchart` behavior, general 3-D
@@ -151,6 +151,7 @@ Generated validation products stay below ignored `.audit/` directories.
 - [Figure sets](docs/FIGURE_SETS.md)
 - [Image backends](docs/IMAGE_BACKENDS.md)
 - [Workflow and diagnostics](docs/WORKFLOW.md)
+- [0.5.0 release notes](docs/release/RELEASE_NOTES_0_5_0.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
 
@@ -162,8 +163,8 @@ behavior.
 
 ## Project status, attribution, and license
 
-Version 0.5.0 is a coherent first public preview/beta target, not a promise of
-1.0 stability or complete MATLAB graphics coverage. Contributions should
+Version 0.5.0 is the first public preview/beta release, not a promise of 1.0
+stability or complete MATLAB graphics coverage. Contributions should
 preserve explicit support boundaries and deterministic behavior; read
 [CONTRIBUTING.md](CONTRIBUTING.md) before proposing changes.
 

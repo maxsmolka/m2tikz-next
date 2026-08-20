@@ -2,9 +2,10 @@
 
 ## Scope and evidence
 
-This is a repository inventory, not legal advice. It records only what is
-supported by files and history inspected at the M2.4A tag base
-`m2t-2.0-m2.3`.
+This is a repository inventory, not legal advice. The initial inventory was
+performed at the M2.4A tag base `m2t-2.0-m2.3` and rechecked against the 0.5.0
+release candidate. It records only what repository files and retained history
+support.
 
 ## Original project and repository
 
@@ -62,10 +63,29 @@ Neither notice may be removed or rewritten during modernization.
 - Historical changelog email addresses and author emails are attribution data,
   not m2tikz-next contact addresses.
 
+## Included inherited references reviewed for 0.5.0
+
+- `test/private/calculateMD5Hash.m` is an inherited upstream test helper. Its
+  comment credits a faster file-digest approach to Jan Simon's DataHash entry;
+  no DataHash package or binary is vendored. The retained history shows the
+  helper entering through upstream contributions, but this repository does not
+  independently establish the exact reuse boundary.
+- `test/suites/ACID.m` is the inherited upstream compatibility suite. Several
+  comments identify examples adapted from public MathWorks documentation. No
+  external image, archive, or binary asset is included with those cases.
+- Modern fixtures and examples use deterministic synthetic data. The stored
+  `test/fixtures/ir/line-v1.json` is a generated project fixture required for
+  schema migration tests.
+- MATLAB, GNU Octave, TikZ/PGF, PGFPlots, TeX Live, Poppler, Python validation
+  libraries, and Actionlint are external tools or dependencies referenced by
+  documentation/CI; their distributions are not vendored in the release tree.
+
 ## Human review required
 
 Before publication, a human should confirm the exact-text BSD-2-Clause
 identification and the final attribution wording. The uncertain third-party file
 and logo asset are no longer present at the candidate tip; their decision record
-is `THIRD_PARTY_REVIEW.md`. No alternative or incompatible license has been
-introduced.
+is `THIRD_PARTY_REVIEW.md`. Human review should also confirm the disposition of
+the two included inherited test references above. No obvious conflicting
+license or release blocker was found in this repository review, but that is not
+a legal conclusion.

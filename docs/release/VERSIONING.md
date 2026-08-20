@@ -1,8 +1,8 @@
 # Versioning policy
 
-m2tikz-next uses Semantic Versioning for public repository releases. The
-working first public release target is `0.5.0`; no tag is created by this
-readiness work.
+m2tikz-next uses Semantic Versioning for public repository releases. The first
+public release is version `0.5.0`. Its corresponding tag is `v0.5.0` and is
+created only after the release pull request is merged and explicitly approved.
 
 ## Pre-1.0 interpretation
 
@@ -15,7 +15,7 @@ readiness work.
 - `1.0.0` will require an explicit stable API and support commitment; it is not
   implied by broad workflow usability.
 
-Version `0.5.0` therefore means a usable scientific-export preview/beta with a
+Version `0.5.0` means a usable scientific-export preview/beta with a
 functional broad core workflow, known unsupported MATLAB graphics, and no
 pretense of production-complete 1.0 maturity.
 

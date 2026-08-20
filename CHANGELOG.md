@@ -4,7 +4,7 @@ This file records user-visible m2tikz-next changes. Original matlab2tikz
 release history remains in Git history and the upstream repository; those
 versions are not m2tikz-next releases.
 
-## [Unreleased] — target 0.5.0
+## [0.5.0]
 
 ### Added
 

@@ -89,6 +89,11 @@ to be portable, but these evidence boundaries do not claim validation for every
 operating system or runtime release. See [Support status](SUPPORT.md) and the
 [MATLAB validation matrix](MATLAB_VALIDATION_MATRIX.md).
 
+On Windows systems with more than one TeX distribution, ensure `lualatex` on
+`PATH` resolves to the intended, fully initialized installation. `where
+lualatex` and `lualatex --version` should agree before starting MATLAB or
+Octave; path order determines which compiler `m2t.export` invokes.
+
 ## Repository validation
 
 From PowerShell 7 at the repository root:

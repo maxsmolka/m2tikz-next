@@ -1,6 +1,6 @@
 # Scientific export workflow
 
-> `m2t.export` is the primary public workflow for the 0.5.0 target. It is a
+> `m2t.export` is the primary public workflow in version 0.5.0. It is a
 > pre-1.0 API and does not yet carry a long-term stability promise.
 
 This public workflow is validated locally with MATLAB R2026a Update 4 on

@@ -19,14 +19,22 @@ or platforms. See [MATLAB validation](MATLAB_VALIDATION_MATRIX.md) and
 
 | Classification | Capability boundary |
 | --- | --- |
-| **Supported** | 2-D line plots and multiline styling; markers; symmetric/asymmetric error bars; legends; linear/logarithmic and reversed axes; custom ticks; multiple/manual axes; axes-owned colorbars; deterministic IR migration/replay; publication profiles; explicit figure sets; scalar images/heatmaps with vector output; axes-owned free 2-D text; figure-owned arrows and double arrows. |
-| **Supported with limitations** | Scatter with one constant style per series; grouped vertical bars with numeric categories and constant styles; traditional vertical `boxplot(...)` compounds in the documented narrow form; explicit hybrid image layers and opt-in deterministic `auto` planning; shared labels/title models where runtime ownership is recognized; Line3; orthographic Cartesian scalar surfaces and narrowly recognized Patch3 decoration. |
+| **Supported** | 2-D line plots and multiline styling; rich 2-D scatter with constant or per-point size, constant or per-point RGB, scalar mapped color, narrow edge/face modes, legends, and axes-owned colorbars; symmetric/asymmetric error bars; linear/logarithmic and reversed axes; custom ticks; multiple/manual axes; deterministic IR migration/replay; publication profiles; explicit figure sets; scalar images/heatmaps with vector output; axes-owned free 2-D text; figure-owned arrows and double arrows. |
+| **Supported with limitations** | Grouped vertical bars with numeric categories and constant styles; traditional vertical `boxplot(...)` compounds in the documented narrow form; explicit hybrid image layers and opt-in deterministic `auto` planning; shared labels/title models where runtime ownership is recognized; Line3; orthographic Cartesian scalar surfaces and narrowly recognized Patch3 decoration. |
 | **Experimental** | The pre-1.0 `m2t.export` and `m2t.exportSet` contracts; publication-profile tuning; FigureIR v2 and JSON/manifest schemas; internal `m2t2.*` interfaces. Tested experimental behavior is not a long-term compatibility promise. |
-| **Unsupported** | Per-point/mapped/filled scatter semantics; `tiledlayout`/`nexttile`; `yyaxis`; polar plots; arbitrary annotations; stacked, horizontal, or categorical bar families; broad `boxchart` semantics; general patch compounds; general 3-D scenes; mesh, scatter3, and contour3; perspective, lighting, and material semantics; broad transparency; RGB/alpha and unsupported image mappings; general downsampling. |
+| **Unsupported** | Scatter3, geographic/polar/categorical/table-backed scatter, nonopaque or per-point alpha, and non-evidence-backed edge/face modes; `tiledlayout`/`nexttile`; `yyaxis`; polar plots; arbitrary annotations; stacked, horizontal, or categorical bar families; broad `boxchart` semantics; general patch compounds; general 3-D scenes; mesh and contour3; perspective, lighting, and material semantics; broad transparency; RGB/alpha and unsupported image mappings; general downsampling. |
 
 ## Important narrow boundaries
 
-Scatter supports constant series-level marker, size, and color only. Image
+Scatter preserves source `SizeData` area through the deterministic conversion
+`PGFPlots radius = sqrt(SizeData) / 2 pt`; constant and per-point areas are
+supported. Active `flat` edge/face roles may use constant RGB, N-by-3 point RGB,
+or N scalar values. Scalar values remain point metadata and use the axes CLim,
+colormap, and ColorbarIR; explicit RGB never receives invented CLim semantics.
+Opaque `none`, `flat`, and constant-RGB edge/face roles are supported where the
+normalized marker has a faithful PGFPlots representation. Per-point sizes use
+source-order-preserving PGFPlots plot segments; many unique sizes therefore grow
+TeX command count rather than being silently quantized. Image
 support preserves scalar matrix data and explicit colormaps; hybrid output is a
 deliberate backend choice, not a general raster fallback. Bar, boxplot, surface,
 and Patch3 recognition is semantic and narrow: arbitrary compound graphics are

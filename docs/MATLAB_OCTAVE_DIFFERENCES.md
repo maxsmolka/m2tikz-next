@@ -13,7 +13,7 @@ the fixtures define them.
 | Figure helper | Empty `matlab.graphics.shape.internal.AnnotationPane`, Type `annotationpane`, Tag `scribeOverlay`, handle visibility off, directly owned by the figure | No corresponding figure child in the validated fixtures | Ignore only the empty, figure-owned, tagged runtime pane; nonempty user annotations remain E001 |
 | On/off properties | `Axes.Box` is `matlab.lang.OnOffSwitchState` | Character value | Convert the supported semantic value to lower-case text |
 | Figure handles | A valid figure may arrive through a numeric legacy-handle container while its Parent is an HG2 object | Numeric graphics handles | Compare graphics identity with handle equality, not class-strict `isequal` |
-| Scatter | `matlab.graphics.chart.primitive.Scatter`, Type `scatter` | Native scatter or capability-proven scatter `hggroup`, depending on toolkit | Both normalize to the existing constant-style ScatterIR |
+| Scatter | `matlab.graphics.chart.primitive.Scatter`, Type `scatter` (recorded baseline; the current local startup was unavailable for M6.1) | Native scatter or capability-proven scatter `hggroup`, depending on toolkit | Observable X/Y, SizeData, CData, marker, edge/face, alpha, display-name, and visibility capabilities normalize to the same explicit rich ScatterIR; no OS/toolkit/version branch is used |
 | Errorbar | `matlab.graphics.chart.primitive.ErrorBar`, Type `errorbar` | Native/compound representation recognized by capability | Both normalize to the existing ErrorbarIR |
 | Legend | `matlab.graphics.illustration.Legend`, Type `legend`, direct figure child with an `Axes` owner | Toolkit-dependent axes/legend ownership and possible hidden axes-text decoration | Ownership is resolved by properties/appdata; only proven legend decoration is excluded |
 | Colorbar | `matlab.graphics.illustration.ColorBar`, Type `colorbar`, direct figure child with an axes owner | Toolkit-dependent colorbar representation | Both reuse ColorbarIR and explicit ownership resolution |
@@ -23,6 +23,12 @@ The MATLAB pane rule is deliberately narrow. Type, Tag, HandleVisibility,
 parent identity, and empty children must all match. A user-created annotation
 makes the pane semantically nonempty and remains unsupported. There is no
 MATLAB-release, OS, or toolkit branch in product code.
+
+M6.1 portable validation uses GNU Octave 11.3. Its native runtime distinguishes
+constant RGB (1-by-3), per-point RGB (N-by-3), and scalar metadata (N values),
+and exposes marker areas through `SizeData`. The reader also retains the
+capability-proven `hggroup` path required by headless gnuplot. This is portable
+runtime evidence, not a claim that Octave substitutes for MATLAB validation.
 
 ## Normalized IR comparison
 

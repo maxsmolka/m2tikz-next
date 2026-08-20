@@ -6,7 +6,8 @@ param(
     [string]$GitCommand = 'git',
     [string]$OutputDirectory = '',
     [switch]$SkipCoreTests,
-    [switch]$SkipTexCompilation
+    [switch]$SkipTexCompilation,
+    [switch]$SkipRichExample
 )
 
 $ErrorActionPreference = 'Stop'
@@ -95,6 +96,7 @@ runM22ReaderTests(fullfile('$outputLiteral','core','m22-reader'));
 runM22RendererTests(fullfile('$outputLiteral','core','m22-renderer'));
 runM23ReaderTests(fullfile('$outputLiteral','core','m23-reader'));
 runM23RendererTests(fullfile('$outputLiteral','core','m23-renderer'));
+runM61RichScatterTests(fullfile('$outputLiteral','core','m61-rich-scatter'));
 generateM2LineFixtures(fullfile('$outputLiteral','fixtures','m2'));
 generateM21Fixtures(fullfile('$outputLiteral','fixtures','m21'));
 generateM22LayoutFixtures(fullfile('$outputLiteral','fixtures','m22'));
@@ -118,6 +120,9 @@ $examplePaths = @(
     @('04-multiple-axes','example_multiple_axes','04-multiple-axes.tex'),
     @('05-colorbar','example_colorbar','05-colorbar.tex')
 )
+if (!$SkipRichExample) {
+    $examplePaths += ,@('11-rich-scatter','example_rich_scatter','11-rich-scatter.tex')
+}
 $exampleAdds = ($examplePaths | ForEach-Object {
     "addpath('$(Octave-Literal (Join-Path $exampleRoot $_[0]))');"
 }) -join ''

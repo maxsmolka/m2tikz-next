@@ -175,7 +175,17 @@ function node = normalizeSeries(source, axesId, index)
     if ~isfield(source, 'kind'), invalidVersion('series missing kind'); end
     switch source.kind
         case 'm2t2.line', node = merge(m2t2.ir.makeLineSeries(), source);
-        case 'm2t2.scatter', node = merge(m2t2.ir.makeScatterSeries(), source);
+        case 'm2t2.scatter'
+            node = merge(m2t2.ir.makeScatterSeries(), source);
+            if ~isfield(source, 'sizeMode')
+                node.sizeMode = 'constant';
+            end
+            if ~isfield(source, 'edgeMode')
+                node.edgeMode = 'constant'; node.edgeColor = row(node.color);
+            end
+            if ~isfield(source, 'faceMode')
+                node.faceMode = 'none'; node.faceColor = row(node.color);
+            end
         case 'm2t2.errorbar', node = merge(m2t2.ir.makeErrorbarSeries(), source);
         case 'm2t2.image', node = merge(m2t2.ir.makeImageSeries(), source);
         case 'm2t2.bar', node = merge(m2t2.ir.makeBarSeries(), source);
@@ -189,12 +199,17 @@ function node = normalizeSeries(source, axesId, index)
         node.id = sprintf('%s-series-%d', axesId, index);
     end
     node.displayName = normalizeText(node.displayName);
-    vectorNames = {'x','y','color','xNegative','xPositive','yNegative','yPositive', ...
+    vectorNames = {'x','y','color','colorData','markerSize','edgeColor','faceColor', ...
+                   'xNegative','xPositive','yNegative','yPositive', ...
                    'categories','values','faceColor','edgeColor','z'};
     vectorNames=[vectorNames,{'positions','lowerWhisker','q1','median','q3', ...
         'upperWhisker','outlierPositions','outlierValues','boxColor', ...
         'medianColor','whiskerColor','outlierColor'}];
     for k = 1:numel(vectorNames)
+        if strcmp(node.kind, 'm2t2.scatter') && strcmp(vectorNames{k}, 'colorData') && ...
+                strcmp(node.colorMode, 'per_point_rgb')
+            continue;
+        end
         if strcmp(node.kind, 'm2t2.surface') && any(strcmp(vectorNames{k}, {'x','y','z'}))
             continue;
         end

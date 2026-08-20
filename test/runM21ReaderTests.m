@@ -18,7 +18,7 @@ function summary = runM21ReaderTests(outputDirectory)
     [status, detail] = unsupportedHggroup();
     if ~strcmp(status, 'PASS'), failures = failures + 1; end
     rows(end + 1, :) = {'unsupported_arbitrary_hggroup', status, detail, 'reader'}; %#ok<AGROW>
-    unsupportedNames = {'size','color','filled','3d'};
+    unsupportedNames = {'3d'};
     for u = 1:numel(unsupportedNames)
         [status, detail] = unsupportedScatter(unsupportedNames{u});
         if ~strcmp(status, 'PASS'), failures = failures + 1; end
@@ -82,14 +82,11 @@ end
 function [status, detail] = unsupportedScatter(kind)
     fig = figure('Visible', 'off');
     try
-        expectedIdentifier = 'M2T2:E007:UnsupportedProperty';
+        expectedIdentifier = 'M2T2:E045:UnsupportedScatterDimensionality';
         switch kind
-            case 'size', scatter(1:3, 1:3, [20 30 40], [1 0 0]); expected = 'SizeData';
-            case 'color', scatter(1:3, 1:3, 36, [1 0 0;0 1 0;0 0 1]); expected = 'CData';
-            case 'filled', scatter(1:3, 1:3, 36, [1 0 0], 'filled'); expected = 'MarkerFaceColor';
             case '3d'
                 scatter3(1:3, 1:3, 1:3, 36, [1 0 0]);
-                expectedIdentifier = 'M2T2:E007:UnsupportedProperty'; expected = 'property=ZData';
+                expected = 'ZData';
         end
         try
             m2t2.reader.readFigure(fig); status = 'FAIL'; detail = ['unsupported scatter ' kind ' was accepted'];

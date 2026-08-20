@@ -82,7 +82,7 @@ and output layout.
 
 ## Supported scientific figures
 
-The validated modern path covers 2-D lines and Line3, constant-style scatter,
+The validated modern path covers 2-D lines and Line3, rich 2-D scatter,
 error bars, legends, logarithmic/reversed axes, custom ticks, multiple and
 manually positioned axes, colorbars, scalar images/heatmaps, free 2-D text,
 arrows, grouped vertical bars, narrow traditional vertical boxplots, and a
@@ -122,7 +122,7 @@ plans and text.
 ## Current limitations
 
 Version 0.5.0 is pre-1.0: APIs and schemas may still change. Unsupported or
-non-general areas include per-point scatter semantics, `tiledlayout`/`nexttile`,
+non-general areas include scatter transparency and 3-D scatter, `tiledlayout`/`nexttile`,
 `yyaxis`, polar plots, arbitrary annotations and patch semantics, stacked or
 horizontal/categorical bars, broad modern `boxchart` behavior, general 3-D
 scenes, mesh/scatter3/contour3, perspective, lighting/material semantics, broad
@@ -131,7 +131,7 @@ exact release and platform stated above; other MATLAB releases are not implied.
 
 ## Examples and validation
 
-[Examples 01–10](examples/README.md) demonstrate line, scatter, error bars,
+[Examples 01–11](examples/README.md) demonstrate line, rich scatter, error bars,
 multiple axes, colorbars, publication profiles and figure sets, and vector,
 hybrid, and automatic image backends using generic synthetic data.
 

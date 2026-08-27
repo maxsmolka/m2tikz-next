@@ -97,6 +97,7 @@ runM22RendererTests(fullfile('$outputLiteral','core','m22-renderer'));
 runM23ReaderTests(fullfile('$outputLiteral','core','m23-reader'));
 runM23RendererTests(fullfile('$outputLiteral','core','m23-renderer'));
 runM61RichScatterTests(fullfile('$outputLiteral','core','m61-rich-scatter'));
+runM62RichImageTests(fullfile('$outputLiteral','core','m62-rich-image'));
 generateM2LineFixtures(fullfile('$outputLiteral','fixtures','m2'));
 generateM21Fixtures(fullfile('$outputLiteral','fixtures','m21'));
 generateM22LayoutFixtures(fullfile('$outputLiteral','fixtures','m22'));
@@ -122,6 +123,7 @@ $examplePaths = @(
 )
 if (!$SkipRichExample) {
     $examplePaths += ,@('11-rich-scatter','example_rich_scatter','11-rich-scatter.tex')
+    $examplePaths += ,@('12-rich-image-alpha','example_rich_image_alpha','12-rich-image-alpha.tex')
 }
 $exampleAdds = ($examplePaths | ForEach-Object {
     "addpath('$(Octave-Literal (Join-Path $exampleRoot $_[0]))');"

@@ -56,3 +56,17 @@ M6.1 assigns focused, stable failures before normalized IR is constructed:
   an unsupported axes color-mapping interaction.
 
 All cases fail rather than dropping points or collapsing size/color arrays.
+
+## Rich-image reader and planning diagnostics
+
+- `M2T2:E047:MalformedImageCData` — empty, nonnumeric, or invalid scalar data.
+- `M2T2:E048:UnsupportedImageDimensionality` — CData is neither 2-D scalar nor RGB.
+- `M2T2:E049:UnsupportedImageRGB` — RGB class, range, or finiteness is unsupported.
+- `M2T2:E050:MalformedImageAlphaData` — alpha shape, class, range, or finiteness is invalid.
+- `M2T2:E051:UnsupportedImageAlphaMapping` — alpha is not explicitly unmapped.
+- `M2T2:E052:UnsupportedImageColorMapping` — scalar/RGB mapping cannot be preserved.
+- `M2T2:E053:UnsupportedVectorRichImage` — forced vector would discard RGB or alpha.
+- `M2T2:E054:UnsupportedImageCoordinates` — placement is malformed or ambiguous.
+
+These diagnostics prevent grayscale conversion, alpha loss, resizing, or an
+invented RGB colorbar.

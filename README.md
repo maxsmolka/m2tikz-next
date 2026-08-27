@@ -84,7 +84,7 @@ and output layout.
 
 The validated modern path covers 2-D lines and Line3, rich 2-D scatter,
 error bars, legends, logarithmic/reversed axes, custom ticks, multiple and
-manually positioned axes, colorbars, scalar images/heatmaps, free 2-D text,
+manually positioned axes, scalar and truecolor images with bounded image-owned alpha, colorbars, free 2-D text,
 arrows, grouped vertical bars, narrow traditional vertical boxplots, and a
 narrow orthographic 3-D surface/Patch3 scope.
 
@@ -97,7 +97,8 @@ documented in
 
 ## Image and hybrid backends
 
-Scalar image data can use the default vector backend or an explicit hybrid PNG
+Opaque scalar image data can use the default vector backend. Scalar/RGB image
+layers can use an explicit hybrid PNG
 layer while keeping axes, labels, and other scientific presentation vector
 based. The deterministic `auto` planner is opt-in:
 
@@ -131,7 +132,7 @@ exact release and platform stated above; other MATLAB releases are not implied.
 
 ## Examples and validation
 
-[Examples 01–11](examples/README.md) demonstrate line, rich scatter, error bars,
+[Examples 01–12](examples/README.md) demonstrate line, rich scatter, rich image alpha, error bars,
 multiple axes, colorbars, publication profiles and figure sets, and vector,
 hybrid, and automatic image backends using generic synthetic data.
 

@@ -22,8 +22,8 @@ function summary = runM33ImageTests(outputDirectory)
         'H12_deterministic_tex', @() deterministicTex(); ...
         'H13_25x25_fixture', @() renderSize(25); ...
         'H14_100x100_fixture', @() renderSize(100); ...
-        'H15_rgb_unsupported', @() unsupportedRgb(outputDirectory); ...
-        'H16_alpha_unsupported', @() unsupportedAlpha(outputDirectory); ...
+        'H15_rgb_hybrid', @() supportedRgb(outputDirectory); ...
+        'H16_alpha_hybrid', @() supportedAlpha(outputDirectory); ...
         'H17_inf_unsupported', @() unsupportedInf(outputDirectory); ...
         'H18_json_replay', @() jsonReplay()};
     rows = cell(size(cases, 1), 4); failures = 0;
@@ -169,24 +169,28 @@ function detail = renderSize(count)
     clear cleanup;
 end
 
-function detail = unsupportedRgb(root)
+function detail = supportedRgb(root)
     rgb = zeros(2, 3, 3); rgb(:, :, 1) = 1;
     fig = figure('Visible', 'off'); cleanup = onCleanup(@() closeFigure(fig));
     ax = axes('Parent', fig); image(ax, rgb);
-    assertUnsupported(fig, fullfile(root, 'h15-rgb'), 'M2T2:E_IMAGE_RGB_UNSUPPORTED');
-    detail = 'true-color MxNx3 CData rejected explicitly'; clear cleanup;
+    item=onlyImage(m2t2.reader.readFigure(fig));
+    assert(strcmp(item.colorMode,'rgb') && strcmp(item.mapping,'none'));
+    result=m2t.export(fig,fullfile(root,'h15-rgb'),'ImageBackend','hybrid');
+    assertSuccess(result); detail = 'truecolor RGB normalized and compiled through hybrid'; clear cleanup;
 end
 
-function detail = unsupportedAlpha(root)
+function detail = supportedAlpha(root)
     [fig, ax, cleanup] = imageFigure([1 2; 3 4]);
     imageHandle = findobj(ax, 'Type', 'image'); set(imageHandle, 'AlphaData', 0.5);
-    assertUnsupported(fig, fullfile(root, 'h16-alpha'), 'M2T2:E_IMAGE_ALPHA_UNSUPPORTED');
-    detail = 'semantically relevant alpha rejected explicitly'; clear cleanup;
+    item=onlyImage(m2t2.reader.readFigure(fig));
+    assert(strcmp(item.alphaMode,'constant') && item.alphaData==0.5);
+    result=m2t.export(fig,fullfile(root,'h16-alpha'),'ImageBackend','hybrid');
+    assertSuccess(result); detail = 'constant alpha normalized and compiled through hybrid'; clear cleanup;
 end
 
 function detail = unsupportedInf(root)
     [fig, ax, cleanup] = imageFigure([1 Inf; -Inf 4]); %#ok<ASGLU>
-    assertUnsupported(fig, fullfile(root, 'h17-inf'), 'M2T2:E_IMAGE_NONFINITE_UNSUPPORTED');
+    assertUnsupported(fig, fullfile(root, 'h17-inf'), 'M2T2:E047:MalformedImageCData');
     detail = 'positive and negative Inf rejected without clamping'; clear cleanup;
 end
 

@@ -16,6 +16,7 @@ octave-cli --quiet --eval "addpath('examples/08-scientific-heatmap'); example_sc
 octave-cli --quiet --eval "addpath('examples/09-hybrid-heatmap'); example_hybrid_heatmap()"
 octave-cli --quiet --eval "addpath('examples/10-auto-image-backend'); example_auto_image_backend()"
 octave-cli --quiet --eval "addpath('examples/11-rich-scatter'); example_rich_scatter()"
+octave-cli --quiet --eval "addpath('examples/12-rich-image-alpha'); example_rich_image_alpha()"
 ```
 
 Compile one result, for example:
@@ -25,7 +26,7 @@ lualatex .audit/public-preview/examples/01-line.tex
 ```
 
 `test/runPublicPreviewValidation.ps1` regenerates and compiles the five
-original core examples plus the rich-scatter example in an isolated output
+original core examples plus the rich-scatter and rich-image examples in an isolated output
 directory. The profile suite runs the
 sixth example's public workflow and validates its default,
 single-column 85 mm, and double-column 170 mm outputs. The seventh example rebuilds four publication figures
@@ -39,6 +40,8 @@ The tenth example opts a 25x25 and 100x100 field into `auto`, then reports the
 vector/small and hybrid/dense decisions returned by policy `default-v1`.
 The eleventh example combines varying marker area, scalar point metadata,
 explicit CLim/colormap state, a filled marker, and an axes-owned colorbar.
+The twelfth example combines synthetic truecolor data with a deterministic
+per-pixel alpha mask while axes, labels, and title remain vector output.
 
 The public workflow uses `m2t.export` and `m2t.exportSet`. The `m2t2.*`
 implementation interfaces and IR schema remain internal/experimental. The

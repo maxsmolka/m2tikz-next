@@ -35,17 +35,27 @@ end
 
 function asset = makeAsset(image, axesNode, filename, reference, index)
     requireUniform(image.x, 'x'); requireUniform(image.y, 'y');
-    mapping = axesNode.colorMapping;
-    indices = m2t2.render.imageColorIndices(image.cdata, mapping);
-    rgb = zeros([size(indices) 3], 'uint8');
-    valid = ~isnan(indices);
-    for channel = 1:3
-        values = zeros(size(indices));
-        channelMap = mapping.colormap(:, channel);
-        values(valid) = channelMap(indices(valid) + 1);
-        rgb(:, :, channel) = uint8(round(values * 255));
+    if strcmp(image.colorMode, 'rgb')
+        valid = true(size(image.cdata,1), size(image.cdata,2));
+        rgb = uint8(round(image.cdata * 255));
+    else
+        mapping = axesNode.colorMapping;
+        indices = m2t2.render.imageColorIndices(image.cdata, mapping, ...
+                                                image.mapping, image.directIndexBase);
+        rgb = zeros([size(indices) 3], 'uint8'); valid = ~isnan(indices);
+        for channel = 1:3
+            values = zeros(size(indices)); channelMap = mapping.colormap(:, channel);
+            values(valid) = channelMap(indices(valid) + 1);
+            rgb(:, :, channel) = uint8(round(values * 255));
+        end
     end
-    alpha = uint8(valid) * 255;
+    if strcmp(image.alphaMode, 'per_pixel')
+        alphaValues = image.alphaData;
+    else
+        alphaValues = repmat(image.alphaData, size(valid));
+    end
+    alphaValues(~valid) = 0;
+    alpha = uint8(round(alphaValues * 255));
     yIncreasing = numel(image.y) == 1 || image.y(2) > image.y(1);
     flipRows = (yIncreasing && strcmp(axesNode.ydirection, 'normal')) || ...
                (~yIncreasing && strcmp(axesNode.ydirection, 'reverse'));

@@ -1,6 +1,6 @@
 # Image rendering backends
 
-Scalar image plots support two rendering representations and an opt-in planner
+Image plots support two rendering representations and an opt-in planner
 through the existing public workflows. The default remains the M3.3 vector
 representation:
 
@@ -16,11 +16,11 @@ deterministic 4096-cell policy; omitted options do not activate it. See
 
 ## Vector and hybrid modes
 
-`vector` emits one PGFPlots matrix-table row per scalar cell. It retains the
+`vector` emits one PGFPlots matrix-table row per opaque scalar cell. It retains the
 M3.3 output byte-for-byte and is useful for small matrices or workflows that
 require the cell data directly in TeX.
 
-`hybrid` converts only each scalar image layer to a lossless PNG. PGFPlots
+`hybrid` converts only each image layer to a lossless PNG. PGFPlots
 places the PNG through `addplot graphics` at explicit scientific cell edges.
 Axes, ticks, labels, titles, legends, colorbars, shared elements, lines,
 scatter, and errorbars remain vector content. It is not a screenshot backend:
@@ -39,8 +39,10 @@ min(max(floor((value - low) / (high - low) * N), 0), N - 1)
 Hybrid RGB components are the selected normalized colormap row rounded to the
 nearest 8-bit channel value. One matrix cell becomes exactly one PNG pixel;
 there is no resampling, averaging, monitor-DPI scaling, or lossy compression.
-Fully opaque images omit an unnecessary alpha channel. A `NaN` cell is an RGBA
-pixel with alpha zero. Inf and -Inf retain the M3.3 explicit diagnostic.
+Truecolor channels are normalized explicitly from floating, uint8, or uint16
+source data. Constant and per-pixel alpha become the PNG alpha channel without
+premultiplication. Fully opaque images omit an unnecessary alpha channel. A
+scalar `NaN` cell has alpha zero.
 
 PNG rows and columns are ordered for normalized numeric coordinates and axes
 directions, so normal/reversed axes match vector orientation. Pixel edges are
@@ -107,8 +109,8 @@ run because the established coordinate-table scaling made it wasteful.
 
 ## Limitations
 
-Hybrid supports only the existing scalar, scaled, linear image capability.
-RGB, meaningful source alpha, Inf, nonlinear color scale, and direct-indexed
-CData remain unsupported. Non-uniform centers are rejected by
+Hybrid supports scalar scaled/direct color and bounded truecolor/alpha modes.
+Inf, RGB NaN, mapped alpha, nonlinear scalar color scale, and unsupported
+dimensions remain unsupported. Non-uniform centers are rejected by
 `M2T:IMAGE_HYBRID_COORDINATES_UNSUPPORTED`. MATLAB and hosted Linux execution
 remain evidence gates; no OS/toolkit branches exist.

@@ -17,7 +17,7 @@ the fixtures define them.
 | Errorbar | `matlab.graphics.chart.primitive.ErrorBar`, Type `errorbar` | Native/compound representation recognized by capability | Both normalize to the existing ErrorbarIR |
 | Legend | `matlab.graphics.illustration.Legend`, Type `legend`, direct figure child with an `Axes` owner | Toolkit-dependent axes/legend ownership and possible hidden axes-text decoration | Ownership is resolved by properties/appdata; only proven legend decoration is excluded |
 | Colorbar | `matlab.graphics.illustration.ColorBar`, Type `colorbar`, direct figure child with an axes owner | Toolkit-dependent colorbar representation | Both reuse ColorbarIR and explicit ownership resolution |
-| Image | `matlab.graphics.primitive.Image` with scalar CData, scaled mapping, XData/YData and AlphaData | Image representation with equivalent supported capabilities | Both normalize to `m2t2.image`; RGB and relevant alpha remain explicit unsupported cases |
+| Image | `matlab.graphics.primitive.Image` with observable CData/mapping, AlphaData/mapping, XData/YData and visibility | Image representation with equivalent observable properties | Both normalize capability-based scalar/RGB and opaque/constant/per-pixel alpha to `m2t2.image`; no runtime branch is used |
 
 The MATLAB pane rule is deliberately narrow. Type, Tag, HandleVisibility,
 parent identity, and empty children must all match. A user-created annotation

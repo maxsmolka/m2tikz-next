@@ -578,7 +578,8 @@ function validateBarGroups(series,path)
 end
 
 function validateImage(node, path)
-    requireFields(node, {'x','y','cdata','mapping','interpolation'}, path);
+    requireFields(node, {'x','y','cdata','colorMode','mapping','directIndexBase', ...
+        'alphaMode','alphaData','interpolation'}, path);
     numericVector(node.x, [path '.x']); numericVector(node.y, [path '.y']);
     if isempty(node.x) || isempty(node.y) || any(~isfinite(node.x(:))) || ...
        any(~isfinite(node.y(:)))
@@ -590,14 +591,43 @@ function validateImage(node, path)
     if numel(node.y) > 1 && ~(all(diff(node.y) > 0) || all(diff(node.y) < 0))
         invalid([path '.y'], 'image y coordinates must be strictly monotonic');
     end
-    if ~(isnumeric(node.cdata) && ismatrix(node.cdata) && ...
-         isequal(size(node.cdata), [numel(node.y) numel(node.x)]))
-        invalid([path '.cdata'], 'expected rows(y)-by-columns(x) scalar matrix');
+    enum(node.colorMode, {'scalar','rgb'}, [path '.colorMode']);
+    expected = [numel(node.y) numel(node.x)];
+    if strcmp(node.colorMode, 'scalar')
+        if ~(isnumeric(node.cdata) && ismatrix(node.cdata) && isequal(size(node.cdata), expected))
+            invalid([path '.cdata'], 'expected rows(y)-by-columns(x) scalar matrix');
+        end
+        if any(isinf(node.cdata(:))), invalid([path '.cdata'], 'Inf is unsupported'); end
+        enum(node.mapping, {'scaled','direct'}, [path '.mapping']);
+        if strcmp(node.mapping, 'direct') && ...
+                (any(~isfinite(node.cdata(:))) || any(node.cdata(:) ~= fix(node.cdata(:))))
+            invalid([path '.cdata'], 'direct scalar CData must contain finite integer indices');
+        end
+    else
+        if ~(isnumeric(node.cdata) && ndims(node.cdata) == 3 && ...
+                size(node.cdata,3) == 3 && isequal(size(node.cdata(:,:,1)), expected))
+            invalid([path '.cdata'], 'expected rows(y)-by-columns(x)-by-3 RGB data');
+        end
+        if any(~isfinite(node.cdata(:))) || any(node.cdata(:)<0) || any(node.cdata(:)>1)
+            invalid([path '.cdata'], 'RGB data must be finite in [0,1]');
+        end
+        enum(node.mapping, {'none'}, [path '.mapping']);
     end
-    if any(isinf(node.cdata(:)))
-        invalid([path '.cdata'], 'Inf is unsupported; NaN represents a missing cell');
+    if ~(isnumeric(node.directIndexBase) && isscalar(node.directIndexBase) && ...
+            any(node.directIndexBase == [0 1]))
+        invalid([path '.directIndexBase'], 'expected 0 or 1');
     end
-    enum(node.mapping, {'scaled'}, [path '.mapping']);
+    enum(node.alphaMode, {'opaque','constant','per_pixel'}, [path '.alphaMode']);
+    if strcmp(node.alphaMode,'per_pixel')
+        validAlpha = isnumeric(node.alphaData) && isequal(size(node.alphaData), expected);
+    else
+        validAlpha = isnumeric(node.alphaData) && isscalar(node.alphaData);
+    end
+    if ~validAlpha || any(~isfinite(node.alphaData(:))) || ...
+            any(node.alphaData(:)<0) || any(node.alphaData(:)>1) || ...
+            (strcmp(node.alphaMode,'opaque') && node.alphaData ~= 1)
+        invalid([path '.alphaData'], 'alpha shape/range does not match alphaMode');
+    end
     enum(node.interpolation, {'nearest'}, [path '.interpolation']);
 end
 

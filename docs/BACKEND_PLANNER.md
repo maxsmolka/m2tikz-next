@@ -1,6 +1,6 @@
 # Deterministic image-backend planner
 
-`ImageBackend='auto'` opts a supported scalar image figure into a small,
+`ImageBackend='auto'` opts a supported image figure into a small,
 deterministic representation decision. Existing calls remain vector by default,
 and explicit `vector` or `hybrid` requests always win:
 
@@ -39,6 +39,8 @@ the largest layer because the current render plan has one image backend.
 | `small_scalar_image` | Auto found image layers at or below 4096 cells. |
 | `dense_scalar_image` | Auto found an image layer above 4096 cells. |
 | `no_image_layer` | Auto found no visible scalar image and selected vector. |
+| `truecolor_requires_hybrid` | Truecolor semantics require a PNG image layer. |
+| `alpha_requires_hybrid` | Nonopaque image-owned alpha requires a PNG image layer. |
 
 Normal selection is not a warning. Policy metadata includes the stable name,
 version, ID, and threshold so a saved result explains the decision.
@@ -51,9 +53,10 @@ time. It performs no trial compilation, retry, screenshot, or runtime
 calibration. Equal FigureIR, request, and policy produce equal decisions.
 Publication profiles therefore do not change the choice.
 
-Capability analysis precedes planning. Unsupported RGB, source alpha, Inf,
-mapping, or coordinate semantics remain explicit reader diagnostics; auto never
-uses hybrid as a fallback. Hybrid's uniform-coordinate requirement also remains
+Capability analysis precedes planning. Rich modes select hybrid by explicit
+semantic reason, not as an error fallback. A forced vector request for RGB or
+nonopaque alpha fails with `M2T2:E053:UnsupportedVectorRichImage`. Hybrid's
+uniform-coordinate requirement remains
 an explicit render diagnostic.
 
 ## Figure sets

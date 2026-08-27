@@ -119,3 +119,6 @@ jobs:
       - name: Compile focused rich-scatter modes
         shell: pwsh
         run: ./test/runM61RichScatterTexValidation.ps1 -OctaveCommand octave-cli -LatexmkCommand latexmk
+      - name: Compile focused rich-image modes
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM62RichImageTexTests(fullfile('.audit','m62-rich-image-tex'));"

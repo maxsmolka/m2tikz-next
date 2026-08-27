@@ -1,5 +1,9 @@
 function lines = renderImage(node, colormapName, colorMapping)
 %RENDERIMAGE Serialize scalar cells as a deterministic PGFPlots matrix plot.
+    if ~strcmp(node.colorMode, 'scalar') || ~strcmp(node.alphaMode, 'opaque')
+        error('M2T2:E053:UnsupportedVectorRichImage', ...
+              'M2T2:E053:UnsupportedVectorRichImage: RGB and alpha require hybrid');
+    end
     bs = char(92);
     options = {'matrix plot*', ...
                ['mesh/cols=' num2str(numel(node.x))], ...
@@ -9,7 +13,8 @@ function lines = renderImage(node, colormapName, colorMapping)
                'forget plot'};
     lines = {[bs 'addplot[' m2t2.util.joinCell(options, ',') '] table[meta=c] {'], ...
              'x y value c'};
-    indices = m2t2.render.imageColorIndices(node.cdata, colorMapping);
+    indices = m2t2.render.imageColorIndices(node.cdata, colorMapping, ...
+                                            node.mapping, node.directIndexBase);
     for row = 1:numel(node.y)
         for column = 1:numel(node.x)
             value = node.cdata(row, column);

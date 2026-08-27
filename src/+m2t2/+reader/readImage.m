@@ -1,40 +1,101 @@
 function node = readImage(handle, path)
-%READIMAGE Normalize a scalar 2-D runtime image without resampling.
+%READIMAGE Normalize a bounded scalar/truecolor image without resampling.
     cdata = get(handle, 'CData');
-    if ~(isnumeric(cdata) && ismatrix(cdata) && ~isempty(cdata))
-        if isnumeric(cdata) && ndims(cdata) == 3 && size(cdata, 3) == 3
-            error('M2T2:E_IMAGE_RGB_UNSUPPORTED', ...
-                  'M2T2 image RGB unsupported: path=%s size=%s', ...
-                  path, sizeText(size(cdata)));
-        end
-        error('M2T2:E_IMAGE_DIMENSIONS_INVALID', ...
-              'M2T2 image dimensions invalid: path=%s size=%s', ...
-              path, sizeText(size(cdata)));
+    if ~(isnumeric(cdata) && ~isempty(cdata))
+        fail('M2T2:E047:MalformedImageCData', path, 'CData must be nonempty numeric data');
     end
-    if any(isinf(cdata(:)))
-        error('M2T2:E_IMAGE_NONFINITE_UNSUPPORTED', ...
-              'M2T2 image Inf unsupported: path=%s', path);
+    scalarImage = ismatrix(cdata);
+    rgbImage = ndims(cdata) == 3 && size(cdata, 3) == 3;
+    if ~(scalarImage || rgbImage)
+        fail('M2T2:E048:UnsupportedImageDimensionality', path, ...
+             ['CData size=' sizeText(size(cdata))]);
     end
     mapping = lower(get(handle, 'CDataMapping'));
-    if ~strcmp(mapping, 'scaled')
-        error('M2T2:E_IMAGE_MAPPING_UNSUPPORTED', ...
-              'M2T2 image mapping unsupported: path=%s mapping=%s', path, mapping);
-    end
-    alpha = get(handle, 'AlphaData');
-    alphaMapping = lower(get(handle, 'AlphaDataMapping'));
-    if ~(isnumeric(alpha) && ~isempty(alpha) && all(isfinite(alpha(:))) && ...
-            all(alpha(:) == 1) && strcmp(alphaMapping, 'none'))
-        error('M2T2:E_IMAGE_ALPHA_UNSUPPORTED', ...
-              'M2T2 image alpha unsupported: path=%s', path);
+    directIndexBase = 1;
+    if scalarImage
+        if any(isinf(cdata(:)))
+            fail('M2T2:E047:MalformedImageCData', path, 'scalar CData contains Inf');
+        end
+        if ~any(strcmp(mapping, {'scaled','direct'}))
+            fail('M2T2:E052:UnsupportedImageColorMapping', path, ['mapping=' mapping]);
+        end
+        if strcmp(mapping, 'direct')
+            if isa(cdata, 'uint8') || isa(cdata, 'uint16'), directIndexBase = 0; end
+            if any(~isfinite(double(cdata(:)))) || any(double(cdata(:)) ~= fix(double(cdata(:))))
+                fail('M2T2:E052:UnsupportedImageColorMapping', path, ...
+                     'direct CData must contain finite integer indices');
+            end
+        end
+        normalized = double(cdata); colorMode = 'scalar';
+    else
+        if ~strcmp(mapping, 'direct')
+            fail('M2T2:E052:UnsupportedImageColorMapping', path, ...
+                 'truecolor CData requires runtime direct mapping');
+        end
+        normalized = normalizeRgb(cdata, path); colorMode = 'rgb'; mapping = 'none';
     end
 
-    rows = size(cdata, 1); columns = size(cdata, 2);
+    alpha = get(handle, 'AlphaData');
+    alphaMapping = lower(get(handle, 'AlphaDataMapping'));
+    if ~strcmp(alphaMapping, 'none')
+        fail('M2T2:E051:UnsupportedImageAlphaMapping', path, ...
+             ['AlphaDataMapping=' alphaMapping]);
+    end
+    [alphaMode, alphaData] = normalizeAlpha(alpha, size(normalized, 1), ...
+                                            size(normalized, 2), path);
+
+    rows = size(normalized, 1); columns = size(normalized, 2);
     x = coordinateCenters(get(handle, 'XData'), columns, [path '.x']);
     y = coordinateCenters(get(handle, 'YData'), rows, [path '.y']);
     node = m2t2.ir.makeImageSeries();
-    node.x = x; node.y = y; node.cdata = double(cdata);
-    node.mapping = mapping;
+    node.x = x; node.y = y; node.cdata = normalized;
+    node.colorMode = colorMode; node.mapping = mapping;
+    node.directIndexBase = directIndexBase;
+    node.alphaMode = alphaMode; node.alphaData = alphaData;
     node.visible = strcmpi(get(handle, 'Visible'), 'on');
+end
+
+function rgb = normalizeRgb(value, path)
+    if isa(value, 'uint8')
+        rgb = double(value) / 255;
+    elseif isa(value, 'uint16')
+        rgb = double(value) / 65535;
+    elseif isa(value, 'single') || isa(value, 'double')
+        rgb = double(value);
+    else
+        fail('M2T2:E049:UnsupportedImageRGB', path, ['class=' class(value)]);
+    end
+    if any(~isfinite(rgb(:))) || any(rgb(:) < 0) || any(rgb(:) > 1)
+        fail('M2T2:E049:UnsupportedImageRGB', path, ...
+             'RGB channels must be finite and normalized after class conversion');
+    end
+end
+
+function [mode, value] = normalizeAlpha(alpha, rows, columns, path)
+    if ~(isnumeric(alpha) && ~isempty(alpha))
+        fail('M2T2:E050:MalformedImageAlphaData', path, ...
+             'AlphaData must be a numeric scalar or image-sized matrix');
+    end
+    if isa(alpha, 'uint8')
+        value = double(alpha) / 255;
+    elseif isa(alpha, 'uint16')
+        value = double(alpha) / 65535;
+    elseif isa(alpha, 'single') || isa(alpha, 'double')
+        value = double(alpha);
+    else
+        fail('M2T2:E050:MalformedImageAlphaData', path, ['class=' class(alpha)]);
+    end
+    if any(~isfinite(value(:))) || any(value(:) < 0) || any(value(:) > 1)
+        fail('M2T2:E050:MalformedImageAlphaData', path, 'alpha must be finite in [0,1]');
+    end
+    if isscalar(value)
+        if value == 1, mode = 'opaque'; else, mode = 'constant'; end
+    elseif isequal(size(value), [rows columns])
+        mode = 'per_pixel';
+    else
+        fail('M2T2:E050:MalformedImageAlphaData', path, ...
+             ['AlphaData size=' sizeText(size(value))]);
+    end
 end
 
 function values = coordinateCenters(runtimeValue, count, path)
@@ -60,8 +121,11 @@ function values = coordinateCenters(runtimeValue, count, path)
 end
 
 function unsupported(path, reason)
-    error('M2T2:E_IMAGE_COORDINATES_UNSUPPORTED', ...
-          'M2T2 image coordinates unsupported: path=%s reason=%s', path, reason);
+    fail('M2T2:E054:UnsupportedImageCoordinates', path, reason);
+end
+
+function fail(identifier, path, reason)
+    error(identifier, '%s: path=%s reason=%s', identifier, path, reason);
 end
 
 function value = sizeText(dimensions)

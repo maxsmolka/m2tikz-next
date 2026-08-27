@@ -1,8 +1,7 @@
 # Image and matrix plots
 
-M3.3 adds scalar two-dimensional image data to the modern `m2t.export` and
-`m2t.exportSet` workflows. The intended input is an `imagesc`-style scientific
-matrix, not a photographic bitmap.
+The modern workflow supports a bounded 2-D image contract: scalar scientific
+matrices and truecolor RGB arrays, with explicit image-owned opacity.
 
 M3.4 additionally provides an explicit compact PNG data-layer representation.
 M3.5 adds opt-in deterministic selection. See
@@ -11,14 +10,18 @@ M3.5 adds opt-in deterministic selection. See
 
 ## Supported scope
 
-- nonempty rectangular numeric 2-D `CData` with `CDataMapping="scaled"`;
+- nonempty scalar 2-D `CData` with `CDataMapping="scaled"` or integer-valued
+  `direct` indices;
+- M-by-N-by-3 double/single RGB in `[0,1]`, plus uint8 and uint16 RGB;
+- unmapped opaque, constant, or image-sized per-pixel alpha in `[0,1]`;
 - implicit matrix-index coordinates and explicit finite monotonic X/Y extents;
 - normal and reversed axes directions;
 - axes-owned `CLim`, explicit colormaps, and existing ColorbarIR elements;
 - `NaN` as a missing cell;
 - the publication profile (compatibility identifier `publication`), multiple axes, and figure sets.
 
-ImageIR stores the matrix unchanged as rows(y)-by-columns(x). It contains the
+ImageIR distinguishes `scalar` from normalized `rgb`, and `opaque`, `constant`,
+and `per_pixel` alpha. It contains the
 expanded cell-center vectors `x` and `y`, but never a graphics handle. Octave
 may expose an endpoint pair even when full vectors were supplied to `imagesc`;
 the reader deterministically expands that pair with `linspace` to one center per
@@ -43,15 +46,13 @@ original value in the generated table. The already-existing ColorbarIR owns the
 colorbar range, ticks, label, direction, orientation, and placement; the image
 path does not create a second colorbar model.
 
-## Non-finite and unsupported content
+## Alpha, truecolor, and unsupported content
 
-`NaN` is serialized as a PGFPlots missing cell. Positive and negative infinity
-are rejected as `M2T2:E_IMAGE_NONFINITE_UNSUPPORTED`; values are never clamped.
-True-color MxNx3 data is explicit `M2T2:E_IMAGE_RGB_UNSUPPORTED`. Alpha is
-accepted only when it is unmapped and uniformly opaque; other alpha is
-`M2T2:E_IMAGE_ALPHA_UNSUPPORTED`. Invalid dimensions, coordinates,
-direct-indexed CData, and nonlinear color mapping also receive stable image
-diagnostics and surface as `unsupported` through both public workflows.
+Scalar `NaN` is a missing transparent cell; Inf is rejected. RGB never acquires
+CLim or a synthetic colorbar. RGB and nonopaque alpha require the hybrid backend,
+which preserves an 8-bit RGB/alpha PNG without resizing or premultiplication.
+RGB NaN, mapped alpha, malformed shapes/ranges, nonuniform hybrid coordinates,
+and unsupported dimensions fail with the documented M6.2 diagnostics.
 
 MATLAB representation remains an external validation gate. The reader uses
 properties and capabilities rather than OS, toolkit, or Octave-version checks.

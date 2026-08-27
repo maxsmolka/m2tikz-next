@@ -24,8 +24,8 @@ function summary = runM35BackendPlannerTests(outputDirectory)
         'P15_exportset_override', @() setOverride(outputDirectory); ...
         'P16_manifest_metadata', @() manifestMetadata(outputDirectory); ...
         'P17_deterministic_repeat', @() deterministicRepeat(); ...
-        'P18_rgb_unsupported', @() unsupportedRgb(outputDirectory); ...
-        'P19_alpha_unsupported', @() unsupportedAlpha(outputDirectory); ...
+        'P18_rgb_auto_hybrid', @() supportedRgb(outputDirectory); ...
+        'P19_alpha_auto_hybrid', @() supportedAlpha(outputDirectory); ...
         'P20_invalid_backend', @() invalidBackend(outputDirectory); ...
         'P21_policy_metadata', @() policyMetadata(); ...
         'P22_explicit_vector_large', @() explicitDecision('vector','vector','explicit_vector',250000); ...
@@ -155,19 +155,18 @@ function detail = deterministicRepeat()
     detail='repeated normalized input returns identical decision struct';
 end
 
-function detail = unsupportedRgb(root)
+function detail = supportedRgb(root)
     rgb=zeros(2,3,3);rgb(:,:,1)=1;fig=figure('Visible','off');cleanup=onCleanup(@()closeFigure(fig));
     image(axes('Parent',fig),rgb);result=m2t.export(fig,fullfile(root,'rgb'),'ImageBackend','auto');
-    assert(~result.success&&strcmp(result.status,'unsupported'));
-    assert(strcmp(result.diagnostics(1).code,'M2T2:E_IMAGE_RGB_UNSUPPORTED'));
-    detail='auto does not hide RGB capability rejection';clear cleanup;
+    assert(result.success);assertDecision(result,'auto','hybrid','truecolor_requires_hybrid');
+    detail='auto selects hybrid for truecolor semantics';clear cleanup;
 end
 
-function detail = unsupportedAlpha(root)
+function detail = supportedAlpha(root)
     [fig,cleanup]=imageFigure([1 2;3 4]);handle=findobj(fig,'Type','image');set(handle,'AlphaData',0.5);
     result=m2t.export(fig,fullfile(root,'alpha'),'ImageBackend','auto');
-    assert(~result.success&&strcmp(result.diagnostics(1).code,'M2T2:E_IMAGE_ALPHA_UNSUPPORTED'));
-    detail='auto does not hide source-alpha capability rejection';clear cleanup;
+    assert(result.success);assertDecision(result,'auto','hybrid','alpha_requires_hybrid');
+    detail='auto selects hybrid for image-owned alpha';clear cleanup;
 end
 
 function detail = invalidBackend(root)

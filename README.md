@@ -1,6 +1,7 @@
 # m2tikz-next
 
-> Version 0.5.0 — public pre-1.0 scientific-export preview/beta
+> Latest release: 0.5.0 — public pre-1.0 scientific-export preview/beta.
+> The development branch includes unreleased M6.1/M6.2 capabilities.
 
 m2tikz-next is a modern, validated scientific figure export pipeline derived
 from [matlab2tikz](https://github.com/matlab2tikz/matlab2tikz). It converts
@@ -146,6 +147,9 @@ Generated validation products stay below ignored `.audit/` directories.
 
 ## Documentation
 
+- [Architecture](ARCHITECTURE.md)
+- [Current project status](PROJECT_STATUS.md)
+- [Roadmap to 1.0](ROADMAP.md)
 - [Installation](docs/INSTALLATION.md)
 - [Support matrix](docs/SUPPORT.md)
 - [Profiles](docs/PROFILES.md)

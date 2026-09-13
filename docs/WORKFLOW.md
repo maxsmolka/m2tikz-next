@@ -1,11 +1,11 @@
 # Scientific export workflow
 
-> `m2t.export` is the primary public workflow in version 0.5.0. It is a
-> pre-1.0 API and does not yet carry a long-term stability promise.
+> `m2t.export` is the primary public workflow. The latest release is 0.5.0;
+> the development branch includes M6.1/M6.2. This pre-1.0 API does not yet carry
+> a long-term stability promise.
 
-This public workflow is validated locally with MATLAB R2026a Update 4 on
-Windows without MATLAB-specific API expectations. The claim is limited to that
-release and environment; see
+Validated with MATLAB R2026a Update 4 on Windows.
+The recorded claim is limited to that release and environment; see
 [MATLAB_VALIDATION_MATRIX.md](MATLAB_VALIDATION_MATRIX.md).
 
 The public workflow turns a supported graphics figure into standalone PGFPlots
@@ -65,7 +65,7 @@ Every diagnostic has four fields:
 | `severity` | `info`, `warning`, or `error`. |
 | `code` | Stable workflow code or the original precise `M2T2:*` identifier. |
 | `message` | User-readable failure detail. |
-| `stage` | `analysis`, `export`, `compile`, or `validation`. |
+| `stage` | `analysis`, `planning`, `export`, `compile`, or `validation`; aggregate figure-set diagnostics use `set`. |
 
 Unsupported reader content retains identifiers such as
 `M2T2:E001:UnsupportedObject`. A missing compiler returns
@@ -73,11 +73,14 @@ Unsupported reader content retains identifiers such as
 `<outputBase>.compile.log` and includes the first meaningful TeX error in its
 diagnostic instead of returning only an exit code.
 
-Scalar `imagesc`-style matrices use the same result and diagnostic path. See
+Scalar `imagesc`-style matrices and bounded truecolor/alpha images use the same
+result and diagnostic path. See
 [IMAGE_PLOTS.md](IMAGE_PLOTS.md) for supported coordinates, color semantics,
 non-finite behavior, structured image diagnostics, and measured size costs.
 Dense matrices may explicitly select `hybrid` or opt into `auto`; the default is
-`vector`. Hybrid assets and lifecycle are documented in
+`vector`. RGB and nonopaque alpha require `hybrid`, either explicitly or through
+`auto`; a forced vector request fails with E053. Opaque scalar scaled/direct
+images can remain vector. Hybrid assets and lifecycle are documented in
 [IMAGE_BACKENDS.md](IMAGE_BACKENDS.md), and the planner policy is documented in
 [BACKEND_PLANNER.md](BACKEND_PLANNER.md).
 
@@ -85,10 +88,12 @@ Dense matrices may explicitly select `hybrid` or opt into `auto`; the default is
 
 `outputBase` is an extension-free relative or absolute path. Parent directories
 are created when needed. Compiler intermediates stay in a temporary directory;
-successful exports leave only the requested `.tex` and `.pdf` products.
+successful exports leave the requested `.tex` and `.pdf` products plus a
+`<outputBase>-assets` directory when hybrid image layers are used.
 
-The default is fail-safe: an existing `.tex`, `.pdf`, or `.compile.log` product
-causes `export_failed` and is not modified. Deliberate replacement is explicit:
+The default is fail-safe: an existing `.tex`, `.pdf`, `.compile.log`, or owned
+asset directory causes `export_failed` and is not modified. Deliberate
+replacement is explicit:
 
 ```matlab
 result = m2t.export(gcf, 'figures/sine', 'Overwrite', true);
@@ -121,15 +126,18 @@ the TeX installation must provide TikZ, PGFPlots 1.18 compatibility, and the
 
 ## Current limitations
 
-- The document backend remains PGFPlots; `ImageBackend` plans only scalar
+- The document backend remains PGFPlots; `ImageBackend` plans only supported
   image-layer representation and never rasterizes a complete figure.
 - The pre-1.0 profile API currently provides only `none` and `publication`;
   numeric custom widths are deferred.
 - Unsupported modern-reader content remains explicit and never falls back to
   the legacy exporter.
-- RGB/alpha images, direct-indexed or nonlinear image color mapping,
-  `tiledlayout`, `yyaxis`, polar plots, arbitrary annotations, general 3-D
-  rendering, and unsupported per-point scatter styling remain out of scope.
+- Nonlinear image color mapping, mapped alpha, RGB NaN, nonuniform hybrid
+  spacing, `tiledlayout`, `yyaxis`, polar plots, arbitrary annotations, general
+  3-D scenes, scatter3, and scatter transparency remain out of scope.
+- Hybrid PNG channels use 8-bit quantization; image dimensions are preserved.
+  Per-point scatter size/color is supported within the explicit edge/face
+  contract in [SUPPORT.md](SUPPORT.md), without automatic size quantization.
 - Visual/raster comparison remains a development validation concern and is not
   part of the normal user call.
 

@@ -21,7 +21,8 @@ releases. GNU Octave 11.3 remains the public hosted-CI runtime.
 | Figure sets | validated | validated | validated | F24, M3.2 S1-S16 |
 | Hybrid image backend | validated | validated | validated | F25, M3.4 R1-R24 |
 | Automatic backend planner | validated | validated | validated | F26, M3.5 P1-P24 |
-| RGB/alpha images | unsupported diagnostic | unsupported diagnostic | unsupported | M3.3 H15-H16, M3.5 P18-P19 |
+| Rich 2-D scatter | native reader/IR/renderer | native reader/IR/renderer | supported in bounded size/color/edge/face scope | M6.1 focused suite, 29/29 per observed runtime |
+| RGB/alpha images and direct scalar mapping | native reader/IR/renderer | native reader/IR/renderer | supported in bounded M6.2 scope; rich modes require hybrid | M6.2 focused suite, 26/26 per observed runtime; 11 focused TeX exports |
 | Axes-data user text | synthetic IR/renderer | runtime reader/export | supported in observed 2-D scope | M5.1 public synthetic suite |
 | Figure-normalized arrow/double-arrow | synthetic IR/renderer | runtime reader/export | supported in observed scope | M5.1 public synthetic suite |
 | Arbitrary annotation shapes | unsupported diagnostic | unsupported diagnostic | unsupported | M5.1 A12, NC4-NC5 |

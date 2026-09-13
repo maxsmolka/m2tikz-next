@@ -333,6 +333,17 @@ function validateLayout(node, axesIds, path)
     requireFields(node, {'kind','rows','columns','cells'}, path);
     enum(node.kind, {'freeform','grid'}, [path '.kind']);
     if ~iscell(node.cells), invalid([path '.cells'], 'expected a cell array'); end
+    if isfield(node, 'tiled')
+        if ~strcmp(node.kind,'grid'), invalid(path,'tiled metadata requires a grid'); end
+        requireStruct(node.tiled,[path '.tiled']);
+        requireFields(node.tiled,{'arrangement','indexing','spacing','padding','geometry'},[path '.tiled']);
+        enum(node.tiled.arrangement,{'fixed'},[path '.tiled.arrangement']);
+        enum(node.tiled.indexing,{'rowmajor','columnmajor'},[path '.tiled.indexing']);
+        enum(node.tiled.spacing,{'loose','compact','tight'},[path '.tiled.spacing']);
+        enum(node.tiled.padding,{'loose','compact','tight'},[path '.tiled.padding']);
+        enum(node.tiled.geometry,{'resolved-runtime'},[path '.tiled.geometry']);
+        if numel(node.cells) ~= numel(axesIds), invalid(path,'every tiled axes must own one cell'); end
+    end
     if strcmp(node.kind, 'freeform')
         if ~isequal(node.rows, 0) || ~isequal(node.columns, 0) || ~isempty(node.cells)
             invalid(path, 'freeform layout must have zero rows/columns and no cells');

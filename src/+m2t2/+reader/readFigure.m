@@ -11,10 +11,18 @@ function ir = readFigure(figureHandle)
     legendHandles = {};
     colorbarHandles = {};
     annotationPanes = {};
+    tiledState = [];
     for k = 1:numel(children)
         type = get(children(k), 'Type');
         tag = property(children(k), 'Tag', '');
-        if strcmp(type, 'legend') || (strcmp(type, 'axes') && strcmp(tag, 'legend'))
+        if strcmp(type, 'tiledlayout')
+            if ~isempty(tiledState)
+                error('M2T2:E056:UnsupportedTiledLayout', 'Multiple tiled layouts are unsupported.');
+            end
+            % Resolve deferred layout geometry without executing user callbacks.
+            drawnow nocallbacks;
+            tiledState = m2t2.reader.readTiledLayout(children(k));
+        elseif strcmp(type, 'legend') || (strcmp(type, 'axes') && strcmp(tag, 'legend'))
             legendHandles{end + 1} = children(k); %#ok<AGROW>
         elseif strcmp(type, 'colorbar') || (strcmp(type, 'axes') && strcmp(tag, 'colorbar'))
             colorbarHandles{end + 1} = children(k); %#ok<AGROW>
@@ -25,6 +33,14 @@ function ir = readFigure(figureHandle)
         elseif ~any(strcmp(type, {'uimenu','uitoolbar','uicontextmenu'}))
             unsupported(type, sprintf('figure.children{%d}', k));
         end
+    end
+
+    if ~isempty(tiledState)
+        if ~isempty(axesHandles) || ~isempty(legendHandles) || ~isempty(colorbarHandles)
+            error('M2T2:E056:UnsupportedTiledLayout', 'Mixed tiled and figure-owned axes/decorations are unsupported.');
+        end
+        axesHandles = tiledState.axes; legendHandles = tiledState.legends;
+        colorbarHandles = tiledState.colorbars;
     end
 
     axesItems = cell(1, numel(axesHandles));
@@ -60,7 +76,11 @@ function ir = readFigure(figureHandle)
 
     ir = m2t2.ir.makeFigure(axesItems);
     ir.size = m2t2.reader.readFigureSize(figureHandle, 'figure.size');
-    ir.layout = m2t2.reader.inferLayout(axesItems);
+    if isempty(tiledState)
+        ir.layout = m2t2.reader.inferLayout(axesItems);
+    else
+        ir.layout = tiledState.layout;
+    end
     ir.elements = cell(1, numel(colorbarHandles));
     for k = 1:numel(colorbarHandles)
         ownerIndex = colorbarOwner(colorbarHandles{k}, axesHandles);
@@ -72,6 +92,7 @@ function ir = readFigure(figureHandle)
         ir.elements{k} = m2t2.reader.readColorbar(colorbarHandles{k}, ...
             axesItems{ownerIndex}, path, sprintf('colorbar-%d', k));
     end
+    if ~isempty(tiledState), ir.elements = [ir.elements tiledState.labels]; end
     figureAnnotationIndex = 0;
     for p = 1:numel(annotationPanes)
         paneChildren = flipud(allchild(annotationPanes{p}));

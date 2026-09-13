@@ -45,8 +45,8 @@ GitHub Actions is the current hosted system. The required jobs are:
 | Job | Coverage |
 | --- | --- |
 | repository-policy | Six architecture invariants, links, confidentiality, citation, actionlint, whitespace. |
-| octave-tests | Core readers/renderers, fixtures, smoke generation, MATLAB-harness preparation, portable M5 IR tests. |
-| tex-preview | Example compilation, workflow/compiler/profile tests, set/image/backend smoke tests, publication calibration, rich scatter/image TeX and set cases. |
+| octave-tests | Core readers/renderers, fixtures, smoke generation, MATLAB-harness preparation, portable M5/tiled IR tests and S1 security cases. |
+| tex-preview | Example compilation, workflow/compiler/profile tests, set/image/backend smoke tests, publication calibration, rich scatter/image TeX and set cases, S1 and tiled-profile compiler cases. |
 
 All three must pass before a milestone merge. The Octave image is digest-pinned
 in [ci.yml](../.github/workflows/ci.yml). Licensed MATLAB validation is separate.
@@ -150,6 +150,22 @@ The confidentiality check scans tracked files; newly added documents must also
 be checked before publication. CI validates YAML with actionlint. Keep generated
 logs, PDFs, PNGs and reports under ignored `.audit/` paths; only deliberately
 reviewed synthetic fixtures and curated milestone reports belong in Git.
+
+## Fixed tiled-layout acceptance
+
+`runM63TiledMatlabTests` requires native MATLAB and runs 26 reader/profile/
+negative cases, including nine supported spacing/padding combinations and
+three explicit zero-spacing rejections. It writes synthetic TeX/JSON evidence.
+`runM63TiledWorkflowTests` additionally requires a real LuaLaTeX compiler and
+tests single export, figure sets and repeated manifests (three cases).
+Report a cross-runtime compiler bridge separately from native Windows TeX.
+
+`runM63TiledIrTests` runs 13 handle-free schema/JSON/renderer/profile cases in
+Octave or MATLAB. `runM63TiledTexTests` reruns those fixtures and compiles three
+representative grids/profiles. Neither establishes native Octave tiledlayout
+support. Inspect native-generated PDFs for cell/spans, labels, decorations,
+85/170 mm profiles and tight spacing; compilation alone missed initial label
+collisions. See [the contract](../docs/TILED_LAYOUTS.md).
 
 ## Security regression
 

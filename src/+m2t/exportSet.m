@@ -120,11 +120,28 @@ function [plan, options, outputDirectory] = preflight(entries, outputValue, vara
     end
 
     manifestPath = fullfile(outputDirectory, 'm2t-manifest.json');
+    try
+        m2t.internal.assertOwnedPath(manifestPath);
+    catch err
+        error('M2T:SET_INVALID_OUTPUT', '%s', err.message);
+    end
+    if exist(manifestPath, 'dir') == 7
+        error('M2T:SET_INVALID_OUTPUT', 'Manifest path is an existing directory.');
+    end
     if ~options.export.overwrite && exist(manifestPath, 'file') == 2
         error('M2T:SET_OUTPUT_EXISTS', ...
               'Existing figure-set manifest: %s.', manifestPath);
     end
     for k = 1:numel(plan)
+        try
+            paths = m2t.internal.normalizeOutputBase(plan(k).outputBase);
+            m2t.internal.checkOutputProducts(paths, plan(k).overwrite);
+        catch err
+            if strcmp(err.identifier, 'M2T:E003:OutputExists')
+                error('M2T:SET_OUTPUT_EXISTS', '%s', err.message);
+            end
+            error('M2T:SET_INVALID_OUTPUT', '%s', err.message);
+        end
         if plan(k).overwrite, continue; end
         products = {[plan(k).outputBase '.tex'], [plan(k).outputBase '.pdf'], ...
                     [plan(k).outputBase '.compile.log']};
@@ -208,8 +225,7 @@ function directory = normalizeOutputDirectory(value)
         error('M2T:SET_INVALID_OUTPUT', ...
               'outputDirectory must be a nonempty text scalar.');
     end
-    if any(value == sprintf('\r')) || any(value == sprintf('\n')) || ...
-       any(value == char(0))
+    if any(double(value) < 32) || any(double(value) == 127)
         error('M2T:SET_INVALID_OUTPUT', ...
               'outputDirectory contains an invalid control character.');
     end
@@ -325,6 +341,7 @@ function manifest = createManifest(entries, options)
 end
 
 function writeManifest(path, manifest, overwrite)
+    m2t.internal.assertOwnedPath(path);
     directory = fileparts(path);
     if exist(directory, 'dir') ~= 7
         [created, message] = mkdir(directory);

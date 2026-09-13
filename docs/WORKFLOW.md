@@ -35,6 +35,18 @@ result = m2t.export(gcf, 'figures/sine');
 
 There is no silent fallback to the inherited `matlab2tikz(...)` exporter.
 
+Output bases can be explicit relative or absolute paths; dots, spaces and
+underscores in their stems are preserved. S1 preflights all owned products
+before writes/deletions. `Overwrite=true` does not authorize following linked
+products, replacing a directory with a file, or deleting foreign/nested asset
+content. Such cases fail with `M2T:E006:UnsafeOutputProduct`. Generated asset
+cleanup is flat and nonrecursive. Unsafe filename/control characters fail
+before output creation. MATLAB requires JVM-backed path inspection.
+
+Only export trusted figures and TeX. LuaLaTeX runs with shell escape disabled,
+but the process is not sandboxed. See the [security boundary](../SECURITY.md)
+for literal text, interpreted markup and caller-owned output directories.
+
 ## Result fields
 
 `m2t.export` always returns a struct with stable M3.0 field names:

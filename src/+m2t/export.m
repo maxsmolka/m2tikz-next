@@ -141,6 +141,7 @@ function result = export(figureHandle, outputBase, varargin)
 end
 
 function prepareOutputs(paths, overwrite)
+    m2t.internal.checkOutputProducts(paths, overwrite);
     if exist(paths.directory, 'file') == 2
         error('M2T:E002:InvalidOutputPath', ...
               'Output directory is an existing file: %s', paths.directory);
@@ -196,7 +197,15 @@ function deleteAssetDirectory(path, expectedParent)
         error('M2T:E004:WriteFailed', ...
               'Refusing to remove image asset directory outside output parent: %s', path);
     end
-    [status, message] = rmdir(path, 's');
+    % Preflight has established a flat collection of generated PNG files.
+    % Never recursively traverse a caller-controlled directory during cleanup.
+    files = dir(fullfile(path, 'image-*.png'));
+    for k = 1:numel(files)
+        child = fullfile(path, files(k).name);
+        m2t.internal.assertOwnedPath(child);
+        deleteWorkflowFile(child);
+    end
+    [status, message] = rmdir(path);
     if ~status || exist(path, 'dir') == 7
         error('M2T:E004:WriteFailed', ...
               'Cannot remove existing image asset directory %s: %s', path, message);

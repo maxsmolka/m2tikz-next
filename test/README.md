@@ -151,6 +151,21 @@ be checked before publication. CI validates YAML with actionlint. Keep generated
 logs, PDFs, PNGs and reports under ignored `.audit/` paths; only deliberately
 reviewed synthetic fixtures and curated milestone reports belong in Git.
 
+## Security regression
+
+`runS1SecurityTests` tests product collisions, overwrite/deletion preflight,
+hostile stems, set traversal, compiler arguments and literal/markup boundaries
+without requiring TeX. It runs 13 shared cases plus one Windows-specific name
+case under MATLAB or five POSIX symlink cases under Octave. These are distinct
+platform evidence, not skipped cases counted as passes. `runS1SecurityTexTests`
+adds three real LuaLaTeX checks for spaces/dots/underscores, owned-asset overwrite
+and disabled shell escape. Hosted jobs run both appropriate suites.
+
+On Windows, `./test/runS1WindowsPathTests.ps1 -MatlabCommand matlab` adds three
+native MATLAB checks for existing/dangling junction products and a deliberately
+linked explicit parent directory. It creates isolated synthetic fixtures under
+`.audit/`, removes only the created junctions, and preserves result evidence.
+
 ## Inherited legacy tests
 
 These exercise the separate `matlab2tikz(...)` exporter, not the modern public

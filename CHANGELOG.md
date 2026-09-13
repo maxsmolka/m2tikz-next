@@ -17,6 +17,11 @@ versions are not m2tikz-next releases.
 
 ### Compatibility and validation
 
+- S1: product-path preflight, nonrecursive asset cleanup, safer filename/asset
+  serialization, disabled compiler shell escape, pinned checkout Actions, and
+  strengthened public repository protection. Unsafe or redirected products now
+  fail explicitly; MATLAB output inspection requires a JVM. See SECURITY.md.
+
 - Public options remain unchanged. FigureIR v2 gains additive defaults for
   older scatter and image documents. No automatic downsampling is introduced.
 - M6.1/M6.2 evidence covers GNU Octave 11.3, MATLAB R2026a Update 4 on Windows,

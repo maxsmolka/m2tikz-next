@@ -70,3 +70,16 @@ All cases fail rather than dropping points or collapsing size/color arrays.
 
 These diagnostics prevent grayscale conversion, alpha loss, resizing, or an
 invented RGB colorbar.
+
+## Export security diagnostics
+
+- `M2T:E002:InvalidOutputPath` rejects unsafe/control characters in output bases.
+- `M2T:E003:OutputExists` preserves products without explicit overwrite.
+- `M2T:E006:UnsafeOutputProduct` rejects redirected products, directory/file
+  conflicts, unknown/nested asset content or unavailable safe path inspection.
+- `M2T:C005:UnsafeProcessArgument` rejects unsafe compiler arguments.
+- `M2T2:E055:UnsafeAssetReference` rejects unsafe relative hybrid asset names.
+
+Figure-set preflight maps product collisions to `M2T:SET_OUTPUT_EXISTS` and
+invalid product paths to `M2T:SET_INVALID_OUTPUT`. Message text can include the
+caller-selected path; generated scientific TeX does not embed absolute paths.

@@ -9,8 +9,8 @@ already supported. Each milestone requires its own review and successful
 
 | Phase | Scope and acceptance boundary |
 | --- | --- |
-| Post-M6.2 alignment | Distinguish released/development features; align architecture, status, workflow, and testing documentation. |
-| S1 | Harden repository security, workflow permissions, paths/assets, overwrite/deletion boundaries, compiler arguments, and text/TeX boundaries without weakening protections. |
+| Post-M6.2 alignment | Complete: released/development features, architecture, status, workflow, and testing documentation aligned. |
+| S1 | Security foundation: repository protection, workflow pins, product preflight, nonrecursive asset cleanup, compiler arguments and explicit text/TeX trust boundary. |
 | M6.3 | Bounded fixed tiled layouts: explicit tile/span/order/ownership, shared labels, supported spacing/padding and legend/colorbar placement; native MATLAB acceptance mandatory. |
 | M6.4 | Explicit left/right Y-axis ownership, scales/ticks/labels, shared X, legends and supported layout interactions; native MATLAB acceptance mandatory. |
 | M6.5 | Bounded scientific scatter3, mesh-like surfaces and combinations with faithful views/color mapping; native evidence for new MATLAB object claims. |

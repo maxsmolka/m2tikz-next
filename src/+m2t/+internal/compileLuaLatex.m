@@ -2,9 +2,13 @@ function outcome = compileLuaLatex(texPath, pdfPath, compiler)
 %COMPILELUALATEX Compile standalone TeX in an isolated temporary directory.
     if nargin < 3, compiler = 'lualatex'; end
     compiler = textScalar(compiler, 'compiler');
+    % Reject malformed arguments before compiler discovery or staging changes.
+    quoteArgument(texPath); quoteArgument(pdfPath);
+    m2t.internal.assertOwnedPath(pdfPath);
     outcome = struct('success', false, 'compiler', compiler, 'logPath', '', ...
                      'diagnostics', m2t.internal.emptyDiagnostics());
     failureLog = [stripExtension(pdfPath) '.compile.log'];
+    m2t.internal.assertOwnedPath(failureLog);
 
     versionCommand = [quoteArgument(compiler) ' --version 2>&1'];
     [available, ~] = system(versionCommand);
@@ -36,7 +40,7 @@ function outcome = compileLuaLatex(texPath, pdfPath, compiler)
         buildDirectory, previousTexmfVar, previousTexmfCache, previousTexInputs));
 
     command = [quoteArgument(compiler) ...
-        ' -interaction=nonstopmode -halt-on-error -file-line-error' ...
+        ' -no-shell-escape -interaction=nonstopmode -halt-on-error -file-line-error' ...
         ' -output-directory=' quoteArgument(buildDirectory) ...
         ' ' quoteArgument(texPath) ' 2>&1'];
     [exitCode, processOutput] = system(command);
@@ -84,14 +88,14 @@ end
 
 function value = quoteArgument(value)
     value = textScalar(value, 'process argument');
-    if any(value == sprintf('\r')) || any(value == sprintf('\n'))
+    if any(double(value) < 32) || any(double(value) == 127)
         error('M2T:C005:UnsafeProcessArgument', ...
-              'Process arguments must not contain line breaks.');
+              'Process arguments must not contain control characters.');
     end
     if ispc
-        if any(value == '"') || any(value == '%')
+        if any(value == '"') || any(value == '%') || any(value == '!')
             error('M2T:C005:UnsafeProcessArgument', ...
-                  'Windows process arguments must not contain double quotes or percent signs.');
+                  'Windows process arguments must not contain quotes, percent or exclamation signs.');
         end
         value = strrep(value, '\', '/');
         value = ['"' value '"'];

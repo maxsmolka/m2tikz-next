@@ -15,7 +15,7 @@ jobs:
   repository-policy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4, resolved 2026-09-13
         with:
           fetch-depth: 0
       - name: Check changed-file whitespace
@@ -49,7 +49,7 @@ jobs:
   octave-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4, resolved 2026-09-13
       - name: Provision GNU Octave 11.3.0 and metadata validator
         shell: bash
         run: |
@@ -75,11 +75,14 @@ jobs:
       - name: Validate MATLAB preparation and portable milestone IR
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM40MatlabPreparationTests(fullfile('.audit','m40-preparation')); runM51AnnotationIrTests(fullfile('.audit','m51-annotation-ir')); runM52GroupedBarIrTests(fullfile('.audit','m52-bar-ir')); runM53BoxplotIrTests(fullfile('.audit','m53-boxplot-ir')); runM54SurfaceIrTests(fullfile('.audit','m54-surface-ir'));"
+      - name: Validate output and asset security boundaries
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runS1SecurityTests(fullfile('.audit','s1-security'));"
 
   tex-preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4, resolved 2026-09-13
       - name: Provision GNU Octave 11.3.0, LuaLaTeX, and PGFPlots
         shell: bash
         run: |
@@ -122,3 +125,6 @@ jobs:
       - name: Compile focused rich-image modes
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM62RichImageTexTests(fullfile('.audit','m62-rich-image-tex'));"
+      - name: Compile safe paths and verify disabled shell escape
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runS1SecurityTexTests(fullfile('.audit','s1-security-tex'));"

@@ -8,5 +8,5 @@ function lines = renderHybridImage(assetReference, xExtent, yExtent)
         ['ymax=' m2t2.util.formatNumber(yExtent(2))], ...
         '/pgfplots/forget plot'};
     lines = {[bs 'addplot graphics[' m2t2.util.joinCell(options, ',') ...
-             '] {' assetReference '};']};
+             '] {' bs 'detokenize{' assetReference '}};']};
 end

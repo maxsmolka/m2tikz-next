@@ -42,7 +42,7 @@ run its own acceptance gates. Required hosted jobs are `repository-policy`,
 
 ## Next phase
 
-The post-M6.2 alignment documents the current state. Next is **S1: public
-repository security hardening**, followed by the ordered work in
+The post-M6.2 alignment and S1 security hardening establish the current
+foundation. Next is **M6.3: modern tiled layout semantics**, followed by the ordered work in
 [ROADMAP.md](ROADMAP.md). New MATLAB object support requires native MATLAB
 validation. See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries.

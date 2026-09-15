@@ -25,6 +25,9 @@ function ir = fitTiledMargins(ir, profile)
         insetLeft=3*tick+~isempty(a.ylabel.value)*(label+5);
         insetBottom=2*tick+~isempty(a.xlabel.value)*(label+5);
         insetRight=tick;insetTop=tick+~isempty(a.title.value)*(titleSize+8);
+        if isfield(a,'dualY')
+            insetRight=3*tick+~isempty(a.dualY.right.label.value)*(label+5);
+        end
         for e=1:numel(ir.elements)
             node=ir.elements{e};if labels(e),continue;end
             if ~strcmp(node.kind,'m2t2.colorbar')||~strcmp(node.owner.kind,'axes')
@@ -32,6 +35,9 @@ function ir = fitTiledMargins(ir, profile)
             end
             if ~strcmp(node.owner.id,a.id),continue;end
             reserve=4*tick+~isempty(node.label.value)*(label+5);
+            if isfield(a,'dualY') && strcmp(node.location,'eastoutside')
+                reserve=6*tick+~isempty(node.label.value)*(label+5);
+            end
             switch node.location
                 case 'eastoutside',insetRight=insetRight+reserve;
                 case 'westoutside',insetLeft=insetLeft+reserve;
@@ -65,6 +71,11 @@ function ir = fitTiledMargins(ir, profile)
             p.x=after.x+(p.x-before.x)*after.width/before.width;
             p.y=after.y+(p.y-before.y)*after.height/before.height;
             p.width=p.width*after.width/before.width;p.height=p.height*after.height/before.height;
+            if isfield(original{owner},'dualY') && strcmp(node.location,'eastoutside')
+                reserve=3*tick+~isempty(original{owner}.dualY.right.label.value)*(label+5);
+                p.x=after.x+after.width+(reserve+tick)/width;
+                p.width=tick/width;
+            end
             node.placement=p;
         end
         ir.elements{k}=node;

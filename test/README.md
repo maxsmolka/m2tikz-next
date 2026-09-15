@@ -45,11 +45,18 @@ GitHub Actions is the current hosted system. The required jobs are:
 | Job | Coverage |
 | --- | --- |
 | repository-policy | Six architecture invariants, links, confidentiality, citation, actionlint, whitespace. |
-| octave-tests | Core readers/renderers, fixtures, smoke generation, MATLAB-harness preparation, portable M5/tiled IR tests and S1 security cases. |
-| tex-preview | Example compilation, workflow/compiler/profile tests, set/image/backend smoke tests, publication calibration, rich scatter/image TeX and set cases, S1 and tiled-profile compiler cases. |
+| octave-tests | Core readers/renderers, fixtures, smoke generation, MATLAB-harness preparation, portable M5/tiled/dual-Y IR tests and S1 security cases. |
+| tex-preview | Example compilation, workflow/compiler/profile tests, set/image/backend smoke tests, publication calibration, rich scatter/image TeX and set cases, S1, tiled-profile and dual-Y compiler cases. |
 
 All three must pass before a milestone merge. The Octave image is digest-pinned
 in [ci.yml](../.github/workflows/ci.yml). Licensed MATLAB validation is separate.
+
+M6.4 adds `runM64DualYIrTests` (16 portable cases) and `runM64DualYTexTests`
+(six real compilations). Native-only `runM64DualYMatlabTests` (20 cases) and
+`runM64DualYWorkflowTests` (four public export/set cases, actual LuaLaTeX
+required) establish the distinct Update 5 reader/workflow evidence. Generated
+native TeX/PDFs additionally require visual review, not just a PDF header check.
+See [the bounded contract](../docs/DUAL_Y_AXES.md).
 
 ## Extended portable regression
 

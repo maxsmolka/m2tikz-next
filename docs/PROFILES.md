@@ -128,5 +128,9 @@ Tile cells and scientific series remain unchanged. This
 prevents the observed shared-label collision at 85 mm without changing source
 figures. It is not a general decoration solver, and figure-space annotations
 fail this transform because safe ownership cannot be inferred. Untiled profile
-behavior is unchanged. Insufficient plotting area fails explicitly rather than
+behavior was unchanged in M6.3. M6.4 adds explicit right-side gutters for dual
+Y axes, including a one-slot policy for a single untiled axes and extra
+separation before an east colorbar. Multiple untiled dual axes fail the profile
+transform. See [DUAL_Y_AXES.md](DUAL_Y_AXES.md).
+Insufficient plotting area fails explicitly rather than
 collapsing a dense grid. See [TILED_LAYOUTS.md](TILED_LAYOUTS.md).

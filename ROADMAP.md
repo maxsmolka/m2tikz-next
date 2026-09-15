@@ -1,6 +1,6 @@
 # Roadmap to 1.0
 
-Latest release: 0.5.0. Functionality merged through M6.3. This roadmap defines
+Latest release: 0.5.0. Functionality merged through M6.4. This roadmap defines
 ordered acceptance work, not release dates or claims that planned features are
 already supported. Each milestone requires its own review and successful
 `repository-policy`, `octave-tests`, and `tex-preview` checks before merge.
@@ -12,7 +12,7 @@ already supported. Each milestone requires its own review and successful
 | Post-M6.2 alignment | Complete: released/development features, architecture, status, workflow, and testing documentation aligned. |
 | S1 | Security foundation: repository protection, workflow pins, product preflight, nonrecursive asset cleanup, compiler arguments and explicit text/TeX trust boundary. |
 | M6.3 | Fixed layouts implemented with explicit cells/spans/order, shared labels, bounded spacing/padding, axes-owned decorations and profiles; see docs/TILED_LAYOUTS.md for native evidence and exclusions. |
-| M6.4 | Explicit left/right Y-axis ownership, scales/ticks/labels, shared X, legends and supported layout interactions; native MATLAB acceptance mandatory. |
+| M6.4 | Implemented bounded left/right ownership, independent scales/ticks/labels/colors, shared X, linked legends and supported tiled/profile interactions; see docs/DUAL_Y_AXES.md for native evidence and exclusions. |
 | M6.5 | Bounded scientific scatter3, mesh-like surfaces and combinations with faithful views/color mapping; native evidence for new MATLAB object claims. |
 | M6.6 | Lossless large-data contract and synthetic line/scatter/image/3-D benchmarks; no silent reduction and no brittle wall-clock CI gate. An opt-in reduction API may remain deferred. |
 | M6.7 | Unsupported-object/partial-output hardening: explicit classification for relevant objects/properties, stable diagnostics, no successful materially incomplete output. |

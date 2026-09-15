@@ -76,6 +76,13 @@ function ir = normalizeV2(decoded)
         target.yticks = normalizeTicks(target.yticks);
         target.zticks = normalizeTicks(target.zticks);
         target.zlabel = normalizeText(target.zlabel);
+        if isfield(target,'dualY')
+            target.dualY.leftColor=row(target.dualY.leftColor);
+            right=target.dualY.right;
+            right.limits=row(right.limits);right.color=row(right.color);
+            right.ticks=normalizeTicks(right.ticks);right.label=normalizeText(right.label);
+            target.dualY.right=right;
+        end
         sourceSeries = structArrayToCells(target.series);
         target.series = cell(1, numel(sourceSeries));
         for s = 1:numel(sourceSeries)

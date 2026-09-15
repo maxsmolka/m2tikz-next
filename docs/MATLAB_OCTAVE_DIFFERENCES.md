@@ -13,6 +13,11 @@ The reader obtains explicit grid/cell/span metadata and shared-label ownership
 from the native container. Octave runs handle-free layout/renderer fixtures only;
 no native Octave tiledlayout parity is claimed. See [TILED_LAYOUTS.md](TILED_LAYOUTS.md).
 
+M6.4 adds separate Update 5 native `yyaxis` evidence. MATLAB `Children` is
+active-side-only; readers compare both sides with `allchild` and restore active
+state. Native legend links determine entry ownership. Octave tests only the
+handle-free dual-axis representation and renderer; see [DUAL_Y_AXES.md](DUAL_Y_AXES.md).
+
 | Area | MATLAB R2026a observation | Octave 11.3 observation | Normalization |
 | --- | --- | --- | --- |
 | Figure helper | Empty `matlab.graphics.shape.internal.AnnotationPane`, Type `annotationpane`, Tag `scribeOverlay`, handle visibility off, directly owned by the figure | No corresponding figure child in the validated fixtures | Ignore only the empty, figure-owned, tagged runtime pane; nonempty user annotations remain E001 |

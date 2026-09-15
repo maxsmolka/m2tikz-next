@@ -17,6 +17,15 @@ versions are not m2tikz-next releases.
   outer-tile decoration cases fail explicitly. See docs/TILED_LAYOUTS.md.
 - Architecture, project status, and roadmap documents distinguish merged
   development capabilities from the latest released version.
+- M6.4: bounded native MATLAB dual Y axes, explicit series/ruler ownership,
+  linked legend ordering, independent scales/ticks/colors and shared X;
+  colorbar/tiled/profile integration. See docs/DUAL_Y_AXES.md.
+
+### Fixed
+
+- Rich scatter marker roles no longer inherit PGFPlots cycle-list colors.
+  Explicitly absent edges/faces remain absent in compiled filled markers;
+  this defect was exposed by M6.4 native PDF review.
 
 ### Compatibility and validation
 

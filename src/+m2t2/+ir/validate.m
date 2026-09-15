@@ -37,6 +37,15 @@ function validate(ir)
     validateLayout(ir.layout, axesIds, 'figure.layout');
     validateElements(ir.elements, ir.axes, axesIds, ir.layout, 'figure.elements');
     validateAnnotations(ir.annotations, ir.axes, axesIds, ir.layout, 'figure.annotations');
+    for k=1:numel(ir.annotations)
+        a=ir.annotations{k};
+        if strcmp(a.owner.kind,'axes')
+            index=find(strcmp(a.owner.id,axesIds),1);
+            if isfield(ir.axes{index},'dualY')
+                invalid('figure.annotations','dual-Y annotation side ownership is unsupported');
+            end
+        end
+    end
 end
 
 function id = validateAxes(node, path)
@@ -78,16 +87,53 @@ function id = validateAxes(node, path)
     logicalScalar(node.ygrid, [path '.ygrid']);
     logicalScalar(node.zgrid, [path '.zgrid']);
     if ~iscell(node.series), invalid([path '.series'], 'expected a cell array'); end
+    if isfield(node,'dualY'),validateDualY(node,path);end
     seriesIds = cell(1, numel(node.series));
     for s = 1:numel(node.series)
         seriesPath = sprintf('%s.series{%d}', path, s);
-        seriesIds{s} = validateSeries(node.series{s}, seriesPath, node.id, node.xscale, node.yscale, node.dimensionality);
+        item=node.series{s};scale=node.yscale;
+        if isfield(node,'dualY')
+            requireFields(item,{'yAxis'},seriesPath);
+            enum(item.yAxis,{'left','right'},[seriesPath '.yAxis']);
+            enum(item.kind,{'m2t2.line','m2t2.scatter'},[seriesPath '.kind']);
+            if strcmp(item.yAxis,'right'),scale=node.dualY.right.scale;end
+            if (strcmp(scale,'log') && any(item.y(isfinite(item.y))<=0)) || ...
+                    (strcmp(node.xscale,'log') && any(item.x(isfinite(item.x))<=0))
+                invalid(seriesPath,'dual-Y logarithmic coordinates must be positive');
+            end
+        elseif isfield(item,'yAxis')
+            enum(item.yAxis,{'left'},[seriesPath '.yAxis']);
+        end
+        seriesIds{s} = validateSeries(item, seriesPath, node.id, node.xscale, scale, node.dimensionality);
     end
     if numel(unique(seriesIds)) ~= numel(seriesIds)
         invalid([path '.series'], 'series ids must be unique');
     end
     validateBarGroups(node.series, path);
     validateLegend(node.legend, seriesIds, [path '.legend']);
+end
+
+function validateDualY(node,path)
+    dual=node.dualY;requireStruct(dual,[path '.dualY']);
+    requireFields(dual,{'leftColor','right'},[path '.dualY']);
+    if node.dimensionality~=2 || ~isempty(node.overlayOf)
+        invalid(path,'dual-Y requires a 2-D axes without unrelated overlay ownership');
+    end
+    validateColor(dual.leftColor,[path '.dualY.leftColor']);
+    right=dual.right;requireStruct(right,[path '.dualY.right']);
+    requireFields(right,{'limits','scale','direction','ticks','label','color'},[path '.dualY.right']);
+    finiteIncreasingPair(right.limits,[path '.dualY.right.limits']);
+    finiteIncreasingPair(node.xlim,[path '.xlim']);finiteIncreasingPair(node.ylim,[path '.ylim']);
+    enum(right.scale,{'linear','log'},[path '.dualY.right.scale']);
+    enum(right.direction,{'normal','reverse'},[path '.dualY.right.direction']);
+    validateTicks(right.ticks,[path '.dualY.right.ticks']);
+    validateText(right.label,[path '.dualY.right.label']);
+    validateColor(right.color,[path '.dualY.right.color']);
+    if (strcmp(node.xscale,'log')&&node.xlim(1)<=0)|| ...
+            (strcmp(node.yscale,'log')&&node.ylim(1)<=0)|| ...
+            (strcmp(right.scale,'log')&&right.limits(1)<=0)
+        invalid(path,'dual-Y logarithmic limits must be positive');
+    end
 end
 
 function validateColorMapping(node, path)

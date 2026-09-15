@@ -95,3 +95,17 @@ caller-selected path; generated scientific TeX does not embed absolute paths.
 These are analysis-stage unsupported failures, not successful partial exports.
 Malformed portable layout metadata also fails IR schema validation. Tiled
 profile gutter limitations use `M2T:PROFILE_GEOMETRY_INVALID`.
+
+## Dual Y axes
+
+- `M2T2:E059:AmbiguousDualYOwnership`: a child lacks a unique active-side
+  membership, or the runtime legend lacks unambiguous series links.
+- `M2T2:E060:UnsupportedDualYState`: unsupported child/ruler presentation,
+  non-2-D state or reversed legend presentation.
+- `M2T2:E061:InvalidDualYXState`: nonnumeric or inconsistent shared X,
+  inconsistent physical/color state, or unsupported manual aspect ratios.
+
+Malformed portable side metadata, unrelated overlays and nonpositive log
+domains fail `M2T2:E003:InvalidIR`. Unsupported dense/manual dual-axis profile
+geometry uses `M2T:PROFILE_GEOMETRY_INVALID`. No successful partial export is
+produced. See [the contract](../DUAL_Y_AXES.md).

@@ -12,6 +12,10 @@ bridge, and separate native-generated/portable TeX and visual checks. These
 results do not relabel the historical Update 4 matrix below or claim native
 Windows TeX or native Octave tiledlayout support. See [TILED_LAYOUTS.md](TILED_LAYOUTS.md).
 
+M6.4 adds separate Update 5 native dual-Y reader/lifecycle and real-compiler
+workflow tests, plus portable Octave IR and TeX/PDF tests. These are not additions
+to the historical Update 4 column below. See [DUAL_Y_AXES.md](DUAL_Y_AXES.md).
+
 | Capability | Octave 11.3 | MATLAB R2026a Update 4 on Windows | Status | Evidence |
 | --- | --- | --- | --- | --- |
 | Runtime/environment | validated | validated | validated | L0 |

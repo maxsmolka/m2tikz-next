@@ -153,18 +153,18 @@ reviewed synthetic fixtures and curated milestone reports belong in Git.
 
 ## Fixed tiled-layout acceptance
 
-`runM63TiledMatlabTests` requires native MATLAB and runs 26 reader/profile/
+`runM63TiledMatlabTests` requires native MATLAB and runs 28 reader/profile/
 negative cases, including nine supported spacing/padding combinations and
 three explicit zero-spacing rejections. It writes synthetic TeX/JSON evidence.
 `runM63TiledWorkflowTests` additionally requires a real LuaLaTeX compiler and
 tests single export, figure sets and repeated manifests (three cases).
 Report a cross-runtime compiler bridge separately from native Windows TeX.
 
-`runM63TiledIrTests` runs 13 handle-free schema/JSON/renderer/profile cases in
-Octave or MATLAB. `runM63TiledTexTests` reruns those fixtures and compiles three
+`runM63TiledIrTests` runs 15 handle-free schema/JSON/renderer/profile cases in
+Octave or MATLAB. `runM63TiledTexTests` reruns those fixtures and compiles four
 representative grids/profiles. Neither establishes native Octave tiledlayout
 support. Inspect native-generated PDFs for cell/spans, labels, decorations,
-85/170 mm profiles and tight spacing; compilation alone missed initial label
+85/170 mm profiles, simultaneous local/shared labels and tight spacing; compilation alone missed initial label
 collisions. See [the contract](../docs/TILED_LAYOUTS.md).
 
 ## Security regression

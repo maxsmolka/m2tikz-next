@@ -9,7 +9,8 @@ function summary = runM63TiledIrTests(outputDirectory)
         'overlap',@()badCase('overlap');'out_of_bounds',@()badCase('bounds'); ...
         'missing_owner',@()badCase('owner');'dynamic',@()badCase('dynamic'); ...
         'bad_spacing',@()badCase('spacing');'missing_metadata',@()badCase('missing'); ...
-        'profile_figure_arrow_rejected',@arrowCase};
+        'profile_figure_arrow_rejected',@arrowCase; ...
+        'local_shared_gutters',@localLabelsCase;'dense_profile_rejected',@denseCase};
     rows=cell(size(cases,1),3); failures=0;
     for k=1:size(cases,1)
         try,cases{k,2}();status='PASS';detail='assertions passed';
@@ -49,6 +50,23 @@ function summary = runM63TiledIrTests(outputDirectory)
         selection=m2t.profile.getSelection('publication','single-column');
         caught=false;try,m2t.profile.apply(a,selection.profile,selection.width);
         catch err,caught=strcmp(err.identifier,'M2T:PROFILE_GEOMETRY_INVALID');end;assert(caught);
+    end
+    function localLabelsCase()
+        a=ir;for n=1:2
+            a.axes{n}.title=m2t2.ir.makeText(['Panel ' num2str(n)]);
+            a.axes{n}.xlabel=m2t2.ir.makeText('Local X');a.axes{n}.ylabel=m2t2.ir.makeText('Local Y');
+        end
+        for role={'xlabel','ylabel'},node=m2t2.ir.makeSharedLabel(role{1},m2t2.ir.makeText(['Shared ' role{1}]));node.owner=m2t2.ir.makeOwner('layout','layout');a.elements{end+1}=node;end
+        s=m2t.profile.getSelection('publication','single-column');q=m2t.profile.apply(a,s.profile,s.width);
+        assert(q.success&&isequal(q.ir.layout,a.layout));
+        p1=q.ir.axes{1}.placement;p2=q.ir.axes{2}.placement;
+        assert((p2.x-p1.x-p1.width)*q.ir.size(1)>40);
+        m2t.internal.writeTextFile(fullfile(outputDirectory,'local-shared.tex'),m2t2.render.renderPgfplots(q.ir,true,q.renderConfig));
+    end
+    function denseCase()
+        a=ir;a.layout.columns=20;a.layout.cells{2}.column=20;
+        s=m2t.profile.getSelection('publication','single-column');caught=false;
+        try,m2t.profile.apply(a,s.profile,s.width);catch err,caught=strcmp(err.identifier,'M2T:PROFILE_GEOMETRY_INVALID');end;assert(caught);
     end
     function badCase(kind)
         a=ir;

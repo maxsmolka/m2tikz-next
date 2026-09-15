@@ -1,5 +1,9 @@
 # ADR-0008: Publication profiles
 
+M6.3 extends the original geometry-only transform for explicit tiled grids;
+see [ADR-0022](ADR-0022-fixed-tiled-layout-semantics.md). The original decision
+below remains the untiled baseline.
+
 - Status: Accepted for M3.1 development
 - Date: 2026-08-11
 

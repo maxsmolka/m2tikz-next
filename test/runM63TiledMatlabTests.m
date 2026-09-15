@@ -8,6 +8,7 @@ function summary=runM63TiledMatlabTests(outputDirectory)
         'tile_span',@spanCase;'column_major',@columnCase;'shared_labels',@labelsCase; ...
         'legend_colorbar_ownership',@decorationCase;'source_lifecycle',@lifecycleCase; ...
         'profile_85',@()profileCase('single-column');'profile_170',@()profileCase('double-column'); ...
+        'local_shared_85',@()profileCase('single-column',true);'local_shared_170',@()profileCase('double-column',true); ...
         'dynamic_rejected',@()negativeCase('flow');'nested_rejected',@()negativeCase('nested'); ...
         'outer_colorbar_rejected',@()negativeCase('colorbar');'outer_legend_rejected',@()negativeCase('legend'); ...
         'subtitle_rejected',@()negativeCase('subtitle')};
@@ -65,12 +66,18 @@ function summary=runM63TiledMatlabTests(outputDirectory)
         after={t.GridSize,t.TileIndexing,t.TileSpacing,t.Padding,t.Units,a.Units,a.Position,h.XData,h.YData};
         assert(isequal(before,after)&&isequal(first,second));clear c;
     end
-    function profileCase(width)
+    function profileCase(width,localLabels)
+        if nargin<2,localLabels=false;end
         [f,t,c]=base(1,2);plot(nexttile(t),1:3);plot(nexttile(t),3:-1:1);title(t,'Shared title');xlabel(t,'Shared X');ylabel(t,'Shared Y');
+        if localLabels
+            for n=1:2,a=nexttile(t,n);title(a,['Panel ' num2str(n)]);xlabel(a,'Local X');ylabel(a,'Local Y');end
+        end
         ir=m2t2.reader.readFigure(f);selection=m2t.profile.getSelection('publication',width);
         transformed=m2t.profile.apply(ir,selection.profile,selection.width);assert(transformed.success);
         assert(transformed.ir.axes{1}.placement.x*transformed.ir.size(1)>=36-1e-10);
-        assert(isequal(transformed.ir.layout,ir.layout));saveIR(transformed.ir,width,transformed.renderConfig);clear c;
+        assert(isequal(transformed.ir.layout,ir.layout));
+        name=width;if localLabels,name=['local-shared-' width];end
+        saveIR(transformed.ir,name,transformed.renderConfig);clear c;
     end
     function spacingCase(spacing,padding)
         [f,t,c]=base(2,2);t.TileSpacing=spacing;t.Padding=padding;

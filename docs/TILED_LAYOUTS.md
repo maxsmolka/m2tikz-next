@@ -41,13 +41,18 @@ nodes; it has no MATLAB tiled-layout API calls or pixel-position guesses.
 
 ## Profiles and sets
 
-The 85/170 mm publication profile reserves physical outer text gutters for tiled
-figures. One affine transform fits axes and colorbars inside these gutters;
-relative ordering, spans and scientific series are unchanged. Shared labels
-receive physical-margin anchors. This is an explicit opt-in profile layout
+The 85/170 mm publication profile reserves physical outer and per-cell text
+gutters, including simultaneous local and shared labels. The explicit grid
+determines equal cell slots and spanning rectangles. Source spacing/padding
+choices map to 2/4/8-point tight/compact/loose gaps and padding. Colorbars follow
+an affine transform relative to their owning axes, with space reserved on the
+appropriate side. Cell order, spans and scientific series are unchanged.
+Shared labels receive physical-margin anchors. This is an explicit opt-in profile layout
 policy, not source geometry inference or data reduction. Unprofiled output
 retains runtime rectangles. It is not a general text-measurement/layout solver;
 long labels and dense grids still require visual review and a suitable size.
+Cells with insufficient plotting area, manual colorbar placement and unsupported
+decoration ownership fail with `M2T:PROFILE_GEOMETRY_INVALID`.
 Figure-space annotations are rejected for this gutter transform because their
 relationship to moved axes cannot be inferred safely. Axes-data text retains
 its explicit coordinate system.
@@ -72,10 +77,10 @@ analysis fails before output creation; it does not report partial support.
 
 ## Evidence
 
-New native evidence: MATLAB R2026a Update 5 on Windows, 26 focused reader/profile/
+New native evidence: MATLAB R2026a Update 5 on Windows, 28 focused reader/profile/
 negative cases and three real workflow/set cases. The workflow cases use a local
-bridge to Linux LuaLaTeX; this is not native Windows TeX evidence. Seventeen
-native-generated TeX fixtures and three portable fixtures compile separately.
+bridge to Linux LuaLaTeX; this is not native Windows TeX evidence. Nineteen
+native-generated TeX fixtures and four portable fixtures compile separately.
 Portable Octave IR/renderer tests do not imply native Octave tiledlayout parity.
 
 The existing broader evidence statement remains:

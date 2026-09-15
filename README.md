@@ -124,8 +124,9 @@ plans and text.
 ## Current limitations
 
 Version 0.5.0 is pre-1.0: APIs and schemas may still change. Unsupported or
-non-general areas include scatter transparency and 3-D scatter, `tiledlayout`/`nexttile`,
-`yyaxis`, polar plots, arbitrary annotations and patch semantics, stacked or
+non-general areas include scatter transparency and 3-D scatter, dynamic/nested
+tiled layouts, dual-axis variants outside [the bounded contract](docs/DUAL_Y_AXES.md),
+polar plots, arbitrary annotations and patch semantics, stacked or
 horizontal/categorical bars, broad modern `boxchart` behavior, general 3-D
 scenes, mesh/scatter3/contour3, perspective, lighting/material semantics, broad
 transparency, and general downsampling. MATLAB validation is limited to the

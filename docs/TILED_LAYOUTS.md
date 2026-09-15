@@ -69,7 +69,8 @@ spans, layout subtitles, custom shared-label rotation, and outer or multi-tile
 legend/colorbar placement fail explicitly. `TileSpacing='none'` is rejected:
 visual testing showed overlapping tick labels, and M6.3 does not silently hide
 them or invent new gaps. Unsupported axes/series still fail through the normal
-reader diagnostics. `yyaxis` remains outside M6.3.
+reader diagnostics. M6.4 extends the slice with bounded
+[dual Y axes](DUAL_Y_AXES.md); it was outside the original M6.3 scope.
 
 `M2T2:E056:UnsupportedTiledLayout`, `M2T2:E057:InvalidTileCell` and
 `M2T2:E058:UnsupportedTileDecoration` distinguish these boundaries. Public

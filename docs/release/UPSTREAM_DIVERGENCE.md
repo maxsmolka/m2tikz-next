@@ -15,10 +15,13 @@ scientific-export path. Major additions include:
 - layered reader/IR/renderer tests, legacy semantic comparisons, TeX matrices,
   PDF/raster geometry validation, and performance measurements.
 
-This is not full replacement coverage. Tiled layouts, `yyaxis`, polar figures,
-general 3-D scenes, broad annotation families, per-point scatter semantics, and
-other documented gaps remain unsupported. Shared figure elements have narrower
-runtime coverage than their IR/renderer model.
+Development functionality additionally includes rich per-point scatter,
+bounded RGB/alpha images, fixed MATLAB tiled layouts and explicit dual Y axes.
+These are not retroactive claims about the released 0.5.0 package.
+This is not full replacement coverage: dynamic/nested layouts, unsupported
+dual-axis variants, polar figures, general 3-D scenes, broad annotation families
+and other [documented gaps](../SUPPORT.md) remain unsupported. Shared figure
+elements have narrower runtime coverage than their IR/renderer model.
 
 The inherited `matlab2tikz(...)` API is preserved and is not silently
 redirected. The public modern entry points are `m2t.export(...)` and

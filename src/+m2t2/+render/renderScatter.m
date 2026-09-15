@@ -21,7 +21,7 @@ function lines = renderScatter(node, colorName)
     end
     if strcmp(node.sizeMode, 'constant') && strcmp(node.colorMode, 'constant_rgb')
         options = m2t2.render.seriesOptions(node, colorName); bs = char(92);
-        lines = {[bs 'addplot+[' m2t2.util.joinCell(options, ',') '] coordinates {'], ...
+        lines = {[bs 'addplot[' m2t2.util.joinCell(options, ',') '] coordinates {'], ...
                  m2t2.render.formatCoordinates(node.x, node.y), '};'};
         return;
     end
@@ -52,18 +52,28 @@ function lines = renderScatter(node, colorName)
             m2t2.util.formatNumber(node.y(k)) ' ' ...
             meta{k}];
     end
-    lines = [definitions, {[bs 'addplot+[' m2t2.util.joinCell(options, ',') '] table[x=x,y=y,meta=meta] {'], ...
+    % Explicit roles must not inherit cycle-list marker colors/scalings.
+    lines = [definitions, {[bs 'addplot[' m2t2.util.joinCell(options, ',') '] table[x=x,y=y,meta=meta] {'], ...
         'x y meta', m2t2.util.joinCell(rows,sprintf('\n')), '};'}];
 end
 
 function value=mappedStyle(node,colorName)
     value=['solid,draw=' role(node.edgeMode,[colorName 'edge'],'mapped color') ...
         ',fill=' role(node.faceMode,[colorName 'face'],'mapped color')];
+    value=[value,visibilityStyle(node)];
 end
 
 function value=symbolicStyle(node,colorName,dataColor)
     value=['solid,draw=' role(node.edgeMode,[colorName 'edge'],dataColor) ...
         ',fill=' role(node.faceMode,[colorName 'face'],dataColor)];
+    value=[value,visibilityStyle(node)];
+end
+
+function value=visibilityStyle(node)
+    % PGF's filled markers stroke their path even with TikZ draw=none.
+    value='';
+    if strcmp(node.edgeMode,'none'),value=[value ',draw opacity=0'];end
+    if strcmp(node.faceMode,'none'),value=[value ',fill opacity=0'];end
 end
 
 function value=role(mode,constantColor,dataColor)

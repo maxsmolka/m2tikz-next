@@ -81,6 +81,9 @@ jobs:
       - name: Validate portable explicit tiled-layout IR
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM63TiledIrTests(fullfile('.audit','m63-tiled-ir'));"
+      - name: Validate portable dual-Y ownership
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM64DualYIrTests(fullfile('.audit','m64-dual-ir'));"
 
   tex-preview:
     runs-on: ubuntu-latest
@@ -134,3 +137,6 @@ jobs:
       - name: Compile portable tiled-layout profiles
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM63TiledTexTests(fullfile('.audit','m63-tiled-tex'));"
+      - name: Compile portable dual-Y coordinate systems
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM64DualYTexTests(fullfile('.audit','m64-dual-tex'));"

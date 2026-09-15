@@ -12,6 +12,8 @@ serialization. Public entry points are `m2t.export` and `m2t.exportSet`;
    explicit layout/placement, ownership, text, legends, colorbars, and annotations.
    Fixed native tiled layouts use explicit grid/cell metadata and resolved
    rectangles; no tiled ownership is inferred from positions.
+   Dual Y axes retain one cell/shared X, explicit side membership and independent
+   ruler state; the renderer uses ordered transparent coordinate layers.
 3. The backend planner selects image representation from validated IR. The
    default is vector; explicit hybrid and opt-in auto are supported. RGB and
    nonopaque image alpha require hybrid. Policy decisions carry reason codes.
@@ -64,6 +66,7 @@ promised to be identical across machines. No silent data reduction is allowed.
 - [Rich scatter](docs/adr/ADR-0020-rich-scatter-semantics.md)
 - [Rich image/alpha](docs/adr/ADR-0021-rich-image-alpha-semantics.md)
 - [Fixed tiled layouts](docs/adr/ADR-0022-fixed-tiled-layout-semantics.md)
+- [Dual Y axes](docs/adr/ADR-0023-dual-y-axis-semantics.md)
 
 The architecture, profile, set, hybrid, planner, and validation invariants run
 in the `repository-policy` CI job. [Testing](test/README.md) explains the

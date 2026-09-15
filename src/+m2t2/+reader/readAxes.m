@@ -1,12 +1,17 @@
-function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle)
+function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, activeDualSide)
 %READAXES Normalize supported 2-D or narrow scientific 3-D Cartesian axes.
     if nargin < 3, axesId = 'axes-1'; end
     if nargin < 4, legendHandle = []; end
+    if nargin < 5, activeDualSide = false; end
+    yRulers = [];
     try
         yRulers = get(axesHandle, 'YAxis');
-        if numel(yRulers) > 1, unsupported('yyaxis', path); end
-    catch err
-        if strcmp(err.identifier, 'M2T2:E001:UnsupportedObject'), rethrow(err); end
+    catch
+        % Octave has no numeric-ruler array.
+    end
+    if numel(yRulers) > 1 && ~activeDualSide
+        [node, annotations] = m2t2.reader.readDualYAxes(axesHandle, path, axesId, legendHandle);
+        return;
     end
     viewValue = get(axesHandle, 'View');
     if numel(viewValue) ~= 2 || any(~isfinite(viewValue)), unsupported('axes', path); end
@@ -59,6 +64,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle)
     catch
     end
     children = flipud(allchild(axesHandle));
+    if activeDualSide, children = flipud(get(axesHandle, 'Children')); end
     barHandles = {};
     for k = 1:numel(children)
         if m2t2.reader.isBarObject(children(k), axesHandle)

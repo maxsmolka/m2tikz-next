@@ -3,6 +3,9 @@ function lines = renderAxes(node, axesIndex, figureSize, config, annotations)
     if nargin < 3, figureSize = zeros(1, 0); end
     if nargin < 4, config = m2t2.render.defaultConfig(); end
     if nargin < 5, annotations = {}; end
+    if isfield(node,'dualY')
+        lines=m2t2.render.renderDualYAxes(node,axesIndex,figureSize,config);return;
+    end
     lines = {};
     bs = char(92);
     for s = 1:numel(node.series)
@@ -98,6 +101,7 @@ function lines = renderAxes(node, axesIndex, figureSize, config, annotations)
     if node.legend.visible
         options{end + 1} = ['legend pos=' legendPosition(node.legend.location)];
     end
+    if isfield(config,'axesOptions'),options=[options,config.axesOptions];end
     lines{end + 1} = [bs 'begin{axis}['];
     for k = 1:numel(options)
         separator = ','; if k == numel(options), separator = ''; end
@@ -105,6 +109,7 @@ function lines = renderAxes(node, axesIndex, figureSize, config, annotations)
     end
     lines{end + 1} = ']';
     for s = 1:numel(node.series)
+        if isfield(config,'seriesIndices') && ~any(config.seriesIndices==s),continue;end
         if ~node.series{s}.visible, continue; end
         if strcmp(node.series{s}.kind, 'm2t2.image') && ...
                 isfield(config, 'imageBackend') && ...

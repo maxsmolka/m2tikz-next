@@ -87,6 +87,9 @@ jobs:
       - name: Validate portable scientific 3-D semantics
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM65Scientific3DIrTests(fullfile('.audit','m65-scientific-ir'));"
+      - name: Validate large-data cardinality contract at small scale
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM66LargeDataContractTests(fullfile('.audit','m66-contract'));"
 
   tex-preview:
     runs-on: ubuntu-latest
@@ -146,3 +149,6 @@ jobs:
       - name: Compile portable scientific 3-D projections
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM65Scientific3DTexTests(fullfile('.audit','m65-scientific-tex'));"
+      - name: Compile large-data contract representatives
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM66LargeDataTexTests(fullfile('.audit','m66-tex'));"

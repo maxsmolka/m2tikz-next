@@ -66,6 +66,19 @@ exercise the [bounded 3-D contract](../docs/SCIENTIFIC_3D.md). Native reference
 images and compiled PDFs must be reviewed for point colors, depth, projection
 and wire connectivity. A successful compile alone is insufficient.
 
+M6.6 adds `runM66LargeDataContractTests` and `runM66LargeDataTexTests`: ten
+small representatives each, testing sample/table/pixel counts and real TeX
+compilation without timing thresholds. Full native/IR measurements live in
+`benchmarks/benchmarkModernLargeData.m`, separate from CI. See the
+[large-data contract](../docs/LARGE_DATA.md) for exact stage/precision boundaries.
+
+Both suites also run six `runM66ColorMappingTests` fixtures: discrete boundary
+values, variable sizes, 3-D, surfaces, two/three-color and horizontal colorbars.
+The compiler lane compiles all six. `runM66ColorMappingMatlabTests` adds four
+native reference figures for scatter, scatter3, surface and scalar image;
+compare their source PNGs to compiled PDFs, rather than treating compilation
+or sample counts alone as proof of correct color semantics.
+
 ## Extended portable regression
 
 The public gate provides M2-M2.3 core coverage. Run the additional workflow

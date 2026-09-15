@@ -70,6 +70,12 @@ presence does not expand the evidence-based m2tikz-next support claim.
 
 ## Diagnostics and future work
 
+Large-data handling retains all supported samples/cells and uses no automatic
+reduction. This is distinct from finite TeX numeric precision and image-owned
+8-bit PNG encoding. See [LARGE_DATA.md](LARGE_DATA.md) for measured scale,
+explicit representation choices, compiler resource limits and the deferred
+reduction-API decision. Timing measurements are not CI thresholds.
+
 Unsupported objects, properties, or ownership relationships are expected to
 fail explicitly with stable structured diagnostics. Silently dropping data or
 decoration can create scientifically misleading output and is treated as a

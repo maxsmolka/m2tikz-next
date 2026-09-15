@@ -8,6 +8,9 @@ versions are not m2tikz-next releases.
 
 ### Added
 
+- M6.6: modern large-data stage benchmark and cardinality/pixel contract tests;
+  explicit no-reduction guidance. No new reduction API. See docs/LARGE_DATA.md.
+
 - M6.5: rich scatter3, explicit wire-mesh topology and bounded orthographic
   camera/depth/child-order semantics. See docs/SCIENTIFIC_3D.md.
 
@@ -25,6 +28,11 @@ versions are not m2tikz-next releases.
   colorbar/tiled/profile integration. See docs/DUAL_Y_AXES.md.
 
 ### Fixed
+
+- M6.6 visual benchmark audit: scalar scatter and surface colors, including
+  finite colorbar bins, follow MATLAB's discrete colormap instead of adding
+  colors by interpolating colormap entries. Scatter retains original scalar
+  values alongside explicit mapped classes in TeX.
 
 - Rich per-point RGB/size runs now own distinct color/class names, avoiding
   color replacement during deferred PGFPlots 3-D drawing.

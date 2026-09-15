@@ -1,6 +1,11 @@
 # Large-data export design notes
 
-## Current state and limits
+Historical M0/M1A notes for the inherited `matlab2tikz` path. These timings and
+candidate strategies are not the current modern-export contract. See
+[LARGE_DATA.md](../LARGE_DATA.md) and the modern M6.6 benchmark for the current
+no-reduction policy and measured reader/IR/planner/render/asset boundaries.
+
+## Historical state and limits
 
 matlab2tikz serializes plot coordinates into PGFPlots input, inline by default or
 as external tabular data when requested. M0 measured roughly 45 seconds and 37 MB

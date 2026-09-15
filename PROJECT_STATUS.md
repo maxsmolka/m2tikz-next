@@ -1,7 +1,7 @@
 # Project status
 
 Latest released version: **0.5.0**. Merged development functionality extends
-through **M6.5**. Unreleased features are listed separately in
+through **M6.6**. Unreleased features are listed separately in
 [CHANGELOG.md](CHANGELOG.md); this status does not announce a new release.
 
 ## Current contract
@@ -46,7 +46,9 @@ run its own acceptance gates. Required hosted jobs are `repository-policy`,
 ## Next phase
 
 The alignment, S1 security hardening, bounded tiled layouts and explicit dual
-Y axes and bounded scientific 3-D establish the current foundation. Next is
-**M6.6: the large-data contract**, followed by the ordered work in
+Y axes and bounded scientific 3-D establish the current foundation.
+The [large-data contract](docs/LARGE_DATA.md) retains all samples with explicit
+representation limits and no reduction API. Next is **M6.7: unsupported-object
+and partial-output hardening**, followed by the ordered work in
 [ROADMAP.md](ROADMAP.md). New MATLAB object support requires native MATLAB
 validation. See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries.

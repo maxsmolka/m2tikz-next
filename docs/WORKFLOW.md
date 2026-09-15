@@ -138,6 +138,11 @@ the TeX installation must provide TikZ, PGFPlots 1.18 compatibility, and the
 
 ## Current limitations
 
+For dense data, consult [the large-data contract](LARGE_DATA.md). Defaults do
+not reduce samples or change representation based on line/scatter count;
+explicit image backends have their own pixel/precision boundary. TeX resource
+failure is reported without a lower-fidelity automatic retry.
+
 - The document backend remains PGFPlots; `ImageBackend` plans only supported
   image-layer representation and never rasterizes a complete figure.
 - The pre-1.0 profile API currently provides only `none` and `publication`;

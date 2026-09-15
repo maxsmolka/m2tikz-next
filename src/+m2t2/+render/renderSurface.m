@@ -1,6 +1,23 @@
 function lines = renderSurface(node, colormapName)
 %RENDERSURFACE Render deterministic matrix-oriented scalar surface data.
     bs = char(92); rows = size(node.z, 1); columns = size(node.z, 2);
+    if strcmp(node.faceMode,'none')
+        color=node.edgeColor;
+        rgb=['{rgb,1:red,' m2t2.util.formatNumber(color(1)) ';green,' ...
+            m2t2.util.formatNumber(color(2)) ';blue,' m2t2.util.formatNumber(color(3)) '}'];
+        options=['color=' rgb ',line width=' m2t2.util.formatNumber(node.lineWidth) ...
+            'pt,' m2t2.render.lineStyleName(node.lineStyle) ',mark=none,forget plot'];
+        lines={};
+        for r=1:rows
+            lines=[lines,{[bs 'addplot3[' options '] coordinates {'], ...
+                m2t2.render.formatCoordinates3(node.x(r,:),node.y(r,:),node.z(r,:)),'};'}]; %#ok<AGROW>
+        end
+        for c=1:columns
+            lines=[lines,{[bs 'addplot3[' options '] coordinates {'], ...
+                m2t2.render.formatCoordinates3(node.x(:,c),node.y(:,c),node.z(:,c)),'};'}]; %#ok<AGROW>
+        end
+        return;
+    end
     data = cell(1, rows * columns + columns + 1); index = 1;
     data{index} = 'x y z meta'; index = index + 1;
     for column = 1:columns

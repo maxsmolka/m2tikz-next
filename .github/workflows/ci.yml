@@ -84,6 +84,9 @@ jobs:
       - name: Validate portable dual-Y ownership
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM64DualYIrTests(fullfile('.audit','m64-dual-ir'));"
+      - name: Validate portable scientific 3-D semantics
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM65Scientific3DIrTests(fullfile('.audit','m65-scientific-ir'));"
 
   tex-preview:
     runs-on: ubuntu-latest
@@ -140,3 +143,6 @@ jobs:
       - name: Compile portable dual-Y coordinate systems
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM64DualYTexTests(fullfile('.audit','m64-dual-tex'));"
+      - name: Compile portable scientific 3-D projections
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM65Scientific3DTexTests(fullfile('.audit','m65-scientific-tex'));"

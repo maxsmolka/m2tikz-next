@@ -109,6 +109,21 @@ function id = validateAxes(node, path)
     if numel(unique(seriesIds)) ~= numel(seriesIds)
         invalid([path '.series'], 'series ids must be unique');
     end
+    broadened=any(cellfun(@(item)strcmp(item.kind,'m2t2.scatter3') || ...
+        (strcmp(item.kind,'m2t2.surface')&&strcmp(item.faceMode,'none')),node.series));
+    if broadened
+        requireFields(node,{'sceneOrder'},path);
+        enum(node.sceneOrder,{'depth','childorder'},[path '.sceneOrder']);
+        if node.dimensionality~=3 || ~all(strcmp({node.xscale,node.yscale,node.zscale},'linear')) || abs(node.view(2))>=90
+            invalid(path,'broader 3-D requires linear orthographic non-polar axes');
+        end
+        if strcmp(node.sceneOrder,'depth') && sum(cellfun(@(item)item.visible,node.series))>1
+            invalid(path,'multiple depth-sorted objects require scene-wide occlusion');
+        end
+        if ~all(cellfun(@(item)any(strcmp(item.kind,{'m2t2.scatter3','m2t2.line3','m2t2.surface','m2t2.patch3'})),node.series))
+            invalid(path,'broader 3-D cannot contain 2-D series');
+        end
+    end
     validateBarGroups(node.series, path);
     validateLegend(node.legend, seriesIds, [path '.legend']);
 end
@@ -498,6 +513,12 @@ function id = validateSeries(node, path, axesId, xscale, yscale, dimensionality)
             validateLine(node, path);
         case 'm2t2.scatter'
             validateScatter(node, path);
+        case 'm2t2.scatter3'
+            if dimensionality~=3,invalid(path,'scatter3 requires axes3d');end
+            validateScatter(node,path);requireFields(node,{'z'},path);numericVector(node.z,[path '.z']);
+            if numel(node.z)~=numel(node.x)||any(~isfinite(node.z))
+                invalid(path,'scatter3 Z must match finite X/Y coordinates');
+            end
         case 'm2t2.errorbar'
             validateErrorbar(node, path);
         case 'm2t2.image'
@@ -532,8 +553,16 @@ function validateSurface(node, path)
         invalid(path, 'surface geometry and scalar colors must be finite');
     end
     enum(node.mapping, {'scaled'}, [path '.mapping']);
-    enum(node.faceMode, {'interpolated'}, [path '.faceMode']);
-    enum(node.edgeMode, {'none'}, [path '.edgeMode']);
+    enum(node.faceMode, {'interpolated','none'}, [path '.faceMode']);
+    if strcmp(node.faceMode,'none')
+        enum(node.edgeMode,{'constant'},[path '.edgeMode']);
+        requireFields(node,{'edgeColor','lineWidth','lineStyle'},path);
+        validateColor(node.edgeColor,[path '.edgeColor']);
+        nonnegativeScalar(node.lineWidth,[path '.lineWidth']);validateStyle(node.lineStyle,[path '.lineStyle']);
+        if strcmp(node.lineStyle,'none'),invalid(path,'wire mesh requires visible edges');end
+    else
+        enum(node.edgeMode, {'none'}, [path '.edgeMode']);
+    end
 end
 
 function validateLine3(node, path)

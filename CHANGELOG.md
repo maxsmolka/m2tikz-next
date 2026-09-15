@@ -8,6 +8,9 @@ versions are not m2tikz-next releases.
 
 ### Added
 
+- M6.5: rich scatter3, explicit wire-mesh topology and bounded orthographic
+  camera/depth/child-order semantics. See docs/SCIENTIFIC_3D.md.
+
 - M6.1: rich 2-D scatter with constant/per-point sizes, per-point RGB or
   scalar-mapped colors, bounded edge/face modes, and axes-owned colorbars.
 - M6.2: scalar scaled/direct images, truecolor RGB, and bounded constant or
@@ -22,6 +25,9 @@ versions are not m2tikz-next releases.
   colorbar/tiled/profile integration. See docs/DUAL_Y_AXES.md.
 
 ### Fixed
+
+- Rich per-point RGB/size runs now own distinct color/class names, avoiding
+  color replacement during deferred PGFPlots 3-D drawing.
 
 - Rich scatter marker roles no longer inherit PGFPlots cycle-list colors.
   Explicitly absent edges/faces remain absent in compiled filled markers;

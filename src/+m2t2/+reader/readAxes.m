@@ -135,7 +135,8 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
                 item = m2t2.reader.readBar(children(k), axesHandle, childPath, ...
                     axesId, barIndex(barHandles, children(k)), numel(barHandles));
             case 'scatter'
-                item = m2t2.reader.readScatter(children(k), childPath);
+                dimension=2;if is3d,dimension=3;end
+                item = m2t2.reader.readScatter(children(k), childPath, dimension);
             case 'errorbar'
                 item = m2t2.reader.readErrorbar(children(k), childPath);
             case 'hggroup'
@@ -147,7 +148,8 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
                 elseif isErrorbar(children(k))
                     item = m2t2.reader.readErrorbar(children(k), childPath);
                 elseif isScatterGroup(children(k))
-                    item = m2t2.reader.readScatter(children(k), childPath);
+                    dimension=2;if is3d,dimension=3;end
+                    item = m2t2.reader.readScatter(children(k), childPath, dimension);
                 else
                     unsupported(type, childPath);
                 end
@@ -168,7 +170,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
         item.id = sprintf('%s-series-%d', axesId, numel(series) + 1);
         series{end + 1} = item; %#ok<AGROW>
     end
-    hasScalarScatter = any(cellfun(@(item) strcmp(item.kind, 'm2t2.scatter') && ...
+    hasScalarScatter = any(cellfun(@(item) any(strcmp(item.kind, {'m2t2.scatter','m2t2.scatter3'})) && ...
         strcmp(item.colorMode, 'scalar_mapped'), series));
     if hasScalarScatter && ~strcmp(node.colorMapping.scale, 'linear')
         error('M2T2:E046:UnsupportedScatterColorMapping', ...
@@ -182,6 +184,16 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
               path, node.colorMapping.scale);
     end
     node.series = series;
+    broader3d=any(cellfun(@(item) strcmp(item.kind,'m2t2.scatter3') || ...
+            (strcmp(item.kind,'m2t2.surface') && strcmp(item.faceMode,'none')),series));
+    if broader3d
+        node.sceneOrder=m2t2.reader.readScientific3DCamera(axesHandle,node,path);
+        if ~isempty(annotations) || (~isempty(legendHandle)&& ...
+                (numel(series)~=1 || ~strcmp(series{1}.kind,'m2t2.scatter3')))
+            error('M2T2:E063:Unsupported3DScene', ...
+                'M2T2-E063 Unsupported3DScene: path=%s reason=3-D annotations and multi-object/mesh legend ownership are unsupported',path);
+        end
+    end
     node.legend = m2t2.reader.readLegend(legendHandle, series, [path '.legend']);
 end
 

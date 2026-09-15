@@ -9,13 +9,22 @@ function node = readSurface(handle, path)
         diagnostic('E035:UnsupportedSurfaceTransparency', path, ...
             'only opaque FaceAlpha=1 and EdgeAlpha=1 are supported');
     end
-    if ~strcmpi(char(get(handle, 'FaceColor')), 'interp')
+    faceColor=get(handle,'FaceColor');
+    wire=ischar(faceColor)&&strcmpi(faceColor,'none');
+    if ~wire && ~(ischar(faceColor)&&strcmpi(faceColor,'interp'))
         diagnostic('E034:UnsupportedSurfaceColorMode', path, ...
             'only FaceColor=interp is supported');
     end
     edgeColor = get(handle, 'EdgeColor'); lineStyle = char(get(handle, 'LineStyle'));
     edgeColorNone = ischar(edgeColor) && strcmpi(edgeColor, 'none');
-    if ~(edgeColorNone || strcmpi(lineStyle, 'none'))
+    if wire
+        if ~(isnumeric(edgeColor)&&numel(edgeColor)==3&&all(isfinite(edgeColor))&& ...
+                all(edgeColor>=0)&&all(edgeColor<=1)) || strcmpi(lineStyle,'none') || ...
+                ~strcmpi(get(handle,'MeshStyle'),'both')
+            diagnostic('E033:UnsupportedSurfaceEdgeMode',path, ...
+                'wire mesh requires constant RGB edges, visible lines, and MeshStyle=both');
+        end
+    elseif ~(edgeColorNone || strcmpi(lineStyle, 'none'))
         diagnostic('E033:UnsupportedSurfaceEdgeMode', path, ...
             'only invisible edges (EdgeColor=none or LineStyle=none) are supported; mesh is outside M5.4');
     end
@@ -38,6 +47,11 @@ function node = readSurface(handle, path)
             'surface coordinates and scalar colors must be finite');
     end
     node = m2t2.ir.makeSurfaceSeries();
+    if wire
+        node.faceMode='none';node.edgeMode='constant';node.edgeColor=reshape(double(edgeColor),1,3);
+        node.lineWidth=double(get(handle,'LineWidth'));
+        node.lineStyle=m2t2.util.normalizeLineStyle(lineStyle,[path '.lineStyle']);
+    end
     node.x = x; node.y = y; node.z = z; node.c = c;
     node.displayName = m2t2.ir.makeText(m2t2.util.textValue( ...
         get(handle, 'DisplayName'), [path '.displayName']), 'plain');

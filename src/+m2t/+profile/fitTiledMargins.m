@@ -28,6 +28,13 @@ function ir = fitTiledMargins(ir, profile)
         if isfield(a,'dualY')
             insetRight=3*tick+~isempty(a.dualY.right.label.value)*(label+5);
         end
+        if isfield(a,'sceneOrder')
+            % A 3-D view can move X/Y labels to either projected lower edge.
+            hasLabel=any(~cellfun(@isempty,{a.xlabel.value,a.ylabel.value,a.zlabel.value}));
+            insetLeft=3*tick+hasLabel*(label+5);insetRight=insetLeft;
+            insetBottom=2*tick+hasLabel*(label+7);
+            insetTop=2*tick+~isempty(a.title.value)*(titleSize+8);
+        end
         for e=1:numel(ir.elements)
             node=ir.elements{e};if labels(e),continue;end
             if ~strcmp(node.kind,'m2t2.colorbar')||~strcmp(node.owner.kind,'axes')
@@ -35,7 +42,7 @@ function ir = fitTiledMargins(ir, profile)
             end
             if ~strcmp(node.owner.id,a.id),continue;end
             reserve=4*tick+~isempty(node.label.value)*(label+5);
-            if isfield(a,'dualY') && strcmp(node.location,'eastoutside')
+            if (isfield(a,'dualY')||isfield(a,'sceneOrder')) && strcmp(node.location,'eastoutside')
                 reserve=6*tick+~isempty(node.label.value)*(label+5);
             end
             switch node.location
@@ -75,6 +82,10 @@ function ir = fitTiledMargins(ir, profile)
                 reserve=3*tick+~isempty(original{owner}.dualY.right.label.value)*(label+5);
                 p.x=after.x+after.width+(reserve+tick)/width;
                 p.width=tick/width;
+            end
+            if isfield(original{owner},'sceneOrder') && strcmp(node.location,'eastoutside')
+                p.x=after.x+after.width+(3*tick+label+5)/width;p.width=tick/width;
+                p.y=after.y;p.height=after.height;
             end
             node.placement=p;
         end

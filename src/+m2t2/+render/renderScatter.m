@@ -1,5 +1,7 @@
 function lines = renderScatter(node, colorName)
 %RENDERSCATTER Render explicit size and color modes through PGFPlots scatter.
+    is3d=strcmp(node.kind,'m2t2.scatter3');command='addplot';
+    if is3d,command='addplot3';end
     if strcmp(node.sizeMode, 'per_point')
         lines={};start=1;
         while start<=numel(node.x)
@@ -9,20 +11,29 @@ function lines = renderScatter(node, colorName)
             end
             part=node;part.sizeMode='constant';part.markerSize=node.markerSize(start);
             part.x=node.x(start:stop);part.y=node.y(start:stop);
+            if is3d,part.z=node.z(start:stop);end
             if strcmp(node.colorMode,'per_point_rgb')
                 part.colorData=node.colorData(start:stop,:);part.color=part.colorData(1,:);
             elseif strcmp(node.colorMode,'scalar_mapped')
                 part.colorData=node.colorData(start:stop);
             end
-            lines=[lines,m2t2.render.renderScatter(part,colorName)]; %#ok<AGROW>
+            % PGFPlots can defer 3-D painting until all plot definitions exist.
+            % Each size run therefore owns distinct color and class names.
+            partName=sprintf('%srun%d',colorName,start);bs=char(92);
+            aliases={[bs 'colorlet{' partName '}{' colorName '}'], ...
+                [bs 'colorlet{' partName 'edge}{' colorName 'edge}'], ...
+                [bs 'colorlet{' partName 'face}{' colorName 'face}']};
+            lines=[lines,aliases,m2t2.render.renderScatter(part,partName)]; %#ok<AGROW>
             start=stop+1;
         end
         return;
     end
     if strcmp(node.sizeMode, 'constant') && strcmp(node.colorMode, 'constant_rgb')
         options = m2t2.render.seriesOptions(node, colorName); bs = char(92);
-        lines = {[bs 'addplot[' m2t2.util.joinCell(options, ',') '] coordinates {'], ...
-                 m2t2.render.formatCoordinates(node.x, node.y), '};'};
+        if is3d,coordinates=m2t2.render.formatCoordinates3(node.x,node.y,node.z);
+        else,coordinates=m2t2.render.formatCoordinates(node.x,node.y);end
+        lines = {[bs command '[' m2t2.util.joinCell(options, ',') '] coordinates {'], ...
+                 coordinates, '};'};
         return;
     end
 
@@ -48,13 +59,15 @@ function lines = renderScatter(node, colorName)
     end
     rows = cell(1,numel(node.x));
     for k=1:numel(rows)
-        rows{k}=[m2t2.util.formatNumber(node.x(k)) ' ' ...
-            m2t2.util.formatNumber(node.y(k)) ' ' ...
-            meta{k}];
+        position=[m2t2.util.formatNumber(node.x(k)) ' ' m2t2.util.formatNumber(node.y(k))];
+        if is3d,position=[position ' ' m2t2.util.formatNumber(node.z(k))];end
+        rows{k}=[position ' ' meta{k}];
     end
+    columns='x=x,y=y,meta=meta';header='x y meta';
+    if is3d,columns='x=x,y=y,z=z,meta=meta';header='x y z meta';end
     % Explicit roles must not inherit cycle-list marker colors/scalings.
-    lines = [definitions, {[bs 'addplot[' m2t2.util.joinCell(options, ',') '] table[x=x,y=y,meta=meta] {'], ...
-        'x y meta', m2t2.util.joinCell(rows,sprintf('\n')), '};'}];
+    lines = [definitions, {[bs command '[' m2t2.util.joinCell(options, ',') '] table[' columns '] {'], ...
+        header, m2t2.util.joinCell(rows,sprintf('\n')), '};'}];
 end
 
 function value=mappedStyle(node,colorName)
@@ -85,7 +98,7 @@ function [definitions,classes,meta]=rgbClasses(node,colorName)
     for k=1:size(node.colorData,1)
         index=find(all(abs(uniqueColors-node.colorData(k,:))<1e-15,2),1);
         if isempty(index),index=size(uniqueColors,1)+1;uniqueColors(index,:)=node.colorData(k,:);end %#ok<AGROW>
-        meta{k}=sprintf('m2t2class%d',index);
+        meta{k}=sprintf('%sclass%d',colorName,index);
     end
     bs=char(92);
     for k=1:size(uniqueColors,1)
@@ -93,7 +106,7 @@ function [definitions,classes,meta]=rgbClasses(node,colorName)
         definitions{end+1}=[bs 'definecolor{' name '}{rgb}{' ...
             m2t2.util.formatNumber(c(1)) ',' m2t2.util.formatNumber(c(2)) ',' ...
             m2t2.util.formatNumber(c(3)) '}']; %#ok<AGROW>
-        classes{end+1}=[sprintf('m2t2class%d',k) '={' ...
+        classes{end+1}=[sprintf('%sclass%d',colorName,k) '={' ...
             symbolicStyle(node,colorName,name) '}']; %#ok<AGROW>
     end
 end

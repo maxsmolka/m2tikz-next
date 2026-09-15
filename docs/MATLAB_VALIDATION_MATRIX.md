@@ -56,6 +56,13 @@ representation and are not equality goldens.
 
 ## Remaining qualification
 
+M6.5 has separate MATLAB R2026a Update 5 on Windows evidence: 26 focused native
+scatter3/mesh/camera/lifecycle/negative cases, four real public profile/set
+exports, 19 portable IR cases and seven portable TeX documents. Thirteen native
+generated documents were compiled separately with Linux LuaLaTeX and inspected
+against synthetic source figures. This does not broaden the historical Update
+4 matrix above or establish native Octave 3-D parity. See [SCIENTIFIC_3D.md](SCIENTIFIC_3D.md).
+
 - GNU Octave 11.3 is the hosted Linux CI baseline; results on other Octave
   releases or platforms are not implied.
 - The installed MATLAB trial exposed many optional MathWorks products. No

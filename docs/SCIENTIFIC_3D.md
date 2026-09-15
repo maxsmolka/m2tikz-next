@@ -36,7 +36,10 @@ the claim. Additional contour3/patch topology has not been introduced.
 it requires 3-D axes and explicit scene order. Constant/per-point marker areas,
 constant RGB, per-point RGB and scalar mapped color reuse the 2-D role rules.
 Scalar metadata uses the existing axes ColorMappingIR and ColorbarIR. Opaque
-edge/face roles and supported marker shapes are unchanged; alpha is rejected.
+scatter uses discrete colormap row classes; original scalar values remain in
+TeX. Interpolated surfaces interpolate scalar values before discrete mapping,
+not vertex RGB. Finite colorbars use the same intervals (M6.6 correction).
+Opaque edge/face roles and supported marker shapes are unchanged; alpha is rejected.
 Variable sizes create exact contiguous plot runs, with distinct names for
 deferred PGFPlots colors/classes. No point or color is reduced or quantized.
 Single-scatter legends in the existing inside-location slice are supported

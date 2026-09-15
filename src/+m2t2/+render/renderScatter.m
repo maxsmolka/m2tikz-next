@@ -1,5 +1,6 @@
-function lines = renderScatter(node, colorName)
+function lines = renderScatter(node, colorName, colorMapping)
 %RENDERSCATTER Render explicit size and color modes through PGFPlots scatter.
+    if nargin<3,colorMapping=[];end
     is3d=strcmp(node.kind,'m2t2.scatter3');command='addplot';
     if is3d,command='addplot3';end
     if strcmp(node.sizeMode, 'per_point')
@@ -23,7 +24,7 @@ function lines = renderScatter(node, colorName)
             aliases={[bs 'colorlet{' partName '}{' colorName '}'], ...
                 [bs 'colorlet{' partName 'edge}{' colorName 'edge}'], ...
                 [bs 'colorlet{' partName 'face}{' colorName 'face}']};
-            lines=[lines,aliases,m2t2.render.renderScatter(part,partName)]; %#ok<AGROW>
+            lines=[lines,aliases,m2t2.render.renderScatter(part,partName,colorMapping)]; %#ok<AGROW>
             start=stop+1;
         end
         return;
@@ -44,9 +45,11 @@ function lines = renderScatter(node, colorName)
         'forget plot'};
     definitions = {};
     if strcmp(node.colorMode, 'scalar_mapped')
-        options{end+1} = 'scatter src=explicit';
-        options{end+1} = ['scatter/use mapped color={' mappedStyle(node, colorName) '}'];
-        meta = arrayfun(@m2t2.util.formatNumber,node.colorData,'UniformOutput',false);
+        if isempty(colorMapping),error('M2T2:E003:InvalidIR','M2T2-E003 InvalidIR: scalar scatter requires color mapping');end
+        indices=m2t2.render.imageColorIndices(node.colorData,colorMapping,'scaled',1);
+        [definitions,classes,meta]=mappedClasses(node,colorName,colorMapping,indices);
+        options{end+1} = 'scatter src=explicit symbolic';
+        options{end+1} = ['scatter/classes={' m2t2.util.joinCell(classes, ',') '}'];
     else
         options{end+1} = 'scatter src=explicit symbolic';
         if strcmp(node.colorMode, 'per_point_rgb')
@@ -61,19 +64,17 @@ function lines = renderScatter(node, colorName)
     for k=1:numel(rows)
         position=[m2t2.util.formatNumber(node.x(k)) ' ' m2t2.util.formatNumber(node.y(k))];
         if is3d,position=[position ' ' m2t2.util.formatNumber(node.z(k))];end
+        if strcmp(node.colorMode,'scalar_mapped'),position=[position ' ' m2t2.util.formatNumber(node.colorData(k))];end
         rows{k}=[position ' ' meta{k}];
     end
     columns='x=x,y=y,meta=meta';header='x y meta';
     if is3d,columns='x=x,y=y,z=z,meta=meta';header='x y z meta';end
+    if strcmp(node.colorMode,'scalar_mapped')
+        header='x y value meta';if is3d,header='x y z value meta';end
+    end
     % Explicit roles must not inherit cycle-list marker colors/scalings.
     lines = [definitions, {[bs command '[' m2t2.util.joinCell(options, ',') '] table[' columns '] {'], ...
         header, m2t2.util.joinCell(rows,sprintf('\n')), '};'}];
-end
-
-function value=mappedStyle(node,colorName)
-    value=['solid,draw=' role(node.edgeMode,[colorName 'edge'],'mapped color') ...
-        ',fill=' role(node.faceMode,[colorName 'face'],'mapped color')];
-    value=[value,visibilityStyle(node)];
 end
 
 function value=symbolicStyle(node,colorName,dataColor)
@@ -108,5 +109,17 @@ function [definitions,classes,meta]=rgbClasses(node,colorName)
             m2t2.util.formatNumber(c(3)) '}']; %#ok<AGROW>
         classes{end+1}=[sprintf('%sclass%d',colorName,k) '={' ...
             symbolicStyle(node,colorName,name) '}']; %#ok<AGROW>
+    end
+end
+
+function [definitions,classes,meta]=mappedClasses(node,colorName,mapping,indices)
+    % Resolve bins before finite decimal serialization; preserve raw values separately.
+    used=unique(indices);definitions=cell(1,numel(used));classes=definitions;bs=char(92);
+    meta=arrayfun(@(i)sprintf('%sindex%d',colorName,i),indices,'UniformOutput',false);
+    for k=1:numel(used)
+        name=sprintf('%smap%d',colorName,used(k));c=mapping.colormap(used(k)+1,:);
+        definitions{k}=[bs 'definecolor{' name '}{rgb}{' m2t2.util.formatNumber(c(1)) ',' ...
+            m2t2.util.formatNumber(c(2)) ',' m2t2.util.formatNumber(c(3)) '}'];
+        classes{k}=[sprintf('%sindex%d',colorName,used(k)) '={' symbolicStyle(node,colorName,name) '}'];
     end
 end

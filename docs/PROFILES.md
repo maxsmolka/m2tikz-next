@@ -134,3 +134,9 @@ separation before an east colorbar. Multiple untiled dual axes fail the profile
 transform. See [DUAL_Y_AXES.md](DUAL_Y_AXES.md).
 Insufficient plotting area fails explicitly rather than
 collapsing a dense grid. See [TILED_LAYOUTS.md](TILED_LAYOUTS.md).
+
+M6.5 adds view-independent physical label gutters for the bounded new 3-D
+scenes, including a one-slot policy for a single untiled axes. Multiple new
+3-D axes require explicit tiled cells. East colorbars use an independent
+8 pt body and physical separation. Source coordinates/view/aspect and source
+figure placements remain unchanged; see [SCIENTIFIC_3D.md](SCIENTIFIC_3D.md).

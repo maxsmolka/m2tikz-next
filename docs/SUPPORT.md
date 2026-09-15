@@ -22,7 +22,7 @@ or platforms. See [MATLAB validation](MATLAB_VALIDATION_MATRIX.md) and
 | **Supported** | 2-D line plots and multiline styling; rich 2-D scatter with constant or per-point size, constant or per-point RGB, scalar mapped color, narrow edge/face modes, legends, and axes-owned colorbars; symmetric/asymmetric error bars; linear/logarithmic and reversed axes; custom ticks; multiple/manual axes; deterministic IR migration/replay; publication profiles; explicit figure sets; scalar images/heatmaps with vector output; axes-owned free 2-D text; figure-owned arrows and double arrows. |
 | **Supported with limitations** | Grouped vertical bars with numeric categories and constant styles; traditional vertical `boxplot(...)` compounds in the documented narrow form; scalar and truecolor image layers with bounded constant/per-pixel alpha, explicit hybrid output, and deterministic `auto` planning; shared labels/title models where runtime ownership is recognized; Line3; orthographic Cartesian scalar surfaces and narrowly recognized Patch3 decoration. |
 | **Experimental** | The pre-1.0 `m2t.export` and `m2t.exportSet` contracts; publication-profile tuning; FigureIR v2 and JSON/manifest schemas; internal `m2t2.*` interfaces. Tested experimental behavior is not a long-term compatibility promise. |
-| **Unsupported** | Scatter3, geographic/polar/categorical/table-backed scatter, scatter alpha, and non-evidence-backed edge/face modes; dynamic/nested/mixed/zero-spacing tiled layouts and outer-tile decorations; dual-axis variants outside the bounded contract below; polar plots; arbitrary annotations; stacked, horizontal, or categorical bar families; broad `boxchart` semantics; general patch compounds; general 3-D scenes; mesh and contour3; perspective, lighting, and material semantics; broad transparency outside image-owned alpha; unsupported image mappings; general downsampling. |
+| **Unsupported** | Geographic/polar/categorical/table-backed scatter, scatter alpha, and non-evidence-backed edge/face modes; dynamic/nested/mixed/zero-spacing tiled layouts and outer-tile decorations; dual-axis variants outside the bounded contract below; polar plots; arbitrary annotations; stacked, horizontal, or categorical bar families; broad `boxchart` semantics; general patch compounds; general 3-D scenes; mesh/scatter3 outside the explicit scientific 3-D contract and contour3; perspective, lighting, and material semantics; broad transparency outside image-owned alpha; unsupported image mappings; general downsampling. |
 
 Fixed MATLAB tiled layouts are supported with the explicit limits in
 [TILED_LAYOUTS.md](TILED_LAYOUTS.md): whole-figure grids, explicit cells/spans,
@@ -32,6 +32,12 @@ tests do not claim native Octave tiledlayout support. Linux compiler evidence
 for this addition uses TeX Live 2025/Debian, separate from historical versions.
 
 ## Important narrow boundaries
+
+Rich native MATLAB scatter3 and constant-color transparent-face wire meshes
+are supported with limitations in [SCIENTIFIC_3D.md](SCIENTIFIC_3D.md).
+New scenes distinguish single-object depth sorting from source-explicit
+child-order combinations; manual camera/complex occlusion is not approximated.
+Native Update 5 evidence does not imply native Octave 3-D parity.
 
 Native MATLAB `yyaxis` line/scatter combinations are supported with limitations
 in [DUAL_Y_AXES.md](DUAL_Y_AXES.md): explicit side ownership, independent limits,
@@ -46,7 +52,8 @@ or N scalar values. Scalar values remain point metadata and use the axes CLim,
 colormap, and ColorbarIR; explicit RGB never receives invented CLim semantics.
 Opaque `none`, `flat`, and constant-RGB edge/face roles are supported where the
 normalized marker has a faithful PGFPlots representation. Per-point sizes use
-source-order-preserving PGFPlots plot segments; many unique sizes therefore grow
+order-preserving PGFPlots plot segments (after explicit 3-D depth ordering when
+requested by the scene); many unique sizes therefore grow
 TeX command count rather than being silently quantized. Image
 support preserves scalar matrix data, truecolor channels, image-owned alpha,
 and explicit colormaps; hybrid output is a deliberate image-layer choice, not a

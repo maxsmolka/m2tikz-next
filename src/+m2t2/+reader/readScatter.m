@@ -1,7 +1,8 @@
-function node = readScatter(handle, path)
-%READSCATTER Normalize the explicit, reproducible rich 2-D scatter slice.
+function node = readScatter(handle, path, dimensionality)
+%READSCATTER Normalize rich scatter roles and explicitly requested dimension.
+    if nargin<3,dimensionality=2;end
     z = property(handle, 'ZData', []);
-    if ~isempty(z)
+    if dimensionality==2 && ~isempty(z)
         diagnostic('E045:UnsupportedScatterDimensionality', path, ...
             'ZData must be empty for 2-D scatter');
     end
@@ -14,6 +15,9 @@ function node = readScatter(handle, path)
     end
     x = reshape(double(rawX), 1, []); y = reshape(double(rawY), 1, []);
     count = numel(x);
+    if dimensionality==3 && ~(isnumeric(z)&&isvector(z)&&numel(z)==count&&all(isfinite(z(:))))
+        diagnostic('E038:Malformed3DData',path,'scatter3 ZData must match finite X/Y coordinates');
+    end
 
     sizeData = property(handle, 'SizeData', 36);
     if ~(isnumeric(sizeData) && isvector(sizeData) && ~isempty(sizeData))
@@ -39,6 +43,7 @@ function node = readScatter(handle, path)
     [colorMode, color, colorData] = normalizeColorData(cdata, count, needsData, path);
 
     node = m2t2.ir.makeScatterSeries();
+    if dimensionality==3,node=m2t2.ir.makeScatter3Series();node.z=reshape(double(z),1,[]);end
     node.x = x; node.y = y; node.colorMode = colorMode;
     node.color = color; node.colorData = colorData;
     node.marker = m2t2.util.normalizeMarker(get(handle, 'Marker'), [path '.marker']);

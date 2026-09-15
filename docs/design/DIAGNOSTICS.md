@@ -109,3 +109,14 @@ Malformed portable side metadata, unrelated overlays and nonpositive log
 domains fail `M2T2:E003:InvalidIR`. Unsupported dense/manual dual-axis profile
 geometry uses `M2T:PROFILE_GEOMETRY_INVALID`. No successful partial export is
 produced. See [the contract](../DUAL_Y_AXES.md).
+
+## Broader scientific 3-D
+
+- `M2T2:E062:Unsupported3DCamera`: unrepresented manual camera modes,
+  logarithmic axes, nonstandard plot box or unsupported elevation.
+- `M2T2:E063:Unsupported3DScene`: multiple depth-sorted objects, unrepresented
+  scene order, mixed dimensionality or unsupported 3-D decorations.
+
+These reject analysis before output, not after producing a plausible partial
+figure. Existing E032-E038 and scatter diagnostics retain their bounded roles.
+See [scientific 3-D](../SCIENTIFIC_3D.md).

@@ -8,6 +8,12 @@ the fixtures define them.
 
 ## Observed graphics-object differences
 
+M6.5 adds separate native Update 5 scatter3/wire-mesh/camera evidence. Native
+depth/child-order overlap probes establish different paint outcomes. Portable
+Octave tests validate the explicit IR/renderer, not native scatter3/mesh parity.
+Default MATLAB mesh can have opaque white faces and mapped edges and is not
+silently treated as transparent wire. See [SCIENTIFIC_3D.md](SCIENTIFIC_3D.md).
+
 M6.3 adds separate native MATLAB R2026a Update 5 evidence for fixed tiled layouts.
 The reader obtains explicit grid/cell/span metadata and shared-label ownership
 from the native container. Octave runs handle-free layout/renderer fixtures only;

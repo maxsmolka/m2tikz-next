@@ -4,6 +4,10 @@
 
 Accepted.
 
+This records the historical M5.4 scope. M6.5 adds a separate bounded
+scatter/wire/camera contract in [ADR-0024](ADR-0024-bounded-scientific-3d.md);
+the exclusions below describe the original decision, not that extension.
+
 ## Decision
 
 Support a narrow orthographic Cartesian 3-D contract with additive FigureIR v2

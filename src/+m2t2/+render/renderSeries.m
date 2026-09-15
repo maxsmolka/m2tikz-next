@@ -5,7 +5,7 @@ function lines = renderSeries(node, colorName, colormapName, colorMapping)
     switch node.kind
         case 'm2t2.line'
             lines = m2t2.render.renderLine(node, colorName);
-        case 'm2t2.scatter'
+        case {'m2t2.scatter','m2t2.scatter3'}
             lines = m2t2.render.renderScatter(node, colorName);
         case 'm2t2.errorbar'
             lines = m2t2.render.renderErrorbar(node, colorName);

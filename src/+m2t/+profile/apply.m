@@ -50,9 +50,9 @@ function transformation = apply(ir, profile, width)
     transformed.size = [targetWidth targetWidth * targetAspectRatio];
     if isfield(transformed.layout, 'tiled')
         transformed = m2t.profile.fitTiledMargins(transformed, profile);
-    elseif any(cellfun(@(a)isfield(a,'dualY'),transformed.axes))
+    elseif any(cellfun(@(a)isfield(a,'dualY')||isfield(a,'sceneOrder'),transformed.axes))
         if numel(transformed.axes)~=1
-            error('M2T:PROFILE_GEOMETRY_INVALID','Multiple dual-Y axes require an explicit tiled layout for publication profiles.');
+            error('M2T:PROFILE_GEOMETRY_INVALID','Multiple dual-Y or broader 3-D axes require an explicit tiled layout for publication profiles.');
         end
         originalLayout=transformed.layout;
         transformed.layout=m2t2.ir.makeTiledLayout(1,1, ...

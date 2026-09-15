@@ -5,7 +5,7 @@ function options = seriesOptions(node, colorName)
             options = lineOptions(node, colorName);
         case 'm2t2.patch3'
             options = {['fill=' colorName], 'area legend', 'forget plot'};
-        case 'm2t2.scatter'
+        case {'m2t2.scatter','m2t2.scatter3'}
             filled = ~strcmp(node.faceMode, 'none');
             edge = roleColor(node.edgeMode, [colorName 'edge'], colorName);
             face = roleColor(node.faceMode, [colorName 'face'], colorName);

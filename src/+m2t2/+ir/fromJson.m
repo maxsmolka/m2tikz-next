@@ -182,8 +182,10 @@ function node = normalizeSeries(source, axesId, index)
     if ~isfield(source, 'kind'), invalidVersion('series missing kind'); end
     switch source.kind
         case 'm2t2.line', node = merge(m2t2.ir.makeLineSeries(), source);
-        case 'm2t2.scatter'
-            node = merge(m2t2.ir.makeScatterSeries(), source);
+        case {'m2t2.scatter','m2t2.scatter3'}
+            if strcmp(source.kind,'m2t2.scatter3'),base=m2t2.ir.makeScatter3Series();
+            else,base=m2t2.ir.makeScatterSeries();end
+            node = merge(base, source);
             if ~isfield(source, 'sizeMode')
                 node.sizeMode = 'constant';
             end
@@ -213,7 +215,7 @@ function node = normalizeSeries(source, axesId, index)
         'upperWhisker','outlierPositions','outlierValues','boxColor', ...
         'medianColor','whiskerColor','outlierColor'}];
     for k = 1:numel(vectorNames)
-        if strcmp(node.kind, 'm2t2.scatter') && strcmp(vectorNames{k}, 'colorData') && ...
+        if any(strcmp(node.kind, {'m2t2.scatter','m2t2.scatter3'})) && strcmp(vectorNames{k}, 'colorData') && ...
                 strcmp(node.colorMode, 'per_point_rgb')
             continue;
         end

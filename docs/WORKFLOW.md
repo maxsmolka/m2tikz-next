@@ -147,7 +147,8 @@ the TeX installation must provide TikZ, PGFPlots 1.18 compatibility, and the
 - Nonlinear image color mapping, mapped alpha, RGB NaN, nonuniform hybrid
   spacing, dynamic/nested/zero-spacing tiled layouts, variants beyond the
   [bounded dual-Y contract](DUAL_Y_AXES.md), polar plots, arbitrary annotations, general
-  3-D scenes, scatter3, and scatter transparency remain out of scope.
+  3-D scenes beyond [the scientific contract](SCIENTIFIC_3D.md), and scatter
+  transparency remain out of scope.
 - Hybrid PNG channels use 8-bit quantization; image dimensions are preserved.
   Per-point scatter size/color is supported within the explicit edge/face
   contract in [SUPPORT.md](SUPPORT.md), without automatic size quantization.

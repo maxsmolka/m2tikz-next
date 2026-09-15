@@ -58,6 +58,14 @@ required) establish the distinct Update 5 reader/workflow evidence. Generated
 native TeX/PDFs additionally require visual review, not just a PDF header check.
 See [the bounded contract](../docs/DUAL_Y_AXES.md).
 
+M6.5 adds `runM65Scientific3DIrTests` (19 portable cases) and
+`runM65Scientific3DTexTests` (seven compilations). Native-only
+`runM65Scientific3DMatlabTests` (26 cases) and
+`runM65Scientific3DWorkflowTests` (four public profile/set exports, real compiler)
+exercise the [bounded 3-D contract](../docs/SCIENTIFIC_3D.md). Native reference
+images and compiled PDFs must be reviewed for point colors, depth, projection
+and wire connectivity. A successful compile alone is insufficient.
+
 ## Extended portable regression
 
 The public gate provides M2-M2.3 core coverage. Run the additional workflow

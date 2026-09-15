@@ -14,6 +14,8 @@ serialization. Public entry points are `m2t.export` and `m2t.exportSet`;
    rectangles; no tiled ownership is inferred from positions.
    Dual Y axes retain one cell/shared X, explicit side membership and independent
    ruler state; the renderer uses ordered transparent coordinate layers.
+   New scientific 3-D scenes explicitly carry depth/child order; scatter XYZ
+   and all point roles stay together, while wire meshes retain grid topology.
 3. The backend planner selects image representation from validated IR. The
    default is vector; explicit hybrid and opt-in auto are supported. RGB and
    nonopaque image alpha require hybrid. Policy decisions carry reason codes.
@@ -67,6 +69,7 @@ promised to be identical across machines. No silent data reduction is allowed.
 - [Rich image/alpha](docs/adr/ADR-0021-rich-image-alpha-semantics.md)
 - [Fixed tiled layouts](docs/adr/ADR-0022-fixed-tiled-layout-semantics.md)
 - [Dual Y axes](docs/adr/ADR-0023-dual-y-axis-semantics.md)
+- [Bounded scientific 3-D](docs/adr/ADR-0024-bounded-scientific-3d.md)
 
 The architecture, profile, set, hybrid, planner, and validation invariants run
 in the `repository-policy` CI job. [Testing](test/README.md) explains the

@@ -18,7 +18,7 @@ function summary = runM21ReaderTests(outputDirectory)
     [status, detail] = unsupportedHggroup();
     if ~strcmp(status, 'PASS'), failures = failures + 1; end
     rows(end + 1, :) = {'unsupported_arbitrary_hggroup', status, detail, 'reader'}; %#ok<AGROW>
-    unsupportedNames = {'3d'};
+    unsupportedNames = {'3d_top_view'};
     for u = 1:numel(unsupportedNames)
         [status, detail] = unsupportedScatter(unsupportedNames{u});
         if ~strcmp(status, 'PASS'), failures = failures + 1; end
@@ -84,8 +84,9 @@ function [status, detail] = unsupportedScatter(kind)
     try
         expectedIdentifier = 'M2T2:E045:UnsupportedScatterDimensionality';
         switch kind
-            case '3d'
+            case '3d_top_view'
                 scatter3(1:3, 1:3, 1:3, 36, [1 0 0]);
+                view(2); % The 2-D reader must never flatten nonempty ZData.
                 expected = 'ZData';
         end
         try

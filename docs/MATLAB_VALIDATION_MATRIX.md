@@ -5,6 +5,13 @@ Windows (`26.1.0.3312084`, `win64`). This claim is limited to that release,
 architecture, and operating system; it does not validate older or newer MATLAB
 releases. GNU Octave 11.3 remains the public hosted-CI runtime.
 
+Separate newer evidence collected from 2026-09-13: S1 path/security checks and M6.3 fixed
+tiled layouts were tested with MATLAB R2026a Update 5 on Windows. M6.3 includes
+28 native cases, three native-workflow cases using Linux LuaLaTeX through a local
+bridge, and separate native-generated/portable TeX and visual checks. These
+results do not relabel the historical Update 4 matrix below or claim native
+Windows TeX or native Octave tiledlayout support. See [TILED_LAYOUTS.md](TILED_LAYOUTS.md).
+
 | Capability | Octave 11.3 | MATLAB R2026a Update 4 on Windows | Status | Evidence |
 | --- | --- | --- | --- | --- |
 | Runtime/environment | validated | validated | validated | L0 |

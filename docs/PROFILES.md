@@ -49,8 +49,10 @@ analysis with `M2T:PROFILE_GEOMETRY_INVALID`.
 
 ## What is preserved
 
-The transform changes only FigureIR physical size; relative axes, overlay,
-subplot, colorbar, and shared-element placements therefore remain unchanged.
+For untiled figures the transform changes only FigureIR physical size; relative
+axes, overlay, subplot, colorbar and shared-element placements remain unchanged.
+Explicit tiled layouts additionally use the documented per-cell text-gutter
+policy below; their scientific data and logical ownership remain unchanged.
 The render configuration applies portable TeX-native font sizes. It preserves:
 
 - all data coordinates and error values;
@@ -71,8 +73,9 @@ The render configuration applies portable TeX-native font sizes. It preserves:
 
 Known core text roles use the table above. User-authored axes annotations keep
 their explicit source font size because it may encode intentional emphasis.
-The profile does not relocate or reflow legends, reposition colorbars, clamp
-line widths or markers, reduce outliers, or choose a width automatically.
+The profile does not relocate or reflow legends, clamp line widths or markers,
+reduce outliers, or choose a width automatically. Colorbars keep relative
+placements for untiled figures and follow their owning axes in tiled profiles.
 The normative policy and figure-family width guidance are in
 [PUBLICATION_PROFILE.md](PUBLICATION_PROFILE.md); its rationale is recorded
 in [ADR-0019](adr/ADR-0019-calibrated-publication-profile.md).
@@ -97,7 +100,7 @@ machine-readable, and do not write export products.
 The API has only `none` and `publication`; future profiles can add normalized
 profile data without profile lookup in readers or renderers. There is no custom
 width parser, font-family selection, automatic legend relocation, automatic
-backend selection, RGB/alpha source-image rendering, layout redesign, or arbitrary plot-type
+backend selection, arbitrary layout redesign, or arbitrary plot-type
 support. Scalar image matrices use the same geometry-only transform; see
 [IMAGE_PLOTS.md](IMAGE_PLOTS.md). The workflow remains PGFPlots plus LuaLaTeX.
 
@@ -117,3 +120,13 @@ single- and double-column exports use identical one-cell-per-pixel assets and
 change only physical vector placement and typography; auto decisions likewise
 use cell count rather than physical width. See
 [IMAGE_BACKENDS.md](IMAGE_BACKENDS.md) and [BACKEND_PLANNER.md](BACKEND_PLANNER.md).
+
+For explicit fixed tiled layouts, M6.3 adds physical outer/per-cell text gutters
+and shared-label anchors to the publication transform. Explicit grid slots and
+spans place axes; colorbars follow their owners through relative affine transforms.
+Tile cells and scientific series remain unchanged. This
+prevents the observed shared-label collision at 85 mm without changing source
+figures. It is not a general decoration solver, and figure-space annotations
+fail this transform because safe ownership cannot be inferred. Untiled profile
+behavior is unchanged. Insufficient plotting area fails explicitly rather than
+collapsing a dense grid. See [TILED_LAYOUTS.md](TILED_LAYOUTS.md).

@@ -20,7 +20,11 @@ clamped with an explicit diagnostic.
 
 The profile changes presentation only. It preserves data, axes limits, series
 order, line widths, marker sizes, user-authored annotation sizes, legend
-membership and geometry, colorbar geometry, and relative axes placement.
+membership and geometry. Untiled figures retain relative axes/colorbar geometry.
+Explicit tiled grids use the physical outer/per-cell gutter policy in
+[TILED_LAYOUTS.md](TILED_LAYOUTS.md), preserving cells/spans and scientific
+semantics while moving axes and their owned colorbars. Figure-space annotations
+and cells too dense for the selected size fail that transform explicitly.
 Default `Profile="none"` behavior is unchanged.
 
 ```matlab

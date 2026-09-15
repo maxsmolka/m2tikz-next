@@ -145,7 +145,7 @@ the TeX installation must provide TikZ, PGFPlots 1.18 compatibility, and the
 - Unsupported modern-reader content remains explicit and never falls back to
   the legacy exporter.
 - Nonlinear image color mapping, mapped alpha, RGB NaN, nonuniform hybrid
-  spacing, `tiledlayout`, `yyaxis`, polar plots, arbitrary annotations, general
+  spacing, dynamic/nested/zero-spacing tiled layouts, `yyaxis`, polar plots, arbitrary annotations, general
   3-D scenes, scatter3, and scatter transparency remain out of scope.
 - Hybrid PNG channels use 8-bit quantization; image dimensions are preserved.
   Per-point scatter size/color is supported within the explicit edge/face
@@ -155,6 +155,8 @@ the TeX installation must provide TikZ, PGFPlots 1.18 compatibility, and the
 
 The architectural rationale is recorded in
 [ADR-0007](adr/ADR-0007-scientific-export-workflow.md).
+Fixed tiled layouts follow [their bounded contract](TILED_LAYOUTS.md), with
+explicit logical cells and native MATLAB acceptance rather than inferred grids.
 Publication-profile layering is recorded in
 [ADR-0008](adr/ADR-0008-publication-profiles.md).
 

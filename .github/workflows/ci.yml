@@ -78,6 +78,9 @@ jobs:
       - name: Validate output and asset security boundaries
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runS1SecurityTests(fullfile('.audit','s1-security'));"
+      - name: Validate portable explicit tiled-layout IR
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM63TiledIrTests(fullfile('.audit','m63-tiled-ir'));"
 
   tex-preview:
     runs-on: ubuntu-latest
@@ -128,3 +131,6 @@ jobs:
       - name: Compile safe paths and verify disabled shell escape
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runS1SecurityTexTests(fullfile('.audit','s1-security-tex'));"
+      - name: Compile portable tiled-layout profiles
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM63TiledTexTests(fullfile('.audit','m63-tiled-tex'));"

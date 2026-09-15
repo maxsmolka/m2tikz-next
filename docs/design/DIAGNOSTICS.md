@@ -83,3 +83,15 @@ invented RGB colorbar.
 Figure-set preflight maps product collisions to `M2T:SET_OUTPUT_EXISTS` and
 invalid product paths to `M2T:SET_INVALID_OUTPUT`. Message text can include the
 caller-selected path; generated scientific TeX does not embed absolute paths.
+
+## Fixed tiled layouts
+
+- `M2T2:E056:UnsupportedTiledLayout`: dynamic/nested/mixed/partial/hidden
+  layouts, unsupported spacing/padding, subtitle or shared-label rotation.
+- `M2T2:E057:InvalidTileCell`: invalid/out-of-bounds/overlapping tile cells.
+- `M2T2:E058:UnsupportedTileDecoration`: outer/multi-tile or ambiguous
+  legend/colorbar ownership.
+
+These are analysis-stage unsupported failures, not successful partial exports.
+Malformed portable layout metadata also fails IR schema validation. Tiled
+profile gutter limitations use `M2T:PROFILE_GEOMETRY_INVALID`.

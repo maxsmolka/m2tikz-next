@@ -4,6 +4,10 @@
 
 Accepted.
 
+M6.3 extends relative-layout handling for explicit tiled grids through
+[ADR-0022](ADR-0022-fixed-tiled-layout-semantics.md). Typography and untiled
+calibration below remain unchanged.
+
 ## Context
 
 Publication figures need deterministic physical dimensions and coherent

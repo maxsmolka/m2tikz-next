@@ -1,7 +1,7 @@
 # Project status
 
 Latest released version: **0.5.0**. Merged development functionality extends
-through **M6.2**. Unreleased features are listed separately in
+through **M6.3**. Unreleased features are listed separately in
 [CHANGELOG.md](CHANGELOG.md); this status does not announce a new release.
 
 ## Current contract
@@ -14,11 +14,13 @@ publication profiles, and explicit figure sets. Public APIs remain pre-1.0;
 Supported families include 2-D lines, rich 2-D scatter, error bars, legends,
 custom ticks, logarithmic/reversed axes, multiple/manual axes, scalar images,
 bounded RGB/alpha image layers, colorbars, axes-owned text, figure arrows,
-grouped vertical bars, narrow traditional boxplots, and narrow orthographic
+grouped vertical bars, narrow traditional boxplots, fixed tiled layouts with
+bounded spans/shared labels and narrow orthographic
 Surface/Line3/Patch3 scenes. Each family has limits in
 [SUPPORT.md](docs/SUPPORT.md).
 
-Major remaining limitations include tiled layouts, dual Y axes, scatter3,
+Major remaining limitations include dynamic/nested/zero-spacing tiled layouts,
+outer-tile decorations, dual Y axes, scatter3,
 general 3-D scenes, lighting/materials, scatter transparency, arbitrary
 annotations/patches, broad bar/boxchart semantics, and automatic downsampling.
 Hybrid images preserve pixel dimensions but encode channels at 8-bit precision.
@@ -42,7 +44,7 @@ run its own acceptance gates. Required hosted jobs are `repository-policy`,
 
 ## Next phase
 
-The post-M6.2 alignment and S1 security hardening establish the current
-foundation. Next is **M6.3: modern tiled layout semantics**, followed by the ordered work in
+The alignment, S1 security hardening and bounded M6.3 tiled layouts establish
+the current foundation. Next is **M6.4: dual Y-axis semantics**, followed by the ordered work in
 [ROADMAP.md](ROADMAP.md). New MATLAB object support requires native MATLAB
 validation. See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries.

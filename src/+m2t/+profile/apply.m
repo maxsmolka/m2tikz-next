@@ -48,6 +48,9 @@ function transformation = apply(ir, profile, width)
     targetWidth = profile.figure.widthTeXPoints(presetIndex);
     transformed = ir;
     transformed.size = [targetWidth targetWidth * targetAspectRatio];
+    if isfield(transformed.layout, 'tiled')
+        transformed = m2t.profile.fitTiledMargins(transformed, profile);
+    end
     transformation.ir = transformed;
     transformation.renderConfig = renderConfig(profile);
     transformation.metadata = metadata(profile.name, presetName, ...

@@ -12,6 +12,9 @@ versions are not m2tikz-next releases.
   scalar-mapped colors, bounded edge/face modes, and axes-owned colorbars.
 - M6.2: scalar scaled/direct images, truecolor RGB, and bounded constant or
   per-pixel image alpha; rich modes use image-layer hybrid PNG output.
+- M6.3: fixed MATLAB tiled layouts with explicit cells/spans, shared labels,
+  axes-owned decorations and profile gutters; dynamic/nested/zero-spacing and
+  outer-tile decoration cases fail explicitly. See docs/TILED_LAYOUTS.md.
 - Architecture, project status, and roadmap documents distinguish merged
   development capabilities from the latest released version.
 

@@ -7,28 +7,13 @@ function node = readLegend(legendHandle, series, path, seriesHandles)
     if ~node.visible, return; end
     m2t2.reader.assertSupportedProperties(legendHandle,path,'legend');
     m2t2.reader.assertDecorationChildren(legendHandle,path,'legend');
-    try
-        if ~strcmpi(get(legendHandle, 'Orientation'), 'vertical')
-            unsupported(path, 'Orientation', get(legendHandle, 'Orientation'));
-        end
-    catch err
-        if strcmp(err.identifier, 'M2T2:E007:UnsupportedProperty'), rethrow(err); end
-    end
-    try
-        if double(get(legendHandle, 'NumColumns')) ~= 1
-            unsupported(path, 'NumColumns', num2str(get(legendHandle, 'NumColumns')));
-        end
-    catch err
-        if strcmp(err.identifier, 'M2T2:E007:UnsupportedProperty'), rethrow(err); end
-    end
+    orientation=m2t2.reader.optionalProperty(legendHandle,'Orientation','vertical');
+    if ~strcmpi(orientation,'vertical'),unsupported(path,'Orientation',orientation);end
+    columns=m2t2.reader.optionalProperty(legendHandle,'NumColumns',1);
+    if double(columns)~=1,unsupported(path,'NumColumns',num2str(columns));end
     node.location = normalizeLocation(get(legendHandle, 'Location'), path);
-    runtimeInterpreter = 'plain';
-    try
-        runtimeInterpreter = m2t2.util.normalizeTextInterpreter( ...
-            get(legendHandle, 'Interpreter'), [path '.entries']);
-    catch err
-        if strcmp(err.identifier, 'M2T2:E007:UnsupportedProperty'), rethrow(err); end
-    end
+    runtimeInterpreter = m2t2.util.normalizeTextInterpreter( ...
+        m2t2.reader.optionalProperty(legendHandle,'Interpreter','none'),[path '.entries']);
     labels = labelCells(get(legendHandle, 'String'));
     candidates = find(cellfun(@(item) item.visible, series));
     if ~isempty(seriesHandles)
@@ -71,8 +56,8 @@ function node = readLegend(legendHandle, series, path, seriesHandles)
 end
 
 function links=legendLinks(handle,labels,path)
-    raw=[];try,raw=get(handle,'PlotChildren');catch,end
-    if isempty(raw),try,raw=getappdata(handle,'__peer_objects__');catch,end,end
+    raw=m2t2.reader.optionalProperty(handle,'PlotChildren',[]);
+    if isempty(raw),raw=getappdata(handle,'__peer_objects__');end
     links={};
     if ~isempty(raw)
         for k=1:numel(raw),links{end+1}=raw(k);end %#ok<AGROW>

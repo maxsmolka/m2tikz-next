@@ -157,8 +157,7 @@ end
 function indices = legendForAxes(legends, axesHandle, axesCount)
     indices = [];
     for k = 1:numel(legends)
-        owner = [];
-        try, owner = getappdata(legends{k}, '__axes_handle__'); catch, end
+        owner = getappdata(legends{k}, '__axes_handle__');
         if isempty(owner), owner = property(legends{k}, 'Axes', []); end
         if numel(owner) > 1
             unsupportedSharedLegend('figure.layout', 'legend references multiple axes');
@@ -179,7 +178,7 @@ function yes = placementsOverlap(first, second)
 end
 
 function value = property(handle, name, default)
-    try, value = get(handle, name); catch, value = default; end
+    value = m2t2.reader.optionalProperty(handle, name, default);
 end
 
 function unsupported(type, path)

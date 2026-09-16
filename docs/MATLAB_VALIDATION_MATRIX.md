@@ -69,6 +69,14 @@ representation and are not equality goldens.
 
 ## Remaining qualification
 
+M7.2 adds 15 synthetic runtime cases with native MATLAB R2026a Update 5 on
+Windows, canonical replay and real LuaLaTeX compilation, plus public profile
+and figure-set workflows. Its separate 205-case native regression covers rich
+scatter/images, tiled/dual/3-D, unsupported-content guards, API and FigureIR.
+Final reader-core repeats include the actual MATLAB manual-colorbar rejection
+instead of reusing an Octave-only success assumption. See the
+[runtime compatibility contract](RUNTIME_COMPATIBILITY.md).
+
 M6.8 adds eight deterministic/reference tests in MATLAB R2026a Update 5 on
 Windows and five real workflow checks over five native figures (including
 tiled, dual-Y and scatter3). Octave has the same eight checks and five workflows

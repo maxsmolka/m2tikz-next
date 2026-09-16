@@ -126,7 +126,7 @@ function [mode, color, data] = normalizeColorData(value, count, required, path)
 end
 
 function value = property(handle, name, default)
-    try, value = get(handle, name); catch, value = default; end
+    value = m2t2.reader.optionalProperty(handle, name, default);
 end
 
 function diagnostic(code, path, reason)

@@ -4,12 +4,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
     if nargin < 4, legendHandle = []; end
     if nargin < 5, activeDualSide = false; end
     m2t2.reader.assertSupportedProperties(axesHandle,path,'axes');
-    yRulers = [];
-    try
-        yRulers = get(axesHandle, 'YAxis');
-    catch
-        % Octave has no numeric-ruler array.
-    end
+    yRulers = m2t2.reader.optionalProperty(axesHandle, 'YAxis', []);
     if numel(yRulers) > 1 && ~activeDualSide
         [node, annotations] = m2t2.reader.readDualYAxes(axesHandle, path, axesId, legendHandle);
         return;
@@ -47,8 +42,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
     node.xdirection = lower(get(axesHandle, 'XDir'));
     node.ydirection = lower(get(axesHandle, 'YDir'));
     node.box = lower(char(get(axesHandle, 'Box')));
-    colorScale = 'linear';
-    try, colorScale = lower(get(axesHandle, 'ColorScale')); catch, end
+    colorScale = lower(m2t2.reader.optionalProperty(axesHandle, 'ColorScale', 'linear'));
     node.colorMapping = m2t2.ir.makeColorMapping( ...
         reshape(double(get(axesHandle, 'CLim')), 1, 2), colorScale, ...
         double(colormap(axesHandle)));
@@ -61,10 +55,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
     node.ygrid = strcmpi(get(axesHandle, 'YGrid'), 'on');
 
     ignored = [get(axesHandle, 'XLabel'), get(axesHandle, 'YLabel'), get(axesHandle, 'Title')];
-    try
-        ignored = [ignored, get(axesHandle, 'ZLabel')];
-    catch
-    end
+    ignored = [ignored, m2t2.reader.optionalProperty(axesHandle, 'ZLabel', [])];
     children = flipud(allchild(axesHandle));
     if activeDualSide, children = flipud(get(axesHandle, 'Children')); end
     barHandles = {};
@@ -85,8 +76,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
         visibleIndex = visibleIndex + 1;
         type = get(children(k), 'Type');
         childPath = sprintf('%s.children{%d}', path, visibleIndex);
-        tag = '';
-        try, tag = get(children(k), 'Tag'); catch, end
+        tag = m2t2.reader.optionalProperty(children(k), 'Tag', '');
         if strcmp(type, 'hggroup') && isPatternRuntimeEmptyGroup(children(k), axesHandle)
             visibleIndex = visibleIndex - 1;
             continue;

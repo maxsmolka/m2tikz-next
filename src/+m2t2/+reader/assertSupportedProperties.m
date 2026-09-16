@@ -68,7 +68,7 @@ function require(handle,name,expected,path)
     if ~matches,fail(path,name);end
 end
 function value=property(handle,name,default)
-    try,value=get(handle,name);catch,value=default;end
+    value=m2t2.reader.optionalProperty(handle,name,default);
 end
 function fail(path,name)
     error('M2T2:E007:UnsupportedProperty','M2T2-E007 UnsupportedProperty: path=%s property=%s is not represented',path,name);

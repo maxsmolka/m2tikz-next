@@ -86,7 +86,7 @@ function bounds=validateRuntimeGeometry(handle,node,path)
 end
 
 function requireOpaqueAlpha(handle, property, path)
-    try, value = double(get(handle, property)); catch, value = 1; end
+    value = double(m2t2.reader.optionalProperty(handle, property, 1));
     if ~(isscalar(value) && isfinite(value) && value == 1)
         unsupportedColor(path, property, value);
     end

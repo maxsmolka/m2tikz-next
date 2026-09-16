@@ -8,6 +8,10 @@ versions are not m2tikz-next releases.
 
 ### Added
 
+- M6.8: determinism/precision audit and real repeated/cross-directory export
+  tests, including native tiled/dual/3-D sets and explicit PNG/JSON boundaries.
+  See docs/DETERMINISM.md.
+
 - M6.6: modern large-data stage benchmark and cardinality/pixel contract tests;
   explicit no-reduction guidance. No new reduction API. See docs/LARGE_DATA.md.
 
@@ -28,6 +32,9 @@ versions are not m2tikz-next releases.
   colorbar/tiled/profile integration. See docs/DUAL_Y_AXES.md.
 
 ### Fixed
+
+- M6.8: measured large scalar vector-image serialization is buffered by row,
+  preserving exact previous TeX bytes with no reduction or precision change.
 
 - M6.7: actual legend object links preserve subsets/reordering; Octave
   colorbars retain real ticks/direction/labels; matching tags cannot hide text.

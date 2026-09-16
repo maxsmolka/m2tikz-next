@@ -58,6 +58,10 @@ asset naming, and manifest determinism. PNG bytes are compared within the same
 encoder; normalized pixels/channels define the cross-encoder semantics.
 Runtime timings, absolute result paths, and compiled PDF metadata are not
 promised to be identical across machines. No silent data reduction is allowed.
+The [determinism contract](docs/DETERMINISM.md) separates reproducible products
+from environment-specific results/logs/PDF metadata and states finite numeric
+precision explicitly. Scalar image tables are buffered by source row without
+changing their serialized scientific values or order.
 
 ## Architecture decisions and checks
 

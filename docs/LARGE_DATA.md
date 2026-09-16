@@ -25,6 +25,8 @@ count does not change that contract. `ImageBackend='vector'` remains the default
 - Existing TeX numeric serialization uses 15 significant decimal digits. No
   additional precision reduction is introduced by large-data handling; binary
   double bitwise round-trip is not promised by that textual representation.
+  Values near the finite-double maximum can round beyond that maximum; see
+  [the precision boundary](DETERMINISM.md). TeX is not a source-data archive.
 
 Thus the no-reduction/lossless-data policy means retained scientific samples
 and normalized values, not an inaccurate promise of infinite display precision.
@@ -91,5 +93,5 @@ No pre-1.0 reduction API is introduced. A credible future API would need
 explicit domain error bounds, extrema/gap/uncertainty preservation, ownership
 and color/size handling, reproducible algorithms and disclosed provenance.
 Current evidence supports clear representation guidance, not a weak universal
-downsampler. M6.8 may optimize measured serialization bottlenecks without
-changing this semantic contract.
+downsampler. M6.8 buffers the measured scalar vector-image serialization
+bottleneck with byte-identical output and unchanged scientific semantics.

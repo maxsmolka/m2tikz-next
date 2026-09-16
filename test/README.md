@@ -226,6 +226,18 @@ New negative cases retain proof that unresolved depth sorting is rejected.
 Bar IR tests cover optional resolved bounds and byte-identical JSON replay,
 while absent fields preserve the established portable geometry.
 
+## Determinism and performance
+
+`runM68DeterminismTests` has eight stable checks for reference serialization,
+precision boundaries, IR/JSON/TeX, planner/assets, PNG bytes, diagnostics and
+native repeat reads. `runM68DeterminismWorkflowTests` has five real-compiler
+checks over same-root/cross-root products, manifest order, source lifecycle and
+failed/skipped manifests. MATLAB uses five figures including native tiled,
+dual-Y and scatter3 scenes; Octave uses two supported common figures.
+PDF bytes and runtime timings are deliberately excluded from byte comparisons.
+Before/after large-data measurements are observations, never timing CI gates.
+See [the determinism contract](../docs/DETERMINISM.md).
+
 ## Inherited legacy tests (separate exporter)
 
 These exercise the separate `matlab2tikz(...)` exporter, not the modern public

@@ -1,7 +1,7 @@
 # Project status
 
 Latest released version: **0.5.0**. Merged development functionality extends
-through **M6.7**. Unreleased features are listed separately in
+through **M6.8**. Unreleased features are listed separately in
 [CHANGELOG.md](CHANGELOG.md); this status does not announce a new release.
 
 ## Current contract
@@ -52,7 +52,8 @@ representation limits and no reduction API. The [unsupported-content policy](doc
 now rejects unrepresented properties, ambiguous ownership and modified compound
 data before producing misleading partial output. Nonwhite axes backgrounds,
 unresolved multi-object 3-D depth sorting and inconsistent scatter compounds
-are explicit unsupported cases. Next is **M6.8: determinism and performance
-hardening**, followed by the ordered work in
+are explicit unsupported cases. [Determinism and precision boundaries](docs/DETERMINISM.md)
+are audited; buffered scalar-image serialization retains exact prior TeX bytes.
+Next is **M7.0: public API freeze candidate**, followed by the ordered work in
 [ROADMAP.md](ROADMAP.md). New MATLAB object support requires native MATLAB
 validation. See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries.

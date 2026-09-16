@@ -56,6 +56,13 @@ representation and are not equality goldens.
 
 ## Remaining qualification
 
+M6.8 adds eight deterministic/reference tests in MATLAB R2026a Update 5 on
+Windows and five real workflow checks over five native figures (including
+tiled, dual-Y and scatter3). Octave has the same eight checks and five workflows
+over two common figures; a generated German locale is checked separately.
+Ten native full-scale before/after fixtures retain identical TeX and PNG bytes.
+See [determinism and precision boundaries](DETERMINISM.md).
+
 M6.7 adds a separate MATLAB R2026a Update 5 on Windows capability matrix
 (50 cases), nine real public export/compiler workflows, and 211 native
 regression cases across bars, boxplots, surfaces, rich scatter/images, tiled

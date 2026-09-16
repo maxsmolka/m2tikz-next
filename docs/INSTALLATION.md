@@ -16,6 +16,11 @@ Both runtimes use the same public `m2t.*` workflow. Platform packages or vendor
 installers may be used, but the commands must be discoverable on `PATH` for the
 portable validation scripts.
 
+Later milestones separately record native MATLAB R2026a Update 5 on Windows
+and local LuaLaTeX / TeX Live 2025/Debian evidence. See the
+[validation matrix](MATLAB_VALIDATION_MATRIX.md); the historical Update 4
+claim does not imply other versions. Public calls follow [API.md](API.md).
+
 ## TeX toolchain
 
 Successful `m2t.export` calls compile standalone PGFPlots documents. The
@@ -68,8 +73,9 @@ on `PATH`, then run:
 ```matlab
 addpath('src');
 x = linspace(0, 2*pi, 200);
-figure;
+figure('Color','w');
 plot(x, sin(x));
+set(gca,'Color','w'); % Explicit supported background, independent of theme.
 result = m2t.export(gcf, 'build/installation-check');
 assert(result.success, result.status);
 disp(result.texPath);
@@ -84,7 +90,8 @@ diagnostics beside them. Existing products are preserved by default; pass
 ## Platform notes
 
 Hosted CI validates GNU Octave 11.3 on Linux. The recorded MATLAB validation is
-MATLAB R2026a Update 4 on Windows. File discovery and export paths are designed
+MATLAB R2026a Update 4 on Windows, with separate newer Update 5 milestone evidence.
+File discovery and export paths are designed
 to be portable, but these evidence boundaries do not claim validation for every
 operating system or runtime release. See [Support status](SUPPORT.md) and the
 [MATLAB validation matrix](MATLAB_VALIDATION_MATRIX.md).

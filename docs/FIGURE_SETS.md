@@ -1,7 +1,7 @@
 # Figure-set workflow
 
-> `m2t.exportSet` and manifest schema 1 are experimental and carry no pre-1.0
-> stability promise.
+> `m2t.exportSet` and manifest schema 1 are covered by the M7.0
+> [API-freeze candidate](API.md), including additive-field and migration rules.
 
 Publications commonly rebuild several related figures with one consistent
 profile. `m2t.exportSet` accepts only explicitly supplied figure handles,
@@ -113,9 +113,10 @@ validation uses stable identifiers including `M2T:SET_INVALID_ENTRY`,
 `M2T:SET_DUPLICATE_NAME`, `M2T:SET_INVALID_NAME`,
 `M2T:SET_INVALID_OUTPUT`, and `M2T:SET_OUTPUT_EXISTS`.
 
-`partial_failure` means at least one entry succeeded and at least one did not.
-`failed` means no entry succeeded. `invalid_set` means preflight prevented the
-build from starting.
+`partial_failure` means at least one entry succeeded but another entry or the
+manifest failed. Thus all entries can succeed while the set fails to write its
+manifest. `failed` means no entry succeeded. `invalid_set` means preflight
+prevented the build from starting. Summary counts describe entries only.
 
 ## Deterministic manifest
 
@@ -154,8 +155,9 @@ After every preflight-valid completed build, `m2t-manifest.json` records:
 Paths are relative to the set directory. Runtime handles, FigureIR, temporary
 compiler directories, timestamps, random identifiers, timings, and absolute
 machine paths are excluded. Identical build inputs therefore produce
-byte-identical manifests. Manifest schema 1 is independent of FigureIR v2 and
-may evolve before 1.0.
+byte-identical manifests for equal configuration and outcomes. Manifest schema
+1 is independent of FigureIR v2; additive fields preserve existing meaning,
+while incompatible changes require a schema bump and migration policy.
 
 ## Reproducible publication example
 

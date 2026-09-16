@@ -1,14 +1,16 @@
 # Project status
 
 Latest released version: **0.5.0**. Merged development functionality extends
-through **M6.8**. Unreleased features are listed separately in
+through **M7.0**. Unreleased features are listed separately in
 [CHANGELOG.md](CHANGELOG.md); this status does not announce a new release.
 
 ## Current contract
 
 The public APIs are `m2t.export` and `m2t.exportSet`. They provide deterministic
 scientific TeX export, LuaLaTeX compilation, structured diagnostics, optional
-publication profiles, and explicit figure sets. Public APIs remain pre-1.0;
+publication profiles, and explicit figure sets. They are the pre-1.0
+[API-freeze candidate](docs/API.md); breaking changes now require exceptional
+justification, an ADR and migration notes. No breaking cleanup was necessary;
 `m2t2.*` and FigureIR are internal/experimental.
 
 Supported families include 2-D lines, rich 2-D scatter, error bars, legends,
@@ -54,6 +56,6 @@ data before producing misleading partial output. Nonwhite axes backgrounds,
 unresolved multi-object 3-D depth sorting and inconsistent scatter compounds
 are explicit unsupported cases. [Determinism and precision boundaries](docs/DETERMINISM.md)
 are audited; buffered scalar-image serialization retains exact prior TeX bytes.
-Next is **M7.0: public API freeze candidate**, followed by the ordered work in
+Next is **M7.1: FigureIR compatibility contract**, followed by the ordered work in
 [ROADMAP.md](ROADMAP.md). New MATLAB object support requires native MATLAB
 validation. See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries.

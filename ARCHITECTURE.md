@@ -3,6 +3,8 @@
 m2tikz-next separates runtime figure inspection from scientific semantics and
 serialization. Public entry points are `m2t.export` and `m2t.exportSet`;
 `m2t2.*`, FigureIR, and JSON helpers remain internal/experimental.
+The two end-user workflows are the [M7.0 API-freeze candidate](docs/API.md);
+their options, results, diagnostics and product lifecycle have an explicit contract.
 
 ## Pipeline and ownership
 

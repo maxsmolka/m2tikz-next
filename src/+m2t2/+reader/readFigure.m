@@ -47,6 +47,9 @@ function ir = readFigure(figureHandle)
     annotations = {};
     usedLegends = false(1, numel(legendHandles));
     for k = 1:numel(axesHandles)
+        if strcmp(get(axesHandles{k},'Color'),'none')&&~isequal(get(figureHandle,'Color'),[1 1 1])
+            error('M2T2:E007:UnsupportedProperty','Transparent axes require a white figure background.');
+        end
         axesId = sprintf('axes-%d', k);
         legendIndex = legendForAxes(legendHandles, axesHandles{k}, numel(axesHandles));
         if numel(legendIndex) > 1

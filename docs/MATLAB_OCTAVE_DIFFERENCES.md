@@ -69,6 +69,15 @@ classified `expected_runtime_difference`; undeclared differences remain
 
 ## Visual evidence subset
 
+M6.7 runtime hardening distinguishes modern MATLAB primitives from Octave
+gnuplot compounds. Legend ownership uses actual object references, not label
+order guesses. Octave colorbar tick/direction/label state comes from the actual
+display axis, whose separate `Limits` property may be stale. Grouped-bar patch
+boundaries differ from MATLAB-style default formulas and are retained in
+optional BarIR `xBounds`. Scatter patch partitions are checked against the
+known runtime construction. See [the unsupported-content policy](UNSUPPORTED_POLICY.md)
+for the explicit large-scatter presentation limitations and rejection rules.
+
 | Visual ID | Fixture | Review |
 | --- | --- | --- |
 | V01 | F08 line and legend | pass: two series and legend order preserved |

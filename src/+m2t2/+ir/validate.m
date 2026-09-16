@@ -64,6 +64,7 @@ function id = validateAxes(node, path)
     textScalar(node.overlayOf, [path '.overlayOf']);
     finitePair(node.xlim, [path '.xlim']); finitePair(node.ylim, [path '.ylim']);
     finitePair(node.zlim, [path '.zlim']);
+    if isfield(node,'background'),enum(node.background,{'white','none'},[path '.background']);end
     enum(node.xscale, {'linear','log'}, [path '.xscale']);
     enum(node.yscale, {'linear','log'}, [path '.yscale']);
     enum(node.zscale, {'linear','log'}, [path '.zscale']);
@@ -105,6 +106,12 @@ function id = validateAxes(node, path)
             enum(item.yAxis,{'left'},[seriesPath '.yAxis']);
         end
         seriesIds{s} = validateSeries(item, seriesPath, node.id, node.xscale, scale, node.dimensionality);
+        scalarMapped=(strcmp(item.kind,'m2t2.surface')&&~strcmp(item.faceMode,'none'))|| ...
+            (strcmp(item.kind,'m2t2.image')&&strcmp(item.colorMode,'scalar'))|| ...
+            (any(strcmp(item.kind,{'m2t2.scatter','m2t2.scatter3'}))&&strcmp(item.colorMode,'scalar_mapped'));
+        if scalarMapped&&~strcmp(node.colorMapping.scale,'linear')
+            invalid(seriesPath,'scalar color mapping requires linear ColorScale');
+        end
     end
     if numel(unique(seriesIds)) ~= numel(seriesIds)
         invalid([path '.series'], 'series ids must be unique');
@@ -632,6 +639,13 @@ function validateBar(node, path, axesId, xscale, yscale)
     end
     if numel(node.categories)>1&&any(diff(node.categories)<=0)
         invalid([path '.categories'],'numeric categories must be strictly increasing');
+    end
+    if isfield(node,'xBounds')
+        bounds=node.xBounds;
+        if ~isnumeric(bounds)||~isreal(bounds)||~isequal(size(bounds),[numel(node.categories) 2])|| ...
+                any(~isfinite(bounds(:)))||any(bounds(:,1)>=bounds(:,2))
+            invalid([path '.xBounds'],'resolved bar bounds must be a finite N-by-2 left/right matrix');
+        end
     end
     if ~strcmp(xscale,'linear')||~strcmp(yscale,'linear')
         invalid(path,'grouped bars require linear axes');

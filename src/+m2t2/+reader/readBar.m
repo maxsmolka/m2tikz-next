@@ -3,6 +3,7 @@ function node = readBar(handle, axesHandle, path, axesId, groupIndex, groupCount
     if ~m2t2.reader.isBarObject(handle, axesHandle)
         ownership(path, 'object does not satisfy the semantic bar ownership signature');
     end
+    m2t2.reader.assertSupportedProperties(handle,path,'primitive');
     mode = lower(char(get(handle, 'BarLayout')));
     if ~strcmp(mode, 'grouped'), unsupportedMode(path, mode); end
     horizontal = get(handle, 'Horizontal');
@@ -51,6 +52,37 @@ function node = readBar(handle, axesHandle, path, axesId, groupIndex, groupCount
     node.displayName = m2t2.ir.makeText(m2t2.util.textValue( ...
         get(handle, 'DisplayName'), [path '.DisplayName']), 'plain');
     node.visible = strcmpi(char(get(handle, 'Visible')), 'on');
+    if strcmp(get(handle,'Type'),'hggroup'),node.xBounds=validateRuntimeGeometry(handle,node,path);end
+end
+
+function bounds=validateRuntimeGeometry(handle,node,path)
+    children=allchild(handle);patches=children(arrayfun(@(h)strcmp(get(h,'Type'),'patch'),children));
+    if numel(patches)~=1,ownership(path,'missing unique patch');end
+    p=patches(1);x=double(get(p,'XData'));y=double(get(p,'YData'));
+    count=numel(node.categories);
+    if ~isequal(size(x),[4 count])||~isequal(size(y),[4 count]),ownership(path,'bar patch geometry shape changed');end
+    % Octave's grouped-bar construction differs from MATLAB's default layout.
+    % Check its resolved rectangle against the semantic width/group contract,
+    % then retain the actual boundaries; the renderer must not guess a runtime.
+    cutoff=1;if count>1,cutoff=min(diff(node.categories))/2;end
+    columnWidth=node.barWidth;if node.groupCount==1,columnWidth=1;end
+    groupDelta=cutoff*node.barWidth/node.groupCount;
+    halfSpan=(1-(1-columnWidth)/2)*groupDelta;
+    offset=2*halfSpan*(node.groupIndex-(node.groupCount+1)/2);
+    left=node.categories-halfSpan+offset+(1-columnWidth)*groupDelta;
+    right=node.categories+halfSpan+offset-(1-columnWidth)*groupDelta;
+    expectedX=[left;left;right;right];
+    expectedY=[repmat(node.baseline,1,count);node.values;node.values;repmat(node.baseline,1,count)];
+    tolerance=16*eps(max(1,max(abs(expectedX(:)))));
+    if any(abs(x(:)-expectedX(:))>tolerance)||~isequal(y,expectedY)
+        ownership(path,'bar patch geometry differs from normalized grouped bars');
+    end
+    names={'FaceColor','EdgeColor','LineStyle','LineWidth'};
+    for k=1:numel(names)
+        if ~isequal(get(p,names{k}),get(handle,names{k})),ownership(path,'bar patch style differs from semantic properties');end
+    end
+    if node.visible&&~strcmp(get(p,'Visible'),'on'),ownership(path,'bar patch is independently hidden');end
+    bounds=[x(1,:);x(3,:)].';
 end
 
 function requireOpaqueAlpha(handle, property, path)

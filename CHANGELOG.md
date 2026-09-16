@@ -29,6 +29,11 @@ versions are not m2tikz-next releases.
 
 ### Fixed
 
+- M6.7: actual legend object links preserve subsets/reordering; Octave
+  colorbars retain real ticks/direction/labels; matching tags cannot hide text.
+  Unknown/hidden children, datatips, brushing, modified bar/errorbar/boxplot
+  compounds and unrepresented properties fail before successful partial output.
+
 - M6.6 visual benchmark audit: scalar scatter and surface colors, including
   finite colorbar bins, follow MATLAB's discrete colormap instead of adding
   colors by interpolating colormap entries. Scatter retains original scalar
@@ -42,6 +47,17 @@ versions are not m2tikz-next releases.
   this defect was exposed by M6.4 native PDF review.
 
 ### Compatibility and validation
+
+- M6.7: automatic orthographic camera and explicit multi-object child-order
+  requirements now cover all native 3-D readers. Nonwhite axes, transparent
+  axes on nonwhite canvases and inconsistent scatter compounds are rejected.
+  One-row/column scalar vector images fail during planning; explicit hybrid
+  preserves their pixels. See docs/UNSUPPORTED_POLICY.md for the tightened
+  boundary and the separately recorded MATLAB Update 5/Octave evidence.
+  Optional BarIR `xBounds` retains validated Octave rectangle boundaries;
+  absent fields retain historical portable-IR geometry.
+  Optional AxesIR `background` distinguishes white and transparent overlays;
+  dual-Y data/ruler helper layers remain transparent.
 
 - S1: product-path preflight, nonrecursive asset cleanup, safer filename/asset
   serialization, disabled compiler shell escape, pinned checkout Actions, and

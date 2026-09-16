@@ -27,6 +27,7 @@ function node=readBoxplot(handle,axesHandle,path,axesId)
         fail('M2T2:E027:MalformedBoxplotStatistics','MalformedBoxplotStatistics',path,'statistics are nonfinite or unordered');
     end
     roles=roleChildren(handle,path,numel(positions));
+    validateResolvedGeometry(roles,stats,positions,handle,path);
     try
         boxStyle=uniformLine(roles.box,path,'Box');medianStyle=uniformLine(roles.median,path,'Median');
         whiskerStyle=uniformLine(roles.whisker,path,'Whisker');outlierStyle=uniformOutliers(roles.outlier,path);
@@ -53,6 +54,41 @@ function node=readBoxplot(handle,axesHandle,path,axesId)
     node.outlierMarker=outlierStyle.marker;node.outlierMarkerSize=outlierStyle.size;node.outlierColor=outlierStyle.color;
     node.visible=strcmpi(get(handle,'Visible'),'on');
     node.displayName=m2t2.ir.makeText(m2t2.util.textValue(get(handle,'DisplayName'),[path '.DisplayName']),'plain');
+end
+
+function validateResolvedGeometry(roles,stats,positions,parent,path)
+    names={'box','median','whisker'};
+    for r=1:numel(names)
+        handles=roles.(names{r});seen=false(1,numel(positions));
+        for k=1:numel(handles)
+            h=handles(k);x=reshape(double(get(h,'XData')),1,[]);y=reshape(double(get(h,'YData')),1,[]);
+            if numel(x)~=2||numel(y)~=2||any(~isfinite([x y])),bad();end
+            index=find(abs(positions-mean(x))<=1e-10);
+            if numel(index)~=1||seen(index),bad();end;seen(index)=true;
+            if strcmp(names{r},'box'),expected=[stats.q1(index) stats.q3(index)];
+            elseif strcmp(names{r},'median'),expected=[stats.q2(index) stats.q2(index)];
+            else,expected=[stats.wlo(index) stats.whi(index)];end
+            if ~isequal(y,expected),bad();end
+            if ~strcmp(names{r},'median')&&any(abs(x-positions(index))>1e-10),bad();end
+            visible(h);
+        end
+    end
+    [expectedX,expectedY]=outliers(stats,positions,path);actualX=[];actualY=[];
+    for h=reshape(roles.outlier,1,[])
+        x=reshape(double(get(h,'XData')),1,[]);y=reshape(double(get(h,'YData')),1,[]);
+        if numel(x)~=numel(y),bad();end
+        empty=isnan(x)&isnan(y);x(empty)=[];y(empty)=[];
+        if any(~isfinite([x y])),bad();end
+        actualX=[actualX x];actualY=[actualY y];visible(h); %#ok<AGROW>
+    end
+    if ~isequal(sortrows([actualX(:) actualY(:)]),sortrows([expectedX(:) expectedY(:)])),bad();end
+    function visible(h)
+        if strcmp(get(parent,'Visible'),'on')&&~strcmp(get(h,'Visible'),'on'),bad();end
+    end
+    function bad()
+        fail('M2T2:E028:AmbiguousBoxplotCompound','AmbiguousBoxplotCompound',path, ...
+            'rendered child geometry/visibility differs from resolved statistics');
+    end
 end
 
 function value=option(args,name,default)

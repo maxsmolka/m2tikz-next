@@ -1,5 +1,6 @@
 function node = readLine3(handle, path)
 %READLINE3 Normalize a semantic Plot3 line without runtime state.
+    m2t2.reader.assertSupportedProperties(handle,path,'line');
     x = reshape(double(get(handle, 'XData')), 1, []);
     y = reshape(double(get(handle, 'YData')), 1, []);
     z = reshape(double(get(handle, 'ZData')), 1, []);

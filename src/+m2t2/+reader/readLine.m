@@ -1,5 +1,6 @@
 function node = readLine(lineHandle, path)
 %READLINE Normalize a 2-D line. Non-finite points become paired NaN gaps.
+    m2t2.reader.assertSupportedProperties(lineHandle,path,'line');
     z = get(lineHandle, 'ZData');
     if ~isempty(z)
         unsupported('line3d', path);

@@ -93,6 +93,7 @@ function lines = renderAxes(node, axesIndex, figureSize, config, annotations)
     if isfield(config, 'imageBackend') && strcmp(config.imageBackend, 'hybrid')
         options{end + 1} = 'axis on top';
     end
+    if isfield(node,'background'),options{end+1}=['axis background/.style={fill=' node.background '}'];end
     options = [options, typographyOptions(config.typography)];
     if ~isempty(figureSize)
         placement = placementOptions(node.placement, figureSize);

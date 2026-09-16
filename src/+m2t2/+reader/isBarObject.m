@@ -13,11 +13,14 @@ function yes = isBarObject(handle, axesHandle)
         end
         if ~strcmp(type, 'hggroup'), return; end
         children = allchild(handle);
+        baseline = get(handle, 'Baseline');
         patchCount = 0;
         for k = 1:numel(children)
             if strcmp(get(children(k), 'Type'), 'patch') && ...
                     sameHandle(get(children(k), 'Parent'), handle)
                 patchCount = patchCount + 1;
+            elseif ~sameHandle(children(k),baseline)
+                return;
             end
         end
         baseline = get(handle, 'Baseline');

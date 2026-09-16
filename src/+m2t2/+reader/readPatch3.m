@@ -1,5 +1,9 @@
 function node = readPatch3(handle, path)
 %READPATCH3 Read only an opaque single-triangle Fill3 decoration.
+    m2t2.reader.assertSupportedProperties(handle,path,'primitive');
+    if ~strcmp(get(handle,'Marker'),'none')
+        error('M2T2:E007:UnsupportedProperty','Patch markers are not represented: %s',path);
+    end
     faces = double(get(handle, 'Faces')); vertices = double(get(handle, 'Vertices'));
     if ~(isequal(size(faces), [1 3]) && isequal(sort(faces), 1:3) && ...
          isequal(size(vertices), [3 3]) && all(isfinite(vertices(:))))

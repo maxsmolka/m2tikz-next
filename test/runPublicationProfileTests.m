@@ -108,6 +108,7 @@ function summary = runPublicationProfileTests(outputDirectory)
     function d=boxplotCase(),ir=boxplotIr();r=exportIr(ir,'boxplot-170','double-column');d=metric(r,4,4);end
     function d=surfaceCase()
         f=figure('Visible','off');c=onCleanup(@()closeFigure(f));a=axes('Parent',f);[x,y]=meshgrid(linspace(-1,1,31));z=sin(pi*x).*cos(pi*y);surf(a,x,y,z,z,'FaceColor','interp','EdgeColor','none');hold(a,'on');plot3(a,[-1 1],[0 0],[.8 .8],'LineWidth',1);plot3(a,[-1 1],[.5 .5],[.8 .8],'LineWidth',1);view(a,135,20);xlabel(a,'x');ylabel(a,'y');zlabel(a,'response');colorbar(a);
+        set(a,'SortMethod','childorder'); % Explicit overlay order; unresolved scene-wide depth is rejected.
         r=exportFigure(f,'surface-170','double-column');d=metric(r,1,3);clear c;
     end
     function d=jsonDeterminism()

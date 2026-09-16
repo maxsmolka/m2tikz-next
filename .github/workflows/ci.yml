@@ -90,6 +90,9 @@ jobs:
       - name: Validate large-data cardinality contract at small scale
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM66LargeDataContractTests(fullfile('.audit','m66-contract'));"
+      - name: Validate unsupported content and no partial output
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM67UnsupportedTests(fullfile('.audit','m67-capability'));"
 
   tex-preview:
     runs-on: ubuntu-latest
@@ -152,3 +155,6 @@ jobs:
       - name: Compile large-data contract representatives
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM66LargeDataTexTests(fullfile('.audit','m66-tex'));"
+      - name: Compile supported capability-boundary workflows
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM67UnsupportedTexTests(fullfile('.audit','m67-tex'));"

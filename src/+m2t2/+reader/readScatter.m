@@ -1,5 +1,6 @@
 function node = readScatter(handle, path, dimensionality)
 %READSCATTER Normalize rich scatter roles and explicitly requested dimension.
+    m2t2.reader.assertSupportedProperties(handle,path,'primitive');
     if nargin<3,dimensionality=2;end
     z = property(handle, 'ZData', []);
     if dimensionality==2 && ~isempty(z)
@@ -67,6 +68,7 @@ function node = readScatter(handle, path, dimensionality)
     node.displayName = m2t2.ir.makeText( ...
         m2t2.util.textValue(get(handle, 'DisplayName'), [path '.displayName']), 'plain');
     node.visible = strcmpi(get(handle, 'Visible'), 'on');
+    if strcmp(get(handle,'Type'),'hggroup'),m2t2.reader.validateScatterCompound(handle,node,path);end
 end
 
 function checkAlpha(handle, name, path)

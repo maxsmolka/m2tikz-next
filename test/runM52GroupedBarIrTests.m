@@ -3,9 +3,9 @@ function summary=runM52GroupedBarIrTests(outputDirectory)
     root=fileparts(fileparts(mfilename('fullpath')));addpath(fullfile(root,'src'));
     if nargin<1,outputDirectory=fullfile(root,'.audit','m52-bar-ir');end;ensureDirectory(outputDirectory);
     cases={@nativeGrouped,@syntheticGeometry,@mixedSign,@jsonReplay,@oldV2, ...
-        @stacked,@horizontal,@arbitraryGroup,@invalidGroup,@invalidColor};
+        @stacked,@horizontal,@arbitraryGroup,@invalidGroup,@invalidColor,@resolvedBounds,@invalidBounds};
     names={'native_grouped','synthetic_geometry','mixed_sign','json_replay','old_v2', ...
-        'stacked_rejected','horizontal_rejected','arbitrary_group','invalid_group','invalid_color'};
+        'stacked_rejected','horizontal_rejected','arbitrary_group','invalid_group','invalid_color','resolved_bounds','invalid_bounds'};
     rows=cell(1,numel(cases));results=cell(numel(cases),4);failures=0;
     for k=1:numel(cases),try,cases{k}();status='PASS';detail='';catch err,status='FAIL';failures=failures+1;detail=[err.identifier ': ' oneLine(err.message)];end;results(k,:)={names{k},status,detail,'bar-ir'};end %#ok<NASGU>
     path=fullfile(outputDirectory,'m52-bar-ir-results.tsv');writeRows(path,results);summary=struct('failures',failures,'tests',numel(cases),'resultPath',path);
@@ -17,6 +17,17 @@ end
 function syntheticGeometry()
     ir=barIR();tex=m2t2.render.renderPgfplots(ir,true);assertContains(tex,'(axis cs:0.742857142857143,0) rectangle (axis cs:0.971428571428572,2)');assertContains(tex,'(axis cs:1.02857142857143,0) rectangle (axis cs:1.25714285714286,4)');
 end
+function resolvedBounds()
+    f=figure('Visible','off');c=onCleanup(@()close(f));a=axes('Parent',f);
+    b=bar(a,[2 4 7],[1 3;2 4;3 5],.65,'grouped');ir=m2t2.reader.readFigure(f);
+    if exist('OCTAVE_VERSION','builtin')
+        for k=1:2,p=findobj(b(k),'Type','patch');x=get(p,'XData');assert(isequal(ir.axes{1}.series{k}.xBounds,[x(1,:);x(3,:)].'));end
+        tex=m2t2.render.renderPgfplots(ir,true);assertContains(tex,['(axis cs:' m2t2.util.formatNumber(ir.axes{1}.series{1}.xBounds(1,1)) ',0)']);
+        replay=m2t2.ir.fromJson(jsonencode(ir));assert(strcmp(tex,m2t2.render.renderPgfplots(replay,true)));
+    end
+    clear c;
+end
+function invalidBounds(),ir=barIR();ir.axes{1}.series{1}.xBounds=[1 0;2 3];expect(@()m2t2.ir.validate(ir),'M2T2:E003:InvalidIR');end
 function mixedSign(),ir=barIR();ir.axes{1}.series{1}.values=[-2 3];m2t2.ir.validate(ir);tex=m2t2.render.renderPgfplots(ir,true);assertContains(tex,'-2)');end
 function jsonReplay(),ir=barIR();loaded=m2t2.ir.fromJson(jsonencode(ir));assert(strcmp(m2t2.render.renderPgfplots(ir,true),m2t2.render.renderPgfplots(loaded,true)));end
 function oldV2(),ir=barIR();ir.axes{1}.series={};loaded=m2t2.ir.fromJson(jsonencode(ir));assert(isempty(loaded.axes{1}.series));end

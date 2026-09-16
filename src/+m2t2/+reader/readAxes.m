@@ -3,6 +3,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
     if nargin < 3, axesId = 'axes-1'; end
     if nargin < 4, legendHandle = []; end
     if nargin < 5, activeDualSide = false; end
+    m2t2.reader.assertSupportedProperties(axesHandle,path,'axes');
     yRulers = [];
     try
         yRulers = get(axesHandle, 'YAxis');
@@ -18,6 +19,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
     is3d = abs(viewValue(2) - 90) > 1e-10;
 
     node = m2t2.ir.makeAxes();
+    node.background='white';if strcmp(get(axesHandle,'Color'),'none'),node.background='none';end
     if is3d
         projection = lower(char(get(axesHandle, 'Projection')));
         if ~strcmp(projection, 'orthographic')
@@ -73,6 +75,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
     end
     validateBarPeerGroup(barHandles, path);
     series = {};
+    seriesHandles = {};
     annotations = {};
     visibleIndex = 0;
     for k = 1:numel(children)
@@ -89,12 +92,15 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
             continue;
         end
         if strcmp(type, 'hggroup') && isStructuredSurfaceGroup(children(k), axesHandle)
+            m2t2.reader.assertSupportedProperties(children(k),childPath,'primitive');
             groupChildren = flipud(allchild(children(k)));
             for g = 1:numel(groupChildren)
                 groupType = get(groupChildren(g), 'Type');
                 groupPath = sprintf('%s.patterngroup{%d}', childPath, g);
                 if strcmp(groupType, 'text')
-                    continue; % Proven compound-surface-owned axis decoration.
+                    m2t2.reader.assertSupportedProperties(groupChildren(g),groupPath,'text');
+                    if isempty(get(groupChildren(g),'String')),continue;end
+                    unsupported('compound text',groupPath);
                 elseif strcmp(groupType, 'surface')
                     item = m2t2.reader.readSurface(groupChildren(g), groupPath);
                 elseif strcmp(groupType, 'line')
@@ -106,11 +112,13 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
                         'M2T2-E031 Unsupported3DPrimitive: type=%s path=%s', groupType, groupPath);
                 end
                 item.id = sprintf('%s-series-%d', axesId, numel(series) + 1);
+                item.visible=item.visible&&strcmp(get(children(k),'Visible'),'on');
                 series{end + 1} = item; %#ok<AGROW>
+                seriesHandles{end+1}=groupChildren(g); %#ok<AGROW>
             end
             continue;
         end
-        if strcmp(type, 'text') && (strcmp(tag, 'colorbar') || ...
+        if strcmp(type, 'text') && (isColorbarRuntimeDecoration(children(k),axesHandle) || ...
                 isLegendRuntimeDecoration(children(k), axesHandle, legendHandle))
             visibleIndex = visibleIndex - 1;
             continue;
@@ -149,7 +157,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
                     item = m2t2.reader.readErrorbar(children(k), childPath);
                 elseif isScatterGroup(children(k))
                     dimension=2;if is3d,dimension=3;end
-                    item = m2t2.reader.readScatter(children(k), childPath, dimension);
+                    item=m2t2.reader.readScatter(children(k),childPath,dimension);
                 else
                     unsupported(type, childPath);
                 end
@@ -169,6 +177,7 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
         end
         item.id = sprintf('%s-series-%d', axesId, numel(series) + 1);
         series{end + 1} = item; %#ok<AGROW>
+        seriesHandles{end+1}=children(k); %#ok<AGROW>
     end
     hasScalarScatter = any(cellfun(@(item) any(strcmp(item.kind, {'m2t2.scatter','m2t2.scatter3'})) && ...
         strcmp(item.colorMode, 'scalar_mapped'), series));
@@ -184,17 +193,19 @@ function [node, annotations] = readAxes(axesHandle, path, axesId, legendHandle, 
               path, node.colorMapping.scale);
     end
     node.series = series;
-    broader3d=any(cellfun(@(item) strcmp(item.kind,'m2t2.scatter3') || ...
-            (strcmp(item.kind,'m2t2.surface') && strcmp(item.faceMode,'none')),series));
-    if broader3d
+    if any(cellfun(@(item)strcmp(item.kind,'m2t2.surface')&&~strcmp(item.faceMode,'none'),series))&& ...
+            ~strcmp(node.colorMapping.scale,'linear')
+        error('M2T2:E034:UnsupportedSurfaceColorMode','Surface ColorScale must be linear: %s',path);
+    end
+    if is3d
         node.sceneOrder=m2t2.reader.readScientific3DCamera(axesHandle,node,path);
         if ~isempty(annotations) || (~isempty(legendHandle)&& ...
-                (numel(series)~=1 || ~strcmp(series{1}.kind,'m2t2.scatter3')))
+                (numel(series)~=1 || ~any(strcmp(series{1}.kind,{'m2t2.scatter3','m2t2.line3'}))))
             error('M2T2:E063:Unsupported3DScene', ...
                 'M2T2-E063 Unsupported3DScene: path=%s reason=3-D annotations and multi-object/mesh legend ownership are unsupported',path);
         end
     end
-    node.legend = m2t2.reader.readLegend(legendHandle, series, [path '.legend']);
+    node.legend = m2t2.reader.readLegend(legendHandle, series, [path '.legend'],seriesHandles);
 end
 
 function yes = isPatternRuntimeEmptyGroup(handle, axesHandle)
@@ -317,6 +328,9 @@ end
 
 function yes = isErrorbar(handle)
     try
+        if ~strcmp(getappdata(handle,'__creator__'),'__errplot__'),yes=false;return;end
+        children=allchild(handle);
+        if numel(children)~=2||~all(arrayfun(@(h)strcmp(get(h,'Type'),'line'),children)),yes=false;return;end
         get(handle, 'LData'); get(handle, 'UData');
         yes = true;
     catch
@@ -324,33 +338,27 @@ function yes = isErrorbar(handle)
     end
 end
 
-function yes = isScatterGroup(handle)
-    yes = false;
+function yes=isColorbarRuntimeDecoration(handle,axesHandle)
+    yes=false;
     try
-        if ~strcmp(get(handle, 'Type'), 'hggroup') || ...
-                ~strcmp(getappdata(handle, '__creator__'), '__scatter__') || ...
-                ~strcmp(get(get(handle, 'Parent'), 'Type'), 'axes')
-            return;
-        end
-        x = get(handle, 'XData');
-        y = get(handle, 'YData');
-        get(handle, 'ZData');
-        get(handle, 'SizeData');
-        get(handle, 'CData');
-        get(handle, 'Marker');
-        get(handle, 'MarkerEdgeColor');
-        get(handle, 'MarkerFaceColor');
-        get(handle, 'DisplayName');
-        if numel(x) ~= numel(y), return; end
-        children = allchild(handle);
-        if ~all(arrayfun(@(child) strcmp(get(child, 'Type'), 'patch') && ...
-                        isequal(get(child, 'Parent'), handle), children))
-            return;
-        end
-        yes = true;
-    catch
-        yes = false;
-    end
+        cb=get(axesHandle,'__colorbar_handle__');callback=get(handle,'DeleteFcn');
+        yes=strcmp(get(handle,'Tag'),'colorbar')&&strcmp(get(handle,'Visible'),'off')&& ...
+            strcmp(get(handle,'HandleVisibility'),'off')&&isempty(get(handle,'String'))&& ...
+            isequal(get(handle,'Parent'),axesHandle)&&isscalar(cb)&&ishandle(cb)&& ...
+            isequal(get(cb,'__axes_handle__'),axesHandle)&&iscell(callback)&& ...
+            numel(callback)>=3&&containsHandle(callback{2},axesHandle)&&containsHandle(callback{3},cb);
+    catch,yes=false;end
+end
+
+function yes=isScatterGroup(handle)
+    yes=false;
+    try
+        if ~strcmp(getappdata(handle,'__creator__'),'__scatter__'),return;end
+        names={'XData','YData','ZData','SizeData','CData','Marker','MarkerEdgeColor','MarkerFaceColor','DisplayName'};
+        for k=1:numel(names),get(handle,names{k});end
+        children=allchild(handle);
+        yes=~isempty(children)&&all(arrayfun(@(h)strcmp(get(h,'Type'),'patch')&&isequal(get(h,'Parent'),handle),children));
+    catch,yes=false;end
 end
 
 function unsupported(type, path)

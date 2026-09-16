@@ -1,9 +1,13 @@
 function writePngAsset(asset, path)
 %WRITEPNGASSET Encode one deterministic lossless RGBA rendering asset.
-    if all(asset.alpha(:) == 255)
-        imwrite(asset.rgb, path, 'png');
-    else
-        imwrite(asset.rgb, path, 'png', 'Alpha', asset.alpha);
+    try
+        if all(asset.alpha(:) == 255)
+            imwrite(asset.rgb, path, 'png');
+        else
+            imwrite(asset.rgb, path, 'png', 'Alpha', asset.alpha);
+        end
+    catch err
+        error('M2T2:E_PNG_WRITE_FAILED','Cannot encode PNG asset: %s',err.message);
     end
     removeTimeMetadata(path);
 end
@@ -37,5 +41,13 @@ function removeTimeMetadata(path)
     end
     fid = fopen(path, 'wb');
     if fid < 0, error('M2T2:E_PNG_WRITE_FAILED', 'Cannot normalize generated PNG: %s', path); end
-    cleanup = onCleanup(@() fclose(fid)); fwrite(fid, output, 'uint8'); clear cleanup;
+    try
+        written=fwrite(fid,output,'uint8');closed=fclose(fid);
+    catch err
+        try,fclose(fid);catch,end
+        error('M2T2:E_PNG_WRITE_FAILED','Cannot normalize generated PNG: %s',err.message);
+    end
+    if written~=numel(output)||closed~=0
+        error('M2T2:E_PNG_WRITE_FAILED','Incomplete normalized PNG write: %s',path);
+    end
 end

@@ -5,6 +5,12 @@ configuration, ordered objects and a stated implementation/runtime boundary.
 It is not a promise that different MATLAB/Octave default palettes, automatic
 limits, font engines or PDF encoders produce identical bytes.
 
+M7.3 additionally fixes a reviewed common Unicode/numeric FigureIR and TeX
+payload to exact SHA-256 goldens across Windows MATLAB, local Linux Octave and
+hosted CI. Its RGBA pixels agree while the native encoders' PNG bytes differ.
+The [environment contract](ENVIRONMENT_CONTRACT.md) defines UTF-8/LF, locale,
+paths and compiler limits; PDF byte identity is deliberately not required.
+
 | Product | Contract and boundary |
 | --- | --- |
 | FigureIR | Handle-free semantic state and explicit ownership/order. Repeated reads of unchanged supported figures are equal; runtime defaults may differ across environments. Render/profile operations do not mutate input IR. |

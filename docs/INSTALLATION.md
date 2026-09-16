@@ -20,6 +20,9 @@ Later milestones separately record native MATLAB R2026a Update 5 on Windows
 and local LuaLaTeX / TeX Live 2025/Debian evidence. See the
 [validation matrix](MATLAB_VALIDATION_MATRIX.md); the historical Update 4
 claim does not imply other versions. Public calls follow [API.md](API.md).
+The [environment contract](ENVIRONMENT_CONTRACT.md) distinguishes Windows
+MATLAB, container/hosted Linux Octave and the actually observed TeX toolchains.
+MATLAB must run with its JVM enabled for safe output-path checks.
 
 ## TeX toolchain
 
@@ -30,6 +33,10 @@ validated toolchain is:
 - LuaLaTeX;
 - TikZ/PGF and PGFPlots 1.18.x;
 - the LaTeX `standalone` class.
+
+That is the historical preview toolchain. New local compatibility/portability
+runs also use TeX Live 2025/Debian. The MATLAB validation bridge reaches Linux
+LuaLaTeX; a native Windows TeX distribution must be independently verified.
 
 LuaLaTeX is the workflow compiler, not a MATLAB or Octave dependency. Verify the
 required commands and packages independently:
@@ -65,6 +72,13 @@ For persistent use, add that absolute `src` directory through your local MATLAB
 or Octave startup configuration. Do not copy or commit a machine-specific path
 into the repository.
 
+Record your MATLAB/Octave version, OS, checkout commit and compiler version
+locally. Testing another MATLAB release creates new evidence only after the
+tests actually run. Do not upload real figures, data, raw logs or screenshots
+with an environment report unless you have reviewed and removed sensitive
+content. Optional synthetic boxplot construction requires its runtime toolbox;
+this is not a claim that every validation fixture runs in base MATLAB only.
+
 ## Verify with a minimal export
 
 Start MATLAB or Octave in the repository root after confirming that LuaLaTeX is
@@ -86,6 +100,16 @@ The output base determines where generated files go. This example creates
 `build/installation-check.tex`, `build/installation-check.pdf`, and compiler
 diagnostics beside them. Existing products are preserved by default; pass
 `'Overwrite', true` only when replacement is intended.
+
+Inspect both `result.diagnostics` and the rendered PDF. Missing LuaLaTeX,
+compilation failure and missing/invalid PDFs have distinct codes. Logs are
+local and may include sensitive paths or labels. Export calls are synchronous
+without a built-in timeout; supervise untrusted or unusually slow jobs outside
+the API. Only trusted TeX/LaTeX-interpreted labels should be exported.
+
+Use `fullfile` for output folders. Spaces and the observed `äöü` path cases are
+tested; generated text is UTF-8 without BOM and generated line endings are LF.
+For hybrid output, keep the companion `-assets` directory beside the TeX file.
 
 ## Platform notes
 

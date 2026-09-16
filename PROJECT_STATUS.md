@@ -1,7 +1,7 @@
 # Project status
 
 Latest released version: **0.5.0**. Merged development functionality extends
-through **M7.3**. Unreleased features are listed separately in
+through **M7.3**, with **0.8.0 feature-freeze preparation**. Unreleased features are listed separately in
 [CHANGELOG.md](CHANGELOG.md); this status does not announce a new release.
 
 ## Current contract
@@ -67,6 +67,14 @@ The [environment contract](docs/ENVIRONMENT_CONTRACT.md) defines explicit UTF-8,
 path/process/TeX boundaries, stable asset-write diagnostics and cross-runtime
 JSON/TeX goldens. PNG pixels, not cross-encoder bytes, are the scientific
 comparison; native Windows TeX and other MATLAB versions remain unverified.
-Next is **v0.8.0 feature-freeze preparation**, followed by the ordered work in
-[ROADMAP.md](ROADMAP.md). New MATLAB object support requires native MATLAB
+The [0.8.0 feature-freeze policy](docs/release/FEATURE_FREEZE_0_8_0.md) is now
+defined; [release notes](docs/release/RELEASE_NOTES_0_8_0_DRAFT.md) are a draft,
+not a release. No new major graphics family is planned before 1.0 unless real
+external acceptance reveals a critical correctness/usability gap that cannot
+reasonably be deferred. Fixes, diagnostics, compatibility, portability,
+performance-regression fixes, docs, security and release engineering remain
+in scope; speculative features and unrelated API expansion do not.
+Next is the **external acceptance package**, then real-world MATLAB testing
+and feedback triage, as ordered in [ROADMAP.md](ROADMAP.md).
+New MATLAB object support requires native MATLAB
 validation. See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries.

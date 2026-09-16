@@ -11,7 +11,9 @@ $documents = @(
     'docs/IMAGE_PLOTS.md','docs/IMAGE_BACKENDS.md','docs/BACKEND_PLANNER.md',
     'docs/MATLAB_OCTAVE_DIFFERENCES.md','docs/MATLAB_VALIDATION_MATRIX.md',
     'docs/design/DIAGNOSTICS.md','docs/RUNTIME_COMPATIBILITY.md',
-    'docs/ENVIRONMENT_CONTRACT.md','test/README.md'
+    'docs/ENVIRONMENT_CONTRACT.md','test/README.md',
+    'docs/release/FEATURE_FREEZE_0_8_0.md','docs/release/RELEASE_NOTES_0_8_0_DRAFT.md',
+    'docs/release/VERSIONING.md','docs/release/DEPENDENCIES.md'
 )
 $missing = [System.Collections.Generic.List[string]]::new()
 

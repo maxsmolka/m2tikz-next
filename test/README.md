@@ -260,6 +260,13 @@ classified with skip reasons; the harness does not install packages.
 
 ## Public API-freeze candidate
 
+Stored IR compatibility is covered by `runM71FigureIrContractTests` (18 cases)
+and `runM71FigureIrTexTests` (nine real PDFs). Committed input/canonical pairs
+cover old/rich scatter/images, tiled/dual/3-D, bar/background and NaN gaps;
+additional cases reject unknown versions, missing semantics and ambiguous JSON.
+The internal codec preserves extreme doubles independently of TeX precision.
+See [FIGURE_IR.md](../docs/FIGURE_IR.md).
+
 `runM70ApiContractTests` runs eight real compiler-backed contract cases in
 MATLAB or Octave: result shapes/defaults, invalid options, safe collisions,
 publication widths, rich-image planning, set inheritance/preflight and failed/

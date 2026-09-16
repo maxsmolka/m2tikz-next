@@ -154,6 +154,7 @@ Generated validation products stay below ignored `.audit/` directories.
 
 - [Architecture](ARCHITECTURE.md)
 - [Public API contract](docs/API.md)
+- [FigureIR compatibility](docs/FIGURE_IR.md)
 - [Current project status](PROJECT_STATUS.md)
 - [Roadmap to 1.0](ROADMAP.md)
 - [Installation](docs/INSTALLATION.md)

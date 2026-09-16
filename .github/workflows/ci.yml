@@ -96,6 +96,9 @@ jobs:
       - name: Validate deterministic serialization and precision boundaries
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM68DeterminismTests(fullfile('.audit','m68-determinism'));"
+      - name: Validate FigureIR compatibility and canonical JSON
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM71FigureIrContractTests(fullfile('.audit','m71-ir'));"
 
   tex-preview:
     runs-on: ubuntu-latest
@@ -167,3 +170,6 @@ jobs:
       - name: Validate public API-freeze candidate
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM70ApiContractTests(fullfile('.audit','m70-api'));"
+      - name: Compile stored FigureIR compatibility classes
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM71FigureIrTexTests(fullfile('.audit','m71-tex'));"

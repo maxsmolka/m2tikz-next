@@ -8,6 +8,12 @@ versions are not m2tikz-next releases.
 
 ### Added
 
+- M7.1: FigureIR compatibility policy, nine synthetic input/canonical JSON
+  pairs, strict known-version migration and an internal deterministic JSON
+  codec that preserves single NaN gaps and extreme double values. Malformed
+  missing payload/ownership and ambiguous bare null now fail explicitly.
+  No public API, TeX precision or manifest schema change. See docs/FIGURE_IR.md.
+
 - M7.0: public API-freeze candidate contract and real compiler-backed API
   regression tests; no breaking changes or new aliases. See docs/API.md.
 

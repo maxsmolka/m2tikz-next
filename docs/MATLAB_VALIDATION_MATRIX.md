@@ -1,5 +1,12 @@
 # MATLAB validation matrix
 
+M7.1 adds 18 portable stored-IR contract cases and nine real PDF compilations
+in both native MATLAB R2026a Update 5 and Octave 11.3. Nine canonical JSON
+goldens match byte-for-byte across these observed runtimes. Native MATLAB
+compilation again uses the Linux LuaLaTeX bridge. This is schema/codec/renderer
+evidence, not expanded MATLAB or native Octave graphics-family support.
+See [FIGURE_IR.md](FIGURE_IR.md).
+
 M7.0 adds eight public API-freeze contract cases in native MATLAB R2026a
 Update 5 on Windows and GNU Octave 11.3. Both pass with real LuaLaTeX:
 the Windows MATLAB run uses a temporary Linux TeX Live 2025/Debian bridge.

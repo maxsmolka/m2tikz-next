@@ -1,7 +1,7 @@
 # Project status
 
 Latest released version: **0.5.0**. Merged development functionality extends
-through **M7.2**. Unreleased features are listed separately in
+through **M7.3**. Unreleased features are listed separately in
 [CHANGELOG.md](CHANGELOG.md); this status does not announce a new release.
 
 ## Current contract
@@ -63,6 +63,10 @@ required source properties, preserved runtime-specific dependencies, explicit
 optional-property handling and the R01-R15 synthetic evidence layers. New
 M7.2 evidence uses MATLAB R2026a Update 5 on Windows and Octave 11.3/gnuplot;
 no additional MATLAB version or platform is implied.
-Next is **M7.3: Portability and environment contract**, followed by the ordered work in
+The [environment contract](docs/ENVIRONMENT_CONTRACT.md) defines explicit UTF-8,
+path/process/TeX boundaries, stable asset-write diagnostics and cross-runtime
+JSON/TeX goldens. PNG pixels, not cross-encoder bytes, are the scientific
+comparison; native Windows TeX and other MATLAB versions remain unverified.
+Next is **v0.8.0 feature-freeze preparation**, followed by the ordered work in
 [ROADMAP.md](ROADMAP.md). New MATLAB object support requires native MATLAB
 validation. See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries.

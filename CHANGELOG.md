@@ -8,6 +8,10 @@ versions are not m2tikz-next releases.
 
 ### Added
 
+- M7.3: observed environment/path/encoding/process contract, twelve focused
+  portability cases and shared cross-runtime JSON/TeX byte goldens. Installation
+  guidance separates native runtime, bridged compiler and external-test evidence.
+
 - M7.2: runtime compatibility contract and R01-R15 synthetic native/portable
   evidence with real compiler workflows. No untested MATLAB version or new
   graphics family is claimed. See docs/RUNTIME_COMPATIBILITY.md.
@@ -45,6 +49,10 @@ versions are not m2tikz-next releases.
   colorbar/tiled/profile integration. See docs/DUAL_Y_AXES.md.
 
 ### Fixed
+
+- M7.3: text products use explicit lossless UTF-8 encoding, including empty
+  writes; PNG encoder/write failures use the existing stable diagnostic and
+  normalized output checks byte count and close status. No new public options.
 
 - M7.2: optional runtime property access distinguishes absence from getter
   failure; scalar nonmissing MATLAB strings normalize explicitly. Legacy

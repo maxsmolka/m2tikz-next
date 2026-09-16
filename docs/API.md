@@ -119,6 +119,11 @@ LuaLaTeX must be on PATH. Compilation uses temporary staging, no shell escape,
 and retains a failure log when possible. MATLAB path inspection needs the JVM.
 The compiler is not sandboxed: export trusted content only; see
 [SECURITY.md](../SECURITY.md). Source figures are not closed or restyled.
+Calls are synchronous without a built-in process timeout. Generated text is
+explicit UTF-8 without BOM; PNG write/encoding failures use the existing
+`M2T2:E_PNG_WRITE_FAILED` diagnostic rather than vendor-specific encoder codes.
+See [the environment contract](ENVIRONMENT_CONTRACT.md) for paths, locale,
+temporary staging and the distinction between native and bridged TeX evidence.
 
 ## Figure sets and manifest schema 1
 

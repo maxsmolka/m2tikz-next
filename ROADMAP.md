@@ -1,11 +1,11 @@
 # Roadmap to 1.0
 
-Latest release: 0.5.0. Functionality merged through M7.2. This roadmap defines
+Latest release: 0.5.0. Functionality merged through M7.3. This roadmap defines
 ordered acceptance work, not release dates or claims that planned features are
 already supported. Each milestone requires its own review and successful
 `repository-policy`, `octave-tests`, and `tex-preview` checks before merge.
 
-## Foundation work through M7.2
+## Foundation work through M7.3
 
 | Phase | Scope and acceptance boundary |
 | --- | --- |
@@ -20,6 +20,7 @@ already supported. Each milestone requires its own review and successful
 | M7.0 | API-freeze candidate audited and documented in docs/API.md; real public-contract tests cover defaults/results/failures/sets. No breaking cleanup. Future breaking changes are exceptional and require an ADR and migration notes. |
 | M7.1 | Complete: FigureIR v2 compatibility/default/ownership policy, strict v1 migration, future-version rejection, deterministic numeric JSON codec and nine golden replay/PDF classes. See docs/FIGURE_IR.md and ADR-0025. |
 | M7.2 | Runtime-sensitive reader audit, absence-only optional-property defaults, scalar string normalization and R01-R15 native/portable/real-compiler coverage. MATLAB Update 5 and Octave 11.3 are separate observed environments; see docs/RUNTIME_COMPATIBILITY.md. |
+| M7.3 | Explicit UTF-8/environment contract, observed Unicode/spaced/nested paths, stable PNG-write diagnostics, real compiler failures and common canonical JSON/TeX goldens. See docs/ENVIRONMENT_CONTRACT.md; no native Windows TeX or untested runtime claim. |
 
 The supported/unsupported contract, scientific fidelity, deterministic output,
 secure workflow, bounded performance, and explicit compatibility take priority
@@ -28,15 +29,14 @@ renderers cannot inspect runtime graphics handles. No whole-figure raster or
 legacy fallback is permitted. Any unavailable correctness/native-runtime gate
 blocks acceptance of the affected work.
 
-## After M7.2
+## After M7.3
 
-1. M7.3 Portability and environment contract
-2. v0.8.0 feature-freeze candidate
-3. External acceptance package and real-world MATLAB testing, then feedback triage
-4. M8.0 1.0 release-candidate readiness
-5. v0.9.0 / v1.0.0-rc.1
-6. M8.1 RC burn-in
-7. v1.0.0
+1. v0.8.0 feature-freeze candidate
+2. External acceptance package and real-world MATLAB testing, then feedback triage
+3. M8.0 1.0 release-candidate readiness
+4. v0.9.0 / v1.0.0-rc.1
+5. M8.1 RC burn-in
+6. v1.0.0
 
 Release/tag creation is a separate authorized action. Arbitrary scene graphs,
 lighting/materials, texture mapping, arbitrary transparency, unfaithful

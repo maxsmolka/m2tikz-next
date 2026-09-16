@@ -260,6 +260,13 @@ classified with skip reasons; the harness does not install packages.
 
 ## Public API-freeze candidate
 
+`runM73EnvironmentTests(out,false)` validates nine path/encoding/diagnostic
+cases and the shared Windows-MATLAB/Linux-Octave JSON/TeX byte goldens. Pass
+`true` for 12 cases with actual compiler runs, Unicode/spaced/nested output,
+hybrid assets, a figure set and failed-compiler cleanup. PNG decoded channels
+are exact; cross-encoder PNG or PDF byte equality is not required. See the
+[environment contract](../docs/ENVIRONMENT_CONTRACT.md).
+
 Runtime compatibility is covered by `runM72RuntimeCompatibilityTests(out,false)`:
 15 synthetic native/portable cases plus property/text checks. Pass `true` to
 compile every representative and exercise public profile/set workflows. Native

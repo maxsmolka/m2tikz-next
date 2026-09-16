@@ -164,3 +164,6 @@ jobs:
       - name: Validate repeated and cross-directory scientific products
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM68DeterminismWorkflowTests(fullfile('.audit','m68-workflow'));"
+      - name: Validate public API-freeze candidate
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM70ApiContractTests(fullfile('.audit','m70-api'));"

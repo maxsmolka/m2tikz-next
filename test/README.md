@@ -258,5 +258,13 @@ compatibility and engine cases. `runM1B3DRegressionTests` checks camera behavior
 regenerate hashes to hide failures. Missing optional runtime dependencies are
 classified with skip reasons; the harness does not install packages.
 
+## Public API-freeze candidate
+
+`runM70ApiContractTests` runs eight real compiler-backed contract cases in
+MATLAB or Octave: result shapes/defaults, invalid options, safe collisions,
+publication widths, rich-image planning, set inheritance/preflight and failed/
+skipped manifests. Existing security/compiler suites cover the remaining
+operational failures. See [API.md](../docs/API.md).
+
 See the [test strategy](../docs/design/TEST_STRATEGY_2_0.md) and
 [visual validation design](../docs/design/VISUAL_VALIDATION.md).

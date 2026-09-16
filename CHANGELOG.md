@@ -8,6 +8,9 @@ versions are not m2tikz-next releases.
 
 ### Added
 
+- M7.0: public API-freeze candidate contract and real compiler-backed API
+  regression tests; no breaking changes or new aliases. See docs/API.md.
+
 - M6.8: determinism/precision audit and real repeated/cross-directory export
   tests, including native tiled/dual/3-D sets and explicit PNG/JSON boundaries.
   See docs/DETERMINISM.md.

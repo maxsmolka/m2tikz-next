@@ -1,6 +1,7 @@
 # Publication profiles
 
-> The profile API is experimental and carries no pre-1.0 stability promise.
+> Public profile options belong to the [API-freeze candidate](API.md).
+> Profile implementation helpers remain internal.
 
 Publication profiles are deterministic, opt-in transformations between the
 normalized FigureIR and the handle-free PGFPlots renderer. They change physical
@@ -83,9 +84,9 @@ in [ADR-0019](adr/ADR-0019-calibrated-publication-profile.md).
 The reader cannot currently distinguish explicit author styling from every
 runtime default. The publication profile therefore uses a non-destructive
 `preserve` policy for line widths and line/scatter marker sizes rather than
-claiming to normalize defaults safely. Existing scatter limitations—constant
-color, marker, and size only—remain unchanged. No downsampling or data
-simplification is performed.
+claiming to normalize defaults safely. Supported per-point scatter size and
+color are preserved; marker shape stays constant and alpha is unsupported.
+See [SUPPORT.md](SUPPORT.md). No downsampling or data simplification is performed.
 
 ## Result metadata and diagnostics
 

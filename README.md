@@ -1,7 +1,7 @@
 # m2tikz-next
 
 > Latest release: 0.5.0 — public pre-1.0 scientific-export preview/beta.
-> The development branch includes unreleased M6.1/M6.2 capabilities.
+> Development includes the public API-freeze candidate; see current project status.
 
 m2tikz-next is a modern, validated scientific figure export pipeline derived
 from [matlab2tikz](https://github.com/matlab2tikz/matlab2tikz). It converts
@@ -11,8 +11,10 @@ faithfully. It preserves upstream history and attribution but is an independent
 project, not an official matlab2tikz release or successor.
 
 The current validation boundary is GNU Octave 11.3 in hosted Linux CI and
-MATLAB R2026a Update 4 on Windows. TeX output is compiled with LuaLaTeX using
-TeX Live 2026 and PGFPlots 1.18.x. See [Installation](docs/INSTALLATION.md) for
+MATLAB R2026a Update 4 on Windows, with newer milestone evidence separately
+recorded for Update 5 in the [validation matrix](docs/MATLAB_VALIDATION_MATRIX.md).
+The original preview used LuaLaTeX, TeX Live 2026 and PGFPlots 1.18.x;
+new local milestones also use TeX Live 2025/Debian. See [Installation](docs/INSTALLATION.md) for
 the complete setup.
 
 ```matlab
@@ -20,8 +22,9 @@ addpath('src');
 
 x = linspace(0, 2*pi, 200);
 y = sin(x);
-figure;
+figure('Color','w');
 plot(x, y);
+set(gca,'Color','w');
 
 result = m2t.export(gcf, 'figure');
 ```
@@ -150,6 +153,7 @@ Generated validation products stay below ignored `.audit/` directories.
 ## Documentation
 
 - [Architecture](ARCHITECTURE.md)
+- [Public API contract](docs/API.md)
 - [Current project status](PROJECT_STATUS.md)
 - [Roadmap to 1.0](ROADMAP.md)
 - [Installation](docs/INSTALLATION.md)

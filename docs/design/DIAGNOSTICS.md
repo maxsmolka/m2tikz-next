@@ -1,6 +1,15 @@
-# Structured diagnostics concept
+# Structured diagnostics
 
-## Current behavior
+## Current public contract
+
+The modern workflows return ordered `severity`, `code`, `message`, `stage`
+records. Full codes/status/stages are automation keys; exact prose is not.
+Unsupported scientific content fails explicitly, never by silent omission or
+legacy fallback. See [API.md](../API.md) and [WORKFLOW.md](../WORKFLOW.md).
+The M1A discussion below is historical context for the inherited exporter,
+not the modern implementation or a list of current identifiers.
+
+## Historical inherited behavior (M1A)
 
 The exporter currently mixes `error(identifier, ...)`, `warning(identifier, ...)`,
 and `userWarning(m2t, ...)`. Some warnings have stable MATLAB identifiers, others
@@ -9,7 +18,7 @@ Callers therefore cannot consistently filter, collect, or turn a category into a
 error. A few fallback paths intentionally continue after reporting unsupported
 objects; other paths throw immediately.
 
-## Proposed model
+## Historical proposal (not the current code vocabulary)
 
 A diagnostic is a small record with a stable code, severity, human-readable
 message, object type/handle context where safe, and an optional cause. Initial
@@ -26,7 +35,7 @@ Codes are part of the compatibility contract; prose may improve without breaking
 automation. Severity is not inferred from the `W`/`E` character alone in code,
 but the naming makes logs readable.
 
-## Compatibility path
+## Historical compatibility proposal
 
 The first implementation should introduce one internal emission function that
 maps records back to today's warning/error behavior and honors `showWarnings`.
@@ -51,7 +60,8 @@ M6.1 assigns focused, stable failures before normalized IR is constructed:
   opaque scalar value one.
 - `M2T2:E044:UnsupportedScatterMarkerStyle` — marker edge/face ownership cannot
   be represented by the narrow `none`, `flat`, or constant-RGB contract.
-- `M2T2:E045:UnsupportedScatterDimensionality` — a scatter has nonempty ZData.
+- `M2T2:E045:UnsupportedScatterDimensionality` — scatter dimensionality is outside
+  the bounded 2-D/scatter3 contract (nonempty ZData alone is supported by M6.5).
 - `M2T2:E046:UnsupportedScatterColorMapping` — scalar point metadata depends on
   an unsupported axes color-mapping interaction.
 

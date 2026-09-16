@@ -1,8 +1,8 @@
 # Scientific export workflow
 
 > `m2t.export` is the primary public workflow. The latest release is 0.5.0;
-> the development branch includes M6.1/M6.2. This pre-1.0 API does not yet carry
-> a long-term stability promise.
+> development has reached the [API-freeze candidate](API.md). Breaking public
+> changes now need exceptional justification and an explicit migration policy.
 
 Validated with MATLAB R2026a Update 4 on Windows.
 The recorded claim is limited to that release and environment; see
@@ -14,7 +14,9 @@ TeX and a validated PDF with one call:
 ```matlab
 addpath('src');
 x = linspace(0, 2*pi, 200);
+figure('Color','w');
 plot(x, sin(x));
+set(gca,'Color','w');
 result = m2t.export(gcf, 'figures/sine');
 ```
 
@@ -58,7 +60,7 @@ for literal text, interpreted markup and caller-owned output directories.
 | `capability` | Analysis classification: `supported`, `unsupported`, or `invalid`. |
 | `texPath` | Absolute standalone TeX path. |
 | `pdfPath` | Absolute final PDF path. |
-| `logPath` | Retained compilation log path on compiler failure; otherwise empty. |
+| `logPath` | Intended log path before compilation; completed compiler outcomes clear it unless a failure log was retained. A path is not proof of file existence. |
 | `backend` | `pgfplots` in M3.0. |
 | `compiler` | `lualatex` in M3.0. |
 | `profile` | Applied profile name, width, physical figure size, and size unit. |
@@ -117,7 +119,7 @@ shell command.
 
 ## Publication profile
 
-Profile application is opt-in and remains experimental:
+Profile application is opt-in and part of the public API-freeze candidate:
 
 ```matlab
 result = m2t.export(gcf, 'figures/sine', ...

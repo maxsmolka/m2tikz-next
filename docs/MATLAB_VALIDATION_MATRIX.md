@@ -1,5 +1,11 @@
 # MATLAB validation matrix
 
+M7.0 adds eight public API-freeze contract cases in native MATLAB R2026a
+Update 5 on Windows and GNU Octave 11.3. Both pass with real LuaLaTeX:
+the Windows MATLAB run uses a temporary Linux TeX Live 2025/Debian bridge.
+This validates the public workflows, not new graphics families or other
+MATLAB releases. See [API.md](API.md).
+
 The modern pipeline was validated locally with MATLAB R2026a Update 4 on
 Windows (`26.1.0.3312084`, `win64`). This claim is limited to that release,
 architecture, and operating system; it does not validate older or newer MATLAB

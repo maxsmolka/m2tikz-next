@@ -5,6 +5,11 @@ serialization. Public entry points are `m2t.export` and `m2t.exportSet`;
 `m2t2.*`, FigureIR, and JSON helpers remain internal/experimental.
 The two end-user workflows are the [M7.0 API-freeze candidate](docs/API.md);
 their options, results, diagnostics and product lifecycle have an explicit contract.
+Stored FigureIR follows [the M7.1 compatibility contract](docs/FIGURE_IR.md)
+and [ADR-0025](docs/adr/ADR-0025-figureir-compatibility-contract.md).
+Internal JSON persistence validates payloads/owners, migrates only known v1
+lines, and uses deterministic keys plus explicit 17-digit numeric encoding.
+It is separate from the unchanged public TeX/manifest serialization paths.
 
 ## Pipeline and ownership
 

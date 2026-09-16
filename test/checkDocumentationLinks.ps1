@@ -6,7 +6,7 @@ $repositoryRoot = Split-Path $PSScriptRoot -Parent
 $documents = @(
     'README.md','NOTICE.md','CONTRIBUTING.md','SECURITY.md',
     'docs/INSTALLATION.md','docs/SUPPORT.md','ARCHITECTURE.md',
-    'PROJECT_STATUS.md','ROADMAP.md','docs/API.md','docs/WORKFLOW.md',
+    'PROJECT_STATUS.md','ROADMAP.md','docs/API.md','docs/FIGURE_IR.md','docs/WORKFLOW.md',
     'docs/PROFILES.md','docs/FIGURE_SETS.md','docs/DETERMINISM.md',
     'docs/IMAGE_PLOTS.md','docs/IMAGE_BACKENDS.md','docs/BACKEND_PLANNER.md',
     'docs/MATLAB_OCTAVE_DIFFERENCES.md','docs/MATLAB_VALIDATION_MATRIX.md',

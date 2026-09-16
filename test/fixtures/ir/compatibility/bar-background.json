@@ -1,0 +1,1 @@
+{"kind":"m2t2.figure","version":2,"axes":[{"kind":"m2t2.axes2d","id":"axes-1","xlim":[0,2],"ylim":[0,3],"xscale":"linear","yscale":"linear","series":[{"kind":"m2t2.bar","id":"bar","owner":{"kind":"axes","id":"axes-1"},"categories":[0,1,2],"values":[1,3,2],"groupId":"group","groupIndex":1,"groupCount":1,"xBounds":[[-0.3,0.3],[0.7,1.3],[1.7,2.3]]}],"background":"white"}]}

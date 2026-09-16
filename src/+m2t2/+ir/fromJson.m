@@ -1,25 +1,56 @@
 function ir = fromJson(jsonText)
 %FROMJSON Decode v1/v2 JSON and return validated current-version IR.
-    decoded = jsondecode(jsonText);
-    if ~isfield(decoded, 'version')
-        invalidVersion('missing version');
+    try
+        if isa(jsonText,'string')&&isscalar(jsonText),jsonText=char(jsonText);end
+        % Bare object null is ambiguous: jsondecode turns scalar NaN into an
+        % empty array. Array null is the explicit numeric gap representation.
+        [tokens, ends] = regexp(char(jsonText), '"(?:[^"\\]|\\.)*"', 'match', 'end');
+        for k=1:numel(tokens)
+            if ~isempty(regexp(char(jsonText(ends(k)+1:end)), '^\s*:', 'once'))
+                key=jsondecode(tokens{k});
+                if numel(key)>63||isempty(regexp(key,'^[A-Za-z][A-Za-z0-9_]*$','once'))
+                    invalidJson('JSON field names must be portable ASCII identifiers of at most 63 characters');
+                end
+            end
+            if ~isempty(regexp(char(jsonText(ends(k)+1:end)), '^\s*:\s*null\s*[,}]', 'once'))
+                invalidJson('bare null is ambiguous; use [] or a numeric array containing null');
+            end
+        end
+        % Octave otherwise renames the valid ArrowIR field end to xEnd,
+        % which formerly replaced nondefault endpoints with constructor data.
+        if exist('OCTAVE_VERSION','builtin')
+            decoded=jsondecode(jsonText,'makeValidName',false);
+        else
+            decoded=jsondecode(jsonText);
+        end
+        if ~(isstruct(decoded) && isscalar(decoded)), invalidJson('expected one figure object'); end
+        if ~isfield(decoded,'version') || ~(isnumeric(decoded.version) && ...
+                isscalar(decoded.version) && isfinite(decoded.version) && ...
+                any(decoded.version==[1 2]))
+            invalidVersion('missing, malformed or unsupported version');
+        end
+        requireSource(decoded, {'kind','axes'}, 'figure');
+        if ~strcmp(decoded.kind,'m2t2.figure'), invalidJson('invalid figure kind'); end
+        switch decoded.version
+            case 1, ir = migrateV1(decoded);
+            case 2, ir = normalizeV2(decoded);
+        end
+        m2t2.ir.validate(ir);
+    catch err
+        if strncmp(err.identifier,'M2T2:',5), rethrow(err); end
+        invalidJson('malformed JSON or schema field structure');
     end
-    switch decoded.version
-        case 1
-            ir = migrateV1(decoded);
-        case 2
-            ir = normalizeV2(decoded);
-        otherwise
-            invalidVersion(sprintf('unsupported version %g', decoded.version));
-    end
-    m2t2.ir.validate(ir);
 end
 
 function ir = migrateV1(old)
+    onlyFields(old,{'kind','version','axes'},'v1 figure');
     oldAxes = structArrayToCells(old.axes);
     axesItems = cell(1, numel(oldAxes));
     for a = 1:numel(oldAxes)
         source = oldAxes{a};
+        names={'kind','id','xlim','ylim','xscale','yscale','xlabel','ylabel','title','xgrid','ygrid','series'};
+        requireSource(source,names,'v1 axes');onlyFields(source,names,'v1 axes');
+        if ~strcmp(source.kind,'m2t2.axes2d'),invalidJson('v1 supports only axes2d');end
         target = m2t2.ir.makeAxes();
         target.id = source.id;
         copyNames = {'xlim','ylim','xscale','yscale','xgrid','ygrid'};
@@ -36,6 +67,9 @@ function ir = migrateV1(old)
         target.series = cell(1, numel(oldSeries));
         entries = {};
         for s = 1:numel(oldSeries)
+            names={'kind','x','y','color','width','style','marker','markerSize','displayName'};
+            requireSource(oldSeries{s},names,'v1 line');onlyFields(oldSeries{s},names,'v1 line');
+            if ~strcmp(oldSeries{s}.kind,'m2t2.line'),invalidJson('v1 supports only line series');end
             item = m2t2.ir.makeLineSeries();
             item.id = sprintf('%s-series-%d', target.id, s);
             item.x = row(oldSeries{s}.x); item.y = row(oldSeries{s}.y);
@@ -63,6 +97,7 @@ function ir = normalizeV2(decoded)
     axesItems = cell(1, numel(axesValues));
     for a = 1:numel(axesValues)
         source = axesValues{a};
+        requireSource(source,{'kind','id','xlim','ylim','xscale','yscale','series'},'axes');
         target = merge(m2t2.ir.makeAxes(), source);
         target.placement = merge(m2t2.ir.makePlacement(), target.placement);
         target.colorMapping = normalizeColorMapping(target.colorMapping);
@@ -109,8 +144,11 @@ function elements = normalizeElements(source)
     for k = 1:numel(raw)
         item = raw{k};
         if ~isfield(item, 'kind'), invalidVersion('figure element missing kind'); end
+        requireSource(item,{'owner'},'figure element');
+        requireSource(item.owner,{'kind','id'},'figure element owner');
         switch item.kind
             case 'm2t2.colorbar'
+                requireSource(item,{'associatedAxesIds','limits'},'colorbar');
                 node = merge(m2t2.ir.makeColorbar(), item);
                 node.owner = merge(m2t2.ir.makeOwner(), node.owner);
                 node.placement = merge(m2t2.ir.makePlacement(), node.placement);
@@ -119,6 +157,7 @@ function elements = normalizeElements(source)
                 node.ticks = normalizeTicks(node.ticks);
                 node.label = normalizeText(node.label);
             case 'm2t2.legend'
+                requireSource(item,{'entries'},'shared legend');
                 node = merge(m2t2.ir.makeSharedLegend(), item);
                 node.owner = merge(m2t2.ir.makeOwner(), node.owner);
                 node.placement = merge(m2t2.ir.makePlacement(), node.placement);
@@ -128,6 +167,7 @@ function elements = normalizeElements(source)
                     node.entries{e} = entry;
                 end
             case 'm2t2.sharedlabel'
+                requireSource(item,{'role','text'},'shared label');
                 node = merge(m2t2.ir.makeSharedLabel(), item);
                 node.owner = merge(m2t2.ir.makeOwner(), node.owner);
                 node.text = normalizeText(node.text);
@@ -147,14 +187,18 @@ function annotations = normalizeAnnotations(source)
     for k = 1:numel(raw)
         item = raw{k};
         if ~isfield(item, 'kind'), invalidVersion('annotation missing kind'); end
+        requireSource(item,{'owner'},'annotation');
+        requireSource(item.owner,{'kind','id'},'annotation owner');
         switch item.kind
             case 'm2t2.textannotation'
+                requireSource(item,{'position','text','coordinateSpace'},'text annotation');
                 node = merge(m2t2.ir.makeTextAnnotation(), item);
                 node.owner = merge(m2t2.ir.makeOwner(), node.owner);
                 node.position = row(node.position);
                 node.text = normalizeText(node.text);
                 node.color = row(node.color);
             case 'm2t2.arrowannotation'
+                requireSource(item,{'annotationKind','start','end','coordinateSpace'},'arrow annotation');
                 node = merge(m2t2.ir.makeArrowAnnotation(), item);
                 node.owner = merge(m2t2.ir.makeOwner(), node.owner);
                 node.start = row(node.start); node.end = row(node.end);
@@ -181,6 +225,18 @@ end
 function node = normalizeSeries(source, axesId, index)
     if ~isfield(source, 'kind'), invalidVersion('series missing kind'); end
     switch source.kind
+        case {'m2t2.line','m2t2.scatter'}, required={'x','y'};
+        case {'m2t2.line3','m2t2.scatter3'}, required={'x','y','z'};
+        case 'm2t2.errorbar', required={'x','y','xNegative','xPositive','yNegative','yPositive'};
+        case 'm2t2.image', required={'x','y','cdata','mapping'};
+        case 'm2t2.surface', required={'x','y','z','c'};
+        case 'm2t2.patch3', required={'vertices'};
+        case 'm2t2.bar', required={'owner','categories','values','groupId','groupIndex','groupCount'};
+        case 'm2t2.boxplot', required={'owner','positions','lowerWhisker','q1','median','q3','upperWhisker','outlierPositions','outlierValues'};
+        otherwise, required={};
+    end
+    requireSource(source,required,'series');
+    switch source.kind
         case 'm2t2.line', node = merge(m2t2.ir.makeLineSeries(), source);
         case {'m2t2.scatter','m2t2.scatter3'}
             if strcmp(source.kind,'m2t2.scatter3'),base=m2t2.ir.makeScatter3Series();
@@ -190,10 +246,12 @@ function node = normalizeSeries(source, axesId, index)
                 node.sizeMode = 'constant';
             end
             if ~isfield(source, 'edgeMode')
-                node.edgeMode = 'constant'; node.edgeColor = row(node.color);
+                node.edgeMode = 'constant';
+                if ~isfield(source,'edgeColor'),node.edgeColor=row(node.color);end
             end
             if ~isfield(source, 'faceMode')
-                node.faceMode = 'none'; node.faceColor = row(node.color);
+                node.faceMode = 'none';
+                if ~isfield(source,'faceColor'),node.faceColor=row(node.color);end
             end
         case 'm2t2.errorbar', node = merge(m2t2.ir.makeErrorbarSeries(), source);
         case 'm2t2.image', node = merge(m2t2.ir.makeImageSeries(), source);
@@ -258,10 +316,13 @@ function output = merge(defaults, source)
 end
 
 function values = structArrayToCells(values)
-    if iscell(values), return; end
+    if ~isempty(values)&&~isvector(values)
+        invalidJson('ordered node collections must be vectors');
+    end
+    if iscell(values),values=reshape(values,1,[]);return;end
     if isempty(values), values = {};
     elseif isstruct(values), values = arrayfun(@(item) item, values, 'UniformOutput', false);
-    else, values = num2cell(values); end
+    else, invalidJson('expected an ordered node collection'); end
 end
 
 function values = textList(values)
@@ -271,7 +332,26 @@ function values = textList(values)
 end
 
 function value = row(value)
+    if ~(isnumeric(value) && (isempty(value) || isvector(value)))
+        invalidJson('expected numeric vector, not a matrix or another type');
+    end
     value = reshape(value, 1, []);
+end
+
+function requireSource(value,names,path)
+    if ~(isstruct(value)&&isscalar(value)&&(isempty(names)||all(isfield(value,names))))
+        invalidJson([path ' is missing required semantic fields']);
+    end
+end
+
+function onlyFields(value,names,path)
+    if ~all(ismember(fieldnames(value),names))
+        invalidJson([path ' contains fields outside the supported v1 migration']);
+    end
+end
+
+function invalidJson(reason)
+    error('M2T2:E003:InvalidIR','M2T2-E003 InvalidIR: %s',reason);
 end
 
 function invalidVersion(reason)

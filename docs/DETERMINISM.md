@@ -8,7 +8,7 @@ limits, font engines or PDF encoders produce identical bytes.
 | Product | Contract and boundary |
 | --- | --- |
 | FigureIR | Handle-free semantic state and explicit ownership/order. Repeated reads of unchanged supported figures are equal; runtime defaults may differ across environments. Render/profile operations do not mutate input IR. |
-| JSON | Repeated `jsonencode` of the same ordered normalized structure is stable in the observed runtime. Deserialization normalizes known versions/defaults. Arbitrary field insertion order and cross-runtime JSON byte identity are not a general canonicalization promise; M7.1 defines compatibility separately. |
+| JSON | Internal `m2t2.ir.toJson` validates/normalizes v2, sorts keys, preserves arrays and writes 17-digit numbers with explicit NaN/shape encoding. Golden canonical bytes and semantic replay are tested. Raw runtime `jsonencode` is not the archival contract; see [FIGURE_IR.md](FIGURE_IR.md) for migration and runtime/version boundaries. |
 | TeX | Equivalent IR/configuration and relative asset stem produce deterministic text, stable object/color/class names and preserved row/sample order. No incidental timestamp, UUID, temporary directory or absolute output root is embedded. Caller-supplied text remains intentional content. |
 | Backend planner | Validated IR and versioned policy determine selected backend and reason. Explicit choice wins; auto gives alpha precedence over RGB, then scalar size. No timing/resource-dependent fallback. |
 | Diagnostics | Ordered traversal produces stable codes/order for unchanged inputs. Exact message wording is not frozen. Runtime error messages and explicit user-selected paths can occur in returned diagnostics/logs, not in the scientific manifest. |
@@ -38,6 +38,10 @@ precision as a side effect of a performance optimization. A future precision
 change requires a separate compatibility/fidelity review and representative
 TeX-engine tests. Hybrid PNG retains the distinct documented 8-bit channel
 boundary; see [large-data contract](LARGE_DATA.md).
+
+The M7.1 internal JSON codec is deliberately separate: its 17-digit persistence
+format preserves the tested double edge values and single NaN gaps, avoiding
+observed raw-runtime JSON losses. It does not change any TeX formatting path.
 
 ## Ordering and layouts
 

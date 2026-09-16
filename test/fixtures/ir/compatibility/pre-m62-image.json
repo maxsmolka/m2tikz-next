@@ -1,0 +1,1 @@
+{"kind":"m2t2.figure","version":2,"axes":[{"kind":"m2t2.axes2d","id":"axes-1","xlim":[0,2],"ylim":[0,3],"xscale":"linear","yscale":"linear","series":[{"kind":"m2t2.image","id":"image","x":[0.5,1.5],"y":[1,2],"cdata":[[0,1],[2,3]],"mapping":"scaled","interpolation":"nearest"}]}]}

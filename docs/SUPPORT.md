@@ -33,6 +33,10 @@ for this addition uses TeX Live 2025/Debian, separate from historical versions.
 
 ## Important narrow boundaries
 
+Stored FigureIR v1/v2 replay and its future-version/error boundaries are
+defined in [FIGURE_IR.md](FIGURE_IR.md). Internal helpers are not public APIs;
+the data compatibility policy does not imply arbitrary new graphics support.
+
 The [unsupported-content policy](UNSUPPORTED_POLICY.md) classifies traversal,
 properties, unknown/hidden children, actual legend links and compound data.
 Nonwhite axes backgrounds and transparent axes on nonwhite canvases are

@@ -59,6 +59,11 @@ a migration only through a separately documented support-window decision.
 
 ## Consequences
 
+M7.1 clarification: [ADR-0025](ADR-0025-figureir-compatibility-contract.md)
+enforces required payload/ownership while explicitly retaining the historical
+generated-series-ID exception, defining unknown-field retention and replacing
+ambiguous raw JSON encoding with the internal deterministic codec.
+
 The version now communicates real compatibility, old JSON remains usable, and
 optional evolution does not cause needless increments. The costs are explicit
 migration code, fixtures retained across releases, and discipline around defaults.

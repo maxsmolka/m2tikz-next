@@ -1,7 +1,7 @@
 function [figureHandle, expected] = createM23ColorbarFixture(name)
-%CREATEM23COLORBARFIXTURE Build one deterministic Octave colorbar fixture.
+%CREATEM23COLORBARFIXTURE Build a deterministic capability-aware colorbar fixture.
     figureHandle = figure('Visible', 'off', 'PaperUnits', 'points', ...
-        'PaperPosition', [0 0 432 324]); expected = struct();
+        'PaperPosition', [0 0 432 324]); expected = struct('unsupportedManual',false);
     switch name
         case {'default','eastoutside','westoutside','horizontal','manual','ticks','label'}
             ax = axes('Parent', figureHandle); imagesc(ax, [1 2; 3 4]);
@@ -12,6 +12,9 @@ function [figureHandle, expected] = createM23ColorbarFixture(name)
             end
             if strcmp(name, 'manual')
                 set(cb, 'Units', 'normalized', 'Position', [0.80 0.20 0.04 0.50]);
+                % MATLAB changes Location to manual; Octave retains orientation.
+                % The existing reader explicitly rejects unresolved orientation.
+                expected.unsupportedManual=strcmp(get(cb,'Location'),'manual');
             elseif strcmp(name, 'ticks')
                 set(cb, 'Ticks', [1 2.5 4], 'TickLabels', {'low','mid','high'});
             elseif strcmp(name, 'label')

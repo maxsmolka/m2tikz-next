@@ -8,6 +8,10 @@ versions are not m2tikz-next releases.
 
 ### Added
 
+- M7.2: runtime compatibility contract and R01-R15 synthetic native/portable
+  evidence with real compiler workflows. No untested MATLAB version or new
+  graphics family is claimed. See docs/RUNTIME_COMPATIBILITY.md.
+
 - M7.1: FigureIR compatibility policy, nine synthetic input/canonical JSON
   pairs, strict known-version migration and an internal deterministic JSON
   codec that preserves single NaN gaps and extreme double values. Malformed
@@ -41,6 +45,11 @@ versions are not m2tikz-next releases.
   colorbar/tiled/profile integration. See docs/DUAL_Y_AXES.md.
 
 ### Fixed
+
+- M7.2: optional runtime property access distinguishes absence from getter
+  failure; scalar nonmissing MATLAB strings normalize explicitly. Legacy
+  colorbar tests now distinguish MATLAB's unresolved manual orientation from
+  the observed Octave axes-backed representation.
 
 - M6.8: measured large scalar vector-image serialization is buffered by row,
   preserving exact previous TeX bytes with no reduction or precision change.

@@ -62,5 +62,5 @@ function labels = normalizeLabels(raw, count)
 end
 
 function value = property(handle, name, default)
-    try, value = get(handle, name); catch, value = default; end
+    value = m2t2.reader.optionalProperty(handle, name, default);
 end

@@ -1,7 +1,6 @@
 function summary = runM23ReaderTests(outputDirectory)
 %RUNM23READERTESTS Verify C1-C10 colorbar normalization and ownership.
     root = fileparts(fileparts(mfilename('fullpath'))); addpath(fullfile(root, 'src'));
-    addpath(fullfile(root, 'test', 'private'));
     if nargin < 1, outputDirectory = fullfile(root, '.audit', 'm2.3'); end
     names = {'default','eastoutside','westoutside','horizontal','manual', ...
              'ticks','label','first_only','separate','overlap'};
@@ -10,8 +9,20 @@ function summary = runM23ReaderTests(outputDirectory)
         figureHandle = [];
         try
             [figureHandle, expected] = createM23ColorbarFixture(names{k});
-            ir = m2t2.reader.readFigure(figureHandle); checkCase(names{k}, ir, expected);
-            status = 'PASS'; detail = '';
+            detail='';
+            if expected.unsupportedManual
+                try
+                    m2t2.reader.readFigure(figureHandle);
+                    error('M2T:ExpectedFailure','Unresolved colorbar orientation accepted.');
+                catch err
+                    assert(strcmp(err.identifier,'M2T2:E007:UnsupportedProperty'));
+                    assert(~isempty(strfind(err.message,'manual orientation'))); %#ok<STREMP>
+                end
+                detail='explicit unsupported: runtime Location=manual';
+            else
+                ir = m2t2.reader.readFigure(figureHandle); checkCase(names{k}, ir, expected);
+            end
+            status = 'PASS';
         catch err
             failures = failures + 1; status = 'FAIL'; detail = oneLine(err.message);
         end

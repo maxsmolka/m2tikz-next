@@ -34,11 +34,6 @@ function labels = labelCells(raw)
 end
 
 function value = tickInterpreter(axesHandle, path)
-    try
-        runtimeValue = get(axesHandle, 'TickLabelInterpreter');
-        value = m2t2.util.normalizeTextInterpreter(runtimeValue, path);
-    catch err
-        if strcmp(err.identifier, 'M2T2:E007:UnsupportedProperty'), rethrow(err); end
-        value = 'plain';
-    end
+    runtimeValue = m2t2.reader.optionalProperty(axesHandle,'TickLabelInterpreter','none');
+    value = m2t2.util.normalizeTextInterpreter(runtimeValue, path);
 end

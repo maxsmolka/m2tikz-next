@@ -260,6 +260,12 @@ classified with skip reasons; the harness does not install packages.
 
 ## Public API-freeze candidate
 
+Runtime compatibility is covered by `runM72RuntimeCompatibilityTests(out,false)`:
+15 synthetic native/portable cases plus property/text checks. Pass `true` to
+compile every representative and exercise public profile/set workflows. Native
+MATLAB and native Octave evidence are kept separate; Octave boxplot/tiled/dual-Y
+cases are portable-only. See [the runtime contract](../docs/RUNTIME_COMPATIBILITY.md).
+
 Stored IR compatibility is covered by `runM71FigureIrContractTests` (18 cases)
 and `runM71FigureIrTexTests` (nine real PDFs). Committed input/canonical pairs
 cover old/rich scatter/images, tiled/dual/3-D, bar/background and NaN gaps;

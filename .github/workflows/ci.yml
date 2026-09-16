@@ -99,6 +99,9 @@ jobs:
       - name: Validate FigureIR compatibility and canonical JSON
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM71FigureIrContractTests(fullfile('.audit','m71-ir'));"
+      - name: Validate native and portable runtime compatibility cases
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM72RuntimeCompatibilityTests(fullfile('.audit','m72-runtime'),false);"
 
   tex-preview:
     runs-on: ubuntu-latest
@@ -173,3 +176,6 @@ jobs:
       - name: Compile stored FigureIR compatibility classes
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM71FigureIrTexTests(fullfile('.audit','m71-tex'));"
+      - name: Compile runtime compatibility cases and public workflows
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runM72RuntimeCompatibilityTests(fullfile('.audit','m72-tex'),true);"

@@ -59,7 +59,7 @@ under the documented output lifecycle. See [workflow](docs/WORKFLOW.md) and
 
 FigureIR version 2 supports version-1 JSON migration and documented additive
 defaults for older v2 documents. Semantic reinterpretation requires a schema
-decision; M7.1 will formalize the complete compatibility contract.
+decision; M7.1 formalizes the complete compatibility contract.
 Repeated equivalent inputs/configuration are tested for IR, TeX, planner,
 asset naming, and manifest determinism. PNG bytes are compared within the same
 encoder; normalized pixels/channels define the cross-encoder semantics.

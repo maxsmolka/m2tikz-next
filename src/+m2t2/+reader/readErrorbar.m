@@ -104,14 +104,13 @@ end
 
 function value = property(handle, names, default)
     for k = 1:numel(names)
-        try
+        if isprop(handle, names{k})
             value = get(handle, names{k}); return;
-        catch
         end
     end
     value = default;
 end
 
 function yes = hasProperty(handle, name)
-    try, get(handle, name); yes = true; catch, yes = false; end
+    yes = isprop(handle, name);
 end

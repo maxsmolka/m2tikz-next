@@ -1,5 +1,9 @@
 function value = textValue(raw, path)
 %TEXTVALUE Normalize graphics text to an IR character row vector.
+    if nargin < 2, path = 'text'; end
+    if isstring(raw) && isscalar(raw) && ~ismissing(raw)
+        raw = char(raw);
+    end
     if ischar(raw)
         if isempty(raw)
             value = '';

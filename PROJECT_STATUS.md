@@ -1,7 +1,7 @@
 # Project status
 
 Latest released version: **0.5.0**. Merged development functionality extends
-through **M7.1**. Unreleased features are listed separately in
+through **M7.2**. Unreleased features are listed separately in
 [CHANGELOG.md](CHANGELOG.md); this status does not announce a new release.
 
 ## Current contract
@@ -58,6 +58,11 @@ data before producing misleading partial output. Nonwhite axes backgrounds,
 unresolved multi-object 3-D depth sorting and inconsistent scatter compounds
 are explicit unsupported cases. [Determinism and precision boundaries](docs/DETERMINISM.md)
 are audited; buffered scalar-image serialization retains exact prior TeX bytes.
-Next is **M7.2: MATLAB compatibility expansion**, followed by the ordered work in
+The [runtime compatibility contract](docs/RUNTIME_COMPATIBILITY.md) records
+required source properties, preserved runtime-specific dependencies, explicit
+optional-property handling and the R01-R15 synthetic evidence layers. New
+M7.2 evidence uses MATLAB R2026a Update 5 on Windows and Octave 11.3/gnuplot;
+no additional MATLAB version or platform is implied.
+Next is **M7.3: Portability and environment contract**, followed by the ordered work in
 [ROADMAP.md](ROADMAP.md). New MATLAB object support requires native MATLAB
 validation. See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries.

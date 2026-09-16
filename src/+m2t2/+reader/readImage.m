@@ -1,5 +1,6 @@
 function node = readImage(handle, path)
 %READIMAGE Normalize a bounded scalar/truecolor image without resampling.
+    m2t2.reader.assertSupportedProperties(handle,path,'primitive');
     cdata = get(handle, 'CData');
     if ~(isnumeric(cdata) && ~isempty(cdata))
         fail('M2T2:E047:MalformedImageCData', path, 'CData must be nonempty numeric data');

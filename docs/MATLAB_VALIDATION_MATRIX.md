@@ -56,6 +56,16 @@ representation and are not equality goldens.
 
 ## Remaining qualification
 
+M6.7 adds a separate MATLAB R2026a Update 5 on Windows capability matrix
+(50 cases), nine real public export/compiler workflows, and 211 native
+regression cases across bars, boxplots, surfaces, rich scatter/images, tiled
+layouts, dual Y and scientific 3-D. Fixtures use explicit white source styling
+where needed to isolate property guards from theme defaults. Real compilation
+uses a Linux LuaLaTeX bridge, not an asserted native Windows TeX installation.
+The corresponding Octave matrix has 52 cases, including compound patch
+tampering and large-scatter runtime representation; these counts are distinct
+from the portable IR regression. See [the policy](UNSUPPORTED_POLICY.md).
+
 M6.5 has separate MATLAB R2026a Update 5 on Windows evidence: 26 focused native
 scatter3/mesh/camera/lifecycle/negative cases, four real public profile/set
 exports, 19 portable IR cases and seven portable TeX documents. Thirteen native

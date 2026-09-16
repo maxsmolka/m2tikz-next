@@ -1,5 +1,9 @@
 function node = readSurface(handle, path)
 %READSURFACE Read the opaque, scalar-colored interpolated Surface slice.
+    m2t2.reader.assertSupportedProperties(handle,path,'primitive');
+    if ~strcmp(get(handle,'Marker'),'none')
+        error('M2T2:E007:UnsupportedProperty','Surface markers are not represented: %s',path);
+    end
     if ~strcmp(get(handle, 'Type'), 'surface')
         diagnostic('E031:Unsupported3DPrimitive', path, 'expected Surface');
     end

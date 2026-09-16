@@ -14,7 +14,7 @@ serialization. Public entry points are `m2t.export` and `m2t.exportSet`;
    rectangles; no tiled ownership is inferred from positions.
    Dual Y axes retain one cell/shared X, explicit side membership and independent
    ruler state; the renderer uses ordered transparent coordinate layers.
-   New scientific 3-D scenes explicitly carry depth/child order; scatter XYZ
+   Native scientific 3-D scenes explicitly carry depth/child order; scatter XYZ
    and all point roles stay together, while wire meshes retain grid topology.
 3. The backend planner selects image representation from validated IR. The
    default is vector; explicit hybrid and opt-in auto are supported. RGB and
@@ -38,6 +38,11 @@ Unsupported semantics produce explicit structured diagnostics, never a legacy
 fallback or whole-figure screenshot. Workflow results include success/status,
 capability, products, backend decisions, diagnostics, and stage timings.
 The analysis and planning stages precede output creation. Tests check that
+central semantic-property guards, complete child traversal and actual legend
+links reject unknown or inconsistent content before product preparation.
+Known compounds validate child geometry against semantic data; hidden handles
+are not presumed nonsemantic. See [unsupported-content policy](docs/UNSUPPORTED_POLICY.md).
+Tests also check that
 reader/export calls preserve the source figure. Existing products and asset
 directories are protected by default; `Overwrite=true` authorizes replacement
 under the documented output lifecycle. See [workflow](docs/WORKFLOW.md) and

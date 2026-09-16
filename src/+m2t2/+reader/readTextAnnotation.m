@@ -1,5 +1,6 @@
 function node = readTextAnnotation(handle, path, id, axesId)
 %READTEXTANNOTATION Normalize a supported axes-owned 2-D text object.
+    m2t2.reader.assertSupportedProperties(handle,path,'text');
     units = lower(char(get(handle, 'Units')));
     if ~strcmp(units, 'data')
         coordinateSpace(path, units);

@@ -120,3 +120,24 @@ produced. See [the contract](../DUAL_Y_AXES.md).
 These reject analysis before output, not after producing a plausible partial
 figure. Existing E032-E038 and scatter diagnostics retain their bounded roles.
 See [scientific 3-D](../SCIENTIFIC_3D.md).
+
+## Unsupported-content hardening
+
+M6.7 reuses canonical codes rather than adding aliases:
+
+- `M2T2:E001:UnsupportedObject`: unknown/hidden containers or primitive children,
+  including datatips; a familiar tag alone never authorizes omission.
+- `M2T2:E007:UnsupportedProperty`: unrepresented semantic properties, dark axes,
+  modified errorbar/scatter compounds, unsupported legend/colorbar styling.
+- `M2T2:E010:UnsupportedSharedLegend`: ambiguous, duplicate or unresolved links.
+- `M2T2:E011:UnsupportedColorbarOwnership`: conflicting owner/display limits.
+- `M2T2:E023:AmbiguousBarOwnership` and `M2T2:E028:AmbiguousBoxplotCompound`:
+  child geometry/visibility no longer agrees with resolved semantic data.
+- Existing scalar color diagnostics reject unrepresented logarithmic mapping;
+  invalid portable scalar-color state fails `M2T2:E003:InvalidIR`.
+- `M2T2:E054:UnsupportedImageCoordinates`: scalar vector matrices with fewer
+  than two rows/columns fail render planning, before output preparation.
+
+Camera/scene E062/E063 checks also cover older native 3-D reader paths.
+The first deterministic traversal failure is reported; an exhaustive list or
+exact message wording is not promised. See [policy](../UNSUPPORTED_POLICY.md).

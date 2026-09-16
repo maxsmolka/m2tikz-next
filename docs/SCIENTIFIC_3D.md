@@ -6,7 +6,7 @@ introduce a general scene renderer or change the public export options.
 
 ## Coordinates, camera and ordering
 
-The new slice requires finite XYZ data, orthographic projection, linear X/Y/Z,
+The bounded slice requires finite XYZ data, orthographic projection, linear X/Y/Z,
 automatic camera position/target/up-vector/view-angle modes, automatic plot-box
 aspect mode, and elevation strictly between -90 and 90 degrees. MATLAB `view`
 azimuth/elevation and resolved data-aspect ratios map to PGFPlots view and
@@ -14,9 +14,10 @@ inverse unit-vector ratios; axis reversals remain explicit. Manual camera
 target, roll, zoom, perspective, logarithmic 3-D and top/bottom views are not
 approximated. The reader does not change camera modes or object order.
 
-New scenes store `AxesIR.sceneOrder` explicitly:
+All native 3-D readers now enforce the common camera contract and store
+`AxesIR.sceneOrder` explicitly (M6.7 closes previously unguarded older paths):
 
-- `depth`: one visible scatter or constant-color wire mesh. Scatter billboards
+- `depth`: one visible supported object. Scatter billboards
   are ordered far-to-near using view, aspect and axis directions; equal-depth
   ties retain input order. XYZ, sizes and active colors are permuted together
   only in a renderer-local copy. Multiple depth-sorted objects are rejected:
@@ -26,8 +27,10 @@ New scenes store `AxesIR.sceneOrder` explicitly:
   preserve that order. No export option silently changes the source setting.
 
 See the documented MATLAB [axes SortMethod and camera properties](https://www.mathworks.com/help/matlab/ref/matlab.graphics.axis.axes-properties.html).
-This additional contract does not retrospectively broaden the older narrow
-surface/compound evidence. Arbitrary intersecting opaque scenes remain outside
+This additional contract does not broaden object-family coverage. Older
+multi-object surface/Line3 compounds also require explicit source child order;
+previous acceptance without a represented scene order is no longer promised.
+Arbitrary intersecting opaque scenes remain outside
 the claim. Additional contour3/patch topology has not been introduced.
 
 ## Scatter and color

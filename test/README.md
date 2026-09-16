@@ -210,7 +210,23 @@ native MATLAB checks for existing/dangling junction products and a deliberately
 linked explicit parent directory. It creates isolated synthetic fixtures under
 `.audit/`, removes only the created junctions, and preserves result evidence.
 
-## Inherited legacy tests
+## Unsupported-content regression
+
+`runM67UnsupportedTests` runs the native runtime matrix: 50 MATLAB cases and
+52 Octave cases, with deterministic diagnostics, product sentinels, unchanged
+source state and supported neighboring cases. `runM67UnsupportedTexTests`
+requires a real compiler and exports nine fixtures covering hidden handles,
+tagged text, legend reordering, reversed/custom colorbars, single-row hybrid,
+explicit child-order 3-D, grouped bars and opaque/transparent overlays. Review source/compiled figures;
+successful compilation alone cannot establish correct legend or color mapping.
+
+M6.7 also updates an old M5.4 scatter3 rejection that became obsolete in M6.5
+and makes older multi-object surface fixtures request child order explicitly.
+New negative cases retain proof that unresolved depth sorting is rejected.
+Bar IR tests cover optional resolved bounds and byte-identical JSON replay,
+while absent fields preserve the established portable geometry.
+
+## Inherited legacy tests (separate exporter)
 
 These exercise the separate `matlab2tikz(...)` exporter, not the modern public
 API. The original MATLAB R2014a/R2014b and Octave 3.8 guidance describes upstream

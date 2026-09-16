@@ -33,9 +33,18 @@ for this addition uses TeX Live 2025/Debian, separate from historical versions.
 
 ## Important narrow boundaries
 
+The [unsupported-content policy](UNSUPPORTED_POLICY.md) classifies traversal,
+properties, unknown/hidden children, actual legend links and compound data.
+Nonwhite axes backgrounds and transparent axes on nonwhite canvases are
+unsupported; dark-theme defaults may therefore require explicit source styling.
+The exporter does not change that styling for callers. Minor grids, rotated
+ticks, alternate axis origins/sides, selected/filled line markers, brushing,
+datatips and decorated free text also fail explicitly. Scalar vector images
+need at least two rows/columns; explicit hybrid retains smaller pixel shapes.
+
 Rich native MATLAB scatter3 and constant-color transparent-face wire meshes
 are supported with limitations in [SCIENTIFIC_3D.md](SCIENTIFIC_3D.md).
-New scenes distinguish single-object depth sorting from source-explicit
+Native 3-D scenes distinguish single-object depth sorting from source-explicit
 child-order combinations; manual camera/complex occlusion is not approximated.
 Native Update 5 evidence does not imply native Octave 3-D parity.
 

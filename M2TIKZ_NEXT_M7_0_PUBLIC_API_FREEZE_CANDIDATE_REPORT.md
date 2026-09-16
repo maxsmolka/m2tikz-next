@@ -52,6 +52,12 @@ unsupported/skipped outcomes. They assert unchanged source IR. Existing
 security/compiler suites retain detailed lower-level failure coverage.
 No new graphics or visual-parity claim is introduced; rendering is unchanged.
 
+The initial hosted run found a test-only absolute-versus-relative expected-path
+error: local invocations supplied absolute directories, CI supplied a relative
+directory. The assertion now resolves the expected base against the working
+directory, preserving the public absolute-path contract. Both call forms are
+rerun; no product behavior or acceptance check is weakened.
+
 Full portable regression passed (140 core, 235 extended, eight curated PDFs,
 all accumulated foundation/TeX suites and eight new API checks), with final
 validation marker and process exit zero. Six architecture invariants,

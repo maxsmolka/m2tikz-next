@@ -24,7 +24,9 @@ function summary=runM70ApiContractTests(outputDirectory)
         r=m2t.export(f,fullfile(outputDirectory,'plot.v1'),'Overwrite',true);shape(r);assert(r.success&&strcmp(r.status,'success'));
         assert(strcmp(r.capability,'supported')&&strcmp(r.profile.name,'none')&&strcmp(r.profile.width,'source'));
         assert(strcmp(r.render.imageBackend.requested,'vector')&&strcmp(r.render.imageBackend.reason,'explicit_vector'));
-        assert(strcmp(r.texPath,fullfile(outputDirectory,'plot.v1.tex'))&&isempty(r.logPath)&&isempty(r.render.assets));
+        expected=fullfile(outputDirectory,'plot.v1.tex');
+        if isempty(regexp(expected,'^(?:[A-Za-z]:[\\/]|[\\/])','once')),expected=fullfile(pwd,expected);end
+        assert(strcmp(r.texPath,expected)&&isempty(r.logPath)&&isempty(r.render.assets));
     end
     function options()
         pairs={{'Unknown',true},{'Overwrite',1},{'Width','source'},{'Profile','missing'},{'ImageBackend','invalid'}};

@@ -6,9 +6,9 @@ remain [m2t.export and m2t.exportSet](API.md).
 
 Validated with MATLAB R2026a Update 4 on Windows.
 
-This sentence records historical evidence. New M7.2 validation uses the
-currently available MATLAB R2026a Update 5 on Windows, explicitly authorized
-for this task. The controlled Octave environment is GNU Octave 11.3 with
+This sentence records historical evidence. M7.2 and current 0.8.0 release
+validation use MATLAB R2026a Update 5 on Windows. The controlled Octave
+environment is GNU Octave 11.3 with
 gnuplot on Linux in a container. Neither proves another MATLAB release,
 another Octave toolkit, nor a native Windows Octave installation.
 

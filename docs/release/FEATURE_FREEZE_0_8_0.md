@@ -1,9 +1,9 @@
-# 0.8.0 feature-freeze candidate
+# 0.8.0 feature-freeze release
 
-This is release preparation, not a release announcement. Latest published
-version and citation metadata remain **0.5.0**. No `v0.8.0` tag or GitHub Release
-is created by this preparation. Both require separate explicit authorization.
-The draft release notes are [here](RELEASE_NOTES_0_8_0_DRAFT.md).
+Version **0.8.0**, tagged `v0.8.0`, is the feature-freeze / pre-1.0 acceptance
+release. It is an immutable reference for external testing, not production-
+complete 1.0 or universal graphics support. The finalized
+[release notes](RELEASE_NOTES_0_8_0.md) define its scope and evidence.
 
 ## Freeze policy
 
@@ -51,20 +51,20 @@ bridge does not establish native Windows TeX validation. Calls have no built-in
 compiler timeout. These are known boundaries, not reasons to label untested
 environments supported.
 
-## Separate release review
+## Release process
 
-Before a separately authorized 0.8.0 release:
+Publication requires:
 
 1. Select the reviewed merged commit and rerun required gates as appropriate.
 2. Review the [source-first artifact policy](ARTIFACT_POLICY.md), attribution,
-   security, installation, known limits and draft notes.
+   security, installation, known limits and finalized notes.
 3. Explicitly approve final version/citation/release metadata and release date;
-   never backdate this preparation or mark draft notes as already released.
+   never backdate preparation or relabel historical evidence.
 4. Obtain separate authorization for the tag and GitHub Release.
 
 External acceptance is the next engineering activity: use the
 [generic local package](../validation/EXTERNAL_ACCEPTANCE_TESTING.md), then test
 roughly 5-10 critical real figures in another MATLAB
 version, triage feedback, and proceed to M8.0 RC readiness, v0.9.0 /
-v1.0.0-rc.1, M8.1 burn-in and v1.0.0. The package is a separate follow-up deliverable;
+v1.0.0-rc.1, M8.1 burn-in and v1.0.0. The package is included in v0.8.0;
 this document does not assert that external testing has happened.

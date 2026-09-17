@@ -21,11 +21,14 @@ pretense of production-complete 1.0 maturity.
 
 ## Independent version domains
 
-The current development line is the
-[0.8.0 feature-freeze candidate](FEATURE_FREEZE_0_8_0.md), not a published
-0.8.0 release. CITATION and latest-release metadata stay at 0.5.0 until a
-separate authorized release review. Draft notes have no release date or tag.
-After this candidate, no new major graphics family is planned before 1.0
+The current release is the
+[0.8.0 feature-freeze / pre-1.0 acceptance release](FEATURE_FREEZE_0_8_0.md),
+identified by the immutable annotated tag `v0.8.0`. Citation and latest-release
+metadata use 0.8.0; historical 0.5.0 records retain their original version.
+Like the 0.5.0 preview, 0.8.0 is marked as a GitHub pre-release; it is not a
+1.0 stability or production-completeness claim. GitHub-generated source
+archives are used, without generated local validation artifacts.
+After this release, no new major graphics family is planned before 1.0
 unless real external acceptance exposes a critical gap that cannot be deferred.
 The general pre-1.0 flexibility above does not override the API-freeze
 exception/ADR/migration requirements or authorize unrelated feature expansion.

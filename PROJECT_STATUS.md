@@ -1,8 +1,8 @@
 # Project status
 
-Latest released version: **0.5.0**. Merged development functionality extends
-through **M7.3**, with **0.8.0 feature-freeze preparation**. Unreleased features are listed separately in
-[CHANGELOG.md](CHANGELOG.md); this status does not announce a new release.
+Latest released version: **0.8.0**, the feature-freeze / pre-1.0 acceptance
+release. It includes M7.2, M7.3, the publication-title clipping fix and the
+external acceptance package. See [CHANGELOG.md](CHANGELOG.md).
 
 ## Current contract
 
@@ -32,9 +32,9 @@ Hybrid images preserve pixel dimensions but encode channels at 8-bit precision.
 
 ## Evidence boundary
 
-Validated with MATLAB R2026a Update 4 on Windows.
+Current release validation: MATLAB R2026a Update 5 on Windows.
 
-That is the existing recorded MATLAB evidence, not a claim for all MATLAB
+Historical Update 4 milestone records remain unchanged. This is not a claim for all MATLAB
 versions or platforms. GNU Octave 11.3 is the hosted Linux CI baseline.
 Native MATLAB, native Octave, portable IR/renderer, and TeX/PDF/visual evidence
 are separate claims; portable fixtures do not imply native runtime support.
@@ -68,8 +68,8 @@ path/process/TeX boundaries, stable asset-write diagnostics and cross-runtime
 JSON/TeX goldens. PNG pixels, not cross-encoder bytes, are the scientific
 comparison; native Windows TeX and other MATLAB versions remain unverified.
 The [0.8.0 feature-freeze policy](docs/release/FEATURE_FREEZE_0_8_0.md) is now
-defined; [release notes](docs/release/RELEASE_NOTES_0_8_0_DRAFT.md) are a draft,
-not a release. No new major graphics family is planned before 1.0 unless real
+in force; see the finalized [release notes](docs/release/RELEASE_NOTES_0_8_0.md).
+No new major graphics family is planned before 1.0 unless real
 external acceptance reveals a critical correctness/usability gap that cannot
 reasonably be deferred. Fixes, diagnostics, compatibility, portability,
 performance-regression fixes, docs, security and release engineering remain

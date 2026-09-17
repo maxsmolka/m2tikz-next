@@ -7,6 +7,12 @@ output.
 
 ## Validated environments
 
+Current 0.8.0 release validation uses MATLAB R2026a Update 5 on Windows,
+GNU Octave 11.3/gnuplot on Linux, and real Linux LuaLaTeX/TeX Live 2025 Debian.
+The MATLAB process uses a Linux compiler bridge, not native Windows TeX.
+
+Historical preview evidence:
+
 - GNU Octave 11.3 in hosted Linux CI and local validation;
 - MATLAB R2026a Update 4 on Windows;
 - TeX Live 2026, LuaLaTeX, and PGFPlots compatibility 1.18.x.

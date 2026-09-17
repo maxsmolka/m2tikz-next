@@ -9,15 +9,15 @@ Choose one figure runtime:
 
 - **GNU Octave:** version 11.3 is exercised by hosted Linux CI and local
   validation.
-- **MATLAB:** validated with MATLAB R2026a Update 4 on Windows. No other MATLAB
+- **MATLAB:** current release validated with MATLAB R2026a Update 5 on Windows. No other MATLAB
   release or operating system is implied by that statement.
 
 Both runtimes use the same public `m2t.*` workflow. Platform packages or vendor
 installers may be used, but the commands must be discoverable on `PATH` for the
 portable validation scripts.
 
-Later milestones separately record native MATLAB R2026a Update 5 on Windows
-and local LuaLaTeX / TeX Live 2025/Debian evidence. See the
+Historical milestones retain their original Update 4 evidence. Current validation
+uses Update 5 and local LuaLaTeX / TeX Live 2025/Debian. See the
 [validation matrix](MATLAB_VALIDATION_MATRIX.md); the historical Update 4
 claim does not imply other versions. Public calls follow [API.md](API.md).
 The [environment contract](ENVIRONMENT_CONTRACT.md) distinguishes Windows
@@ -113,8 +113,8 @@ For hybrid output, keep the companion `-assets` directory beside the TeX file.
 
 ## Platform notes
 
-Hosted CI validates GNU Octave 11.3 on Linux. The recorded MATLAB validation is
-MATLAB R2026a Update 4 on Windows, with separate newer Update 5 milestone evidence.
+Hosted CI validates GNU Octave 11.3 on Linux. Current release validation uses
+MATLAB R2026a Update 5 on Windows; earlier Update 4 records remain historical.
 File discovery and export paths are designed
 to be portable, but these evidence boundaries do not claim validation for every
 operating system or runtime release. See [Support status](SUPPORT.md) and the

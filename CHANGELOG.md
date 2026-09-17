@@ -6,15 +6,21 @@ versions are not m2tikz-next releases.
 
 ## [Unreleased]
 
+No changes recorded after the 0.8.0 feature freeze.
+
+## [0.8.0]
+
+Feature-freeze / pre-1.0 acceptance release; not production-complete 1.0.
+
 ### Added
 
 - Generic local external acceptance guide, explicit-handle validation helper,
   source-data-free JSON summary and manually redacted feedback template.
   Scientific review remains manual; no registry, upload or new public m2t API.
 
-- 0.8.0 feature-freeze preparation: bounded post-freeze policy, reviewed
-  support/evidence statements and explicitly draft release notes. Latest
-  published version and citation remain 0.5.0; no tag or release is created.
+- 0.8.0 feature freeze: bounded post-freeze policy, reviewed support/evidence
+  statements and finalized release notes. The immutable v0.8.0 reference is
+  intended for external real-world MATLAB acceptance testing.
 
 - M7.3: observed environment/path/encoding/process contract, twelve focused
   portability cases and shared cross-runtime JSON/TeX byte goldens. Installation

@@ -1,6 +1,6 @@
 # Roadmap to 1.0
 
-Latest release: 0.5.0. Functionality merged through M7.3. This roadmap defines
+Latest release: 0.8.0, feature-frozen for external acceptance. This roadmap defines
 ordered acceptance work, not release dates or claims that planned features are
 already supported. Each milestone requires its own review and successful
 `repository-policy`, `octave-tests`, and `tex-preview` checks before merge.
@@ -31,8 +31,8 @@ blocks acceptance of the affected work.
 
 ## After M7.3
 
-The [0.8.0 feature-freeze candidate preparation](docs/release/FEATURE_FREEZE_0_8_0.md)
-is complete; no 0.8.0 release or tag is implied. After this candidate no new
+The [0.8.0 feature-freeze release](docs/release/FEATURE_FREEZE_0_8_0.md)
+provides the immutable `v0.8.0` external testing reference. After this release no new
 major graphics family is planned before 1.0 unless external acceptance testing
 reveals a critical correctness/usability gap that cannot reasonably be deferred.
 Bug/correctness fixes, diagnostics, compatibility/portability, performance

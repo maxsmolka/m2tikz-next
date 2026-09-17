@@ -1,5 +1,13 @@
 # MATLAB validation matrix
 
+## 0.8.0 release evidence
+
+The current release gate uses MATLAB R2026a Update 5 on Windows
+(`26.1.0.3346908`, `win64`), including the 26-fixture layered validation,
+retained legacy smoke and current milestone regressions. Historical Update 4
+tables below remain unchanged. Native MATLAB invokes real Linux LuaLaTeX through
+a process bridge; other MATLAB versions and native Windows TeX remain unverified.
+
 ## Current publication-profile qualification
 
 Publication geometry is revalidated with **MATLAB R2026a Update 5 on Windows**:

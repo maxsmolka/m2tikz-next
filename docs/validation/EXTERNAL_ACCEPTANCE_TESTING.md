@@ -1,9 +1,15 @@
 # External real-world MATLAB acceptance
 
-The feature-freeze candidate is ready for evaluation, not a promise that your
-MATLAB version or scientific figures are supported. Latest published release
-is still 0.5.0. Test the reviewed development commit, or a subsequently separately
-authorized tag, and record exactly which one you used.
+The 0.8.0 feature-freeze release is ready for evaluation, not a promise that your
+MATLAB version or scientific figures are supported. Test **`v0.8.0`**, not moving
+`main`, and record the resolved commit SHA:
+
+```console
+git clone https://github.com/maxsmolka/m2tikz-next.git
+cd m2tikz-next
+git checkout --detach v0.8.0
+git rev-parse HEAD
+```
 
 The publication-title clipping fix is included in this package's baseline.
 Titles still belong in the manual checklist: passing compilation is not a

@@ -8,6 +8,10 @@ versions are not m2tikz-next releases.
 
 ### Added
 
+- Generic local external acceptance guide, explicit-handle validation helper,
+  source-data-free JSON summary and manually redacted feedback template.
+  Scientific review remains manual; no registry, upload or new public m2t API.
+
 - 0.8.0 feature-freeze preparation: bounded post-freeze policy, reviewed
   support/evidence statements and explicitly draft release notes. Latest
   published version and citation remain 0.5.0; no tag or release is created.

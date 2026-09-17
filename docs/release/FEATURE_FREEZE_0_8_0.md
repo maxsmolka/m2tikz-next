@@ -62,8 +62,9 @@ Before a separately authorized 0.8.0 release:
    never backdate this preparation or mark draft notes as already released.
 4. Obtain separate authorization for the tag and GitHub Release.
 
-External acceptance is the next engineering activity: provide a generic local
-test package, then test roughly 5-10 critical real figures in another MATLAB
+External acceptance is the next engineering activity: use the
+[generic local package](../validation/EXTERNAL_ACCEPTANCE_TESTING.md), then test
+roughly 5-10 critical real figures in another MATLAB
 version, triage feedback, and proceed to M8.0 RC readiness, v0.9.0 /
-v1.0.0-rc.1, M8.1 burn-in and v1.0.0. The package is a separate follow-up phase;
+v1.0.0-rc.1, M8.1 burn-in and v1.0.0. The package is a separate follow-up deliverable;
 this document does not assert that external testing has happened.

@@ -15,7 +15,9 @@ $documents = @(
     'docs/release/FEATURE_FREEZE_0_8_0.md','docs/release/RELEASE_NOTES_0_8_0_DRAFT.md',
     'docs/release/VERSIONING.md','docs/release/DEPENDENCIES.md',
     'docs/PUBLICATION_PROFILE.md','docs/adr/ADR-0008-publication-profiles.md',
-    'docs/adr/ADR-0019-calibrated-publication-profile.md'
+    'docs/adr/ADR-0019-calibrated-publication-profile.md',
+    'docs/validation/EXTERNAL_ACCEPTANCE_TESTING.md',
+    'validation/external-acceptance/README.md','validation/external-acceptance/FEEDBACK_TEMPLATE.md'
 )
 $missing = [System.Collections.Generic.List[string]]::new()
 

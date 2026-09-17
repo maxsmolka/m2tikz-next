@@ -74,7 +74,10 @@ external acceptance reveals a critical correctness/usability gap that cannot
 reasonably be deferred. Fixes, diagnostics, compatibility, portability,
 performance-regression fixes, docs, security and release engineering remain
 in scope; speculative features and unrelated API expansion do not.
-Next is the **external acceptance package**, then real-world MATLAB testing
-and feedback triage, as ordered in [ROADMAP.md](ROADMAP.md).
+The [external acceptance package](docs/validation/EXTERNAL_ACCEPTANCE_TESTING.md)
+provides a local-only helper, manual semantic checklist and redacted feedback
+template. It is not a new public API or evidence that external testing occurred.
+Next is **external real-world MATLAB acceptance**, then feedback triage, as
+ordered in [ROADMAP.md](ROADMAP.md).
 New MATLAB object support requires native MATLAB
 validation. See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries.

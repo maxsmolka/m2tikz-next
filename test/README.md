@@ -268,6 +268,13 @@ presence/separation and physical width/height. Visual review remains required.
 With `false`, the matrix checks profile/semantic/deterministic contracts without
 a compiler. Native MATLAB and portable-only Octave layout cases are labeled.
 
+`runExternalAcceptanceTests(out,false)` checks twelve synthetic local-package
+contracts: input validation, no source-data summary leakage, caller-figure
+preservation, explicit review states, missing-compiler classification and safe
+session collisions. Pass `true` for a thirteenth real-PDF/publication workflow.
+This tests the [external package](../validation/external-acceptance/README.md),
+not actual external scientific figures or an unobserved MATLAB release.
+
 `runM73EnvironmentTests(out,false)` validates nine path/encoding/diagnostic
 cases and the shared Windows-MATLAB/Linux-Octave JSON/TeX byte goldens. Pass
 `true` for 12 cases with actual compiler runs, Unicode/spaced/nested output,

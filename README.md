@@ -35,6 +35,11 @@ preserved unless `'Overwrite', true` is requested.
 
 ## Installation
 
+For real-world testing on another MATLAB version, use the
+[external acceptance guide](docs/validation/EXTERNAL_ACCEPTANCE_TESTING.md).
+Keep actual figures and data local; this package does not predeclare support
+for the tester's runtime or replace scientific visual review.
+
 Clone the source checkout and add its `src` directory to the MATLAB or Octave
 path:
 

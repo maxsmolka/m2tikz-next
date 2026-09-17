@@ -40,13 +40,16 @@ regressions, docs/security/release engineering and narrowly necessary real
 acceptance gaps remain in scope. Missing plot families, speculative features
 and unrelated API expansion are not automatically authorized.
 
-1. External acceptance package
-2. External real-world MATLAB acceptance
-3. Feedback triage
-4. M8.0 1.0 release-candidate readiness
-5. v0.9.0 / v1.0.0-rc.1
-6. M8.1 RC burn-in
-7. v1.0.0
+The generic [external acceptance package](docs/validation/EXTERNAL_ACCEPTANCE_TESTING.md)
+is available; it records local review without publishing real figures or
+claiming a new MATLAB version as tested. Remaining work:
+
+1. External real-world MATLAB acceptance
+2. Feedback triage
+3. M8.0 1.0 release-candidate readiness
+4. v0.9.0 / v1.0.0-rc.1
+5. M8.1 RC burn-in
+6. v1.0.0
 
 Release/tag creation is a separate authorized action. Arbitrary scene graphs,
 lighting/materials, texture mapping, arbitrary transparency, unfaithful

@@ -108,6 +108,9 @@ jobs:
       - name: Validate publication geometry and inert default controls
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runPublicationGeometryTests(fullfile('.audit','publication-geometry-core'),false);"
+      - name: Validate local external acceptance privacy and classifications
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runExternalAcceptanceTests(fullfile('.audit','external-package'),false);"
 
   tex-preview:
     runs-on: ubuntu-latest
@@ -195,3 +198,6 @@ jobs:
         run: |
           octave-cli --quiet --eval "addpath('test'); runPublicationGeometryTests(fullfile('.audit','publication-geometry'),true);"
           "$RUNNER_TEMP/publication-geometry-venv/bin/python" test/checkPublicationPdfGeometry.py .audit/publication-geometry
+      - name: Compile synthetic external acceptance workflow
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runExternalAcceptanceTests(fullfile('.audit','external-package-tex'),true);"

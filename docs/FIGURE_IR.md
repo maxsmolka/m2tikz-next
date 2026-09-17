@@ -157,6 +157,11 @@ byte promise. Adding future optional defaults can change normalized JSON bytes
 without changing schema meaning; review/update goldens deliberately, never
 blindly. Scientific TeX and decoded PNG equivalence are independently tested.
 
+M7.3 additionally locks a shared Unicode-containing JSON/TeX fixture in the
+observed Windows MATLAB and Linux Octave environments; see the
+[environment contract](ENVIRONMENT_CONTRACT.md). This expands concrete evidence,
+not the universal byte promise or the FigureIR schema version.
+
 ## Committed evidence
 
 `test/fixtures/ir/compatibility` contains nine input/normalized-canonical pairs:

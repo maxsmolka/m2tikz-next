@@ -11,8 +11,12 @@ output.
 - MATLAB R2026a Update 4 on Windows;
 - TeX Live 2026, LuaLaTeX, and PGFPlots compatibility 1.18.x.
 
-The MATLAB statement is exact: it does not imply validation of other releases
-or platforms. See [MATLAB validation](MATLAB_VALIDATION_MATRIX.md) and
+These bullets record the historical preview boundary. New milestones separately
+validate MATLAB R2026a Update 5 on Windows and local LuaLaTeX/TeX Live 2025
+(Debian), with container/hosted Linux Octave 11.3. This does not imply other
+MATLAB releases, native Windows Octave or native Windows TeX. See the
+[runtime](RUNTIME_COMPATIBILITY.md) and [environment](ENVIRONMENT_CONTRACT.md)
+contracts, [MATLAB validation](MATLAB_VALIDATION_MATRIX.md) and
 [MATLAB/Octave differences](MATLAB_OCTAVE_DIFFERENCES.md).
 
 ## Capability matrix
@@ -93,8 +97,11 @@ Unsupported objects, properties, or ownership relationships are expected to
 fail explicitly with stable structured diagnostics. Silently dropping data or
 decoration can create scientifically misleading output and is treated as a
 product risk. Broader graphics coverage will be added through specific reader,
-IR, renderer, and regression contracts rather than catch-all acceptance.
+IR, renderer, and regression contracts rather than catch-all acceptance, and
+is subject to the [feature-freeze policy](release/FEATURE_FREEZE_0_8_0.md).
 
-Pre-1.0 work includes selecting additional runtime validation targets and
-stabilizing the public APIs. It does not imply that every unsupported MATLAB
-graphics family is planned for the next release.
+The next evidence is external real-world testing in another MATLAB version,
+then feedback triage and RC readiness. The public API is already a freeze
+candidate. No new major graphics family is planned before 1.0 unless external
+acceptance establishes a critical correctness/usability gap that cannot be
+deferred; every missing MATLAB plot family is not an automatic roadmap item.

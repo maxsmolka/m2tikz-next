@@ -31,12 +31,22 @@ blocks acceptance of the affected work.
 
 ## After M7.3
 
-1. v0.8.0 feature-freeze candidate
-2. External acceptance package and real-world MATLAB testing, then feedback triage
-3. M8.0 1.0 release-candidate readiness
-4. v0.9.0 / v1.0.0-rc.1
-5. M8.1 RC burn-in
-6. v1.0.0
+The [0.8.0 feature-freeze candidate preparation](docs/release/FEATURE_FREEZE_0_8_0.md)
+is complete; no 0.8.0 release or tag is implied. After this candidate no new
+major graphics family is planned before 1.0 unless external acceptance testing
+reveals a critical correctness/usability gap that cannot reasonably be deferred.
+Bug/correctness fixes, diagnostics, compatibility/portability, performance
+regressions, docs/security/release engineering and narrowly necessary real
+acceptance gaps remain in scope. Missing plot families, speculative features
+and unrelated API expansion are not automatically authorized.
+
+1. External acceptance package
+2. External real-world MATLAB acceptance
+3. Feedback triage
+4. M8.0 1.0 release-candidate readiness
+5. v0.9.0 / v1.0.0-rc.1
+6. M8.1 RC burn-in
+7. v1.0.0
 
 Release/tag creation is a separate authorized action. Arbitrary scene graphs,
 lighting/materials, texture mapping, arbitrary transparency, unfaithful

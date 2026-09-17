@@ -1,7 +1,8 @@
 # m2tikz-next
 
 > Latest release: 0.5.0 — public pre-1.0 scientific-export preview/beta.
-> Development includes the public API-freeze candidate; see current project status.
+> Development is prepared as the 0.8.0 feature-freeze candidate, not a published 0.8.0 release.
+> See the [freeze policy](docs/release/FEATURE_FREEZE_0_8_0.md) and current project status.
 
 m2tikz-next is a modern, validated scientific figure export pipeline derived
 from [matlab2tikz](https://github.com/matlab2tikz/matlab2tikz). It converts

@@ -21,6 +21,15 @@ pretense of production-complete 1.0 maturity.
 
 ## Independent version domains
 
+The current development line is the
+[0.8.0 feature-freeze candidate](FEATURE_FREEZE_0_8_0.md), not a published
+0.8.0 release. CITATION and latest-release metadata stay at 0.5.0 until a
+separate authorized release review. Draft notes have no release date or tag.
+After this candidate, no new major graphics family is planned before 1.0
+unless real external acceptance exposes a critical gap that cannot be deferred.
+The general pre-1.0 flexibility above does not override the API-freeze
+exception/ADR/migration requirements or authorize unrelated feature expansion.
+
 The repository release, FigureIR schema, deterministic manifest schema, and
 internal implementation namespace evolve independently. A schema version is
 not a repository release number. The public entry points are `m2t.export` and

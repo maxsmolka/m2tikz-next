@@ -5,10 +5,10 @@ No minimum version is inferred where the repository has not established one.
 | Dependency | Role | Evidence/status |
 |---|---|---|
 | GNU Octave | Export runtime, tests, development | Version 11.3 validated in hosted Linux CI |
-| MATLAB | Export runtime and reader validation | MATLAB R2026a Update 4 validated on Windows; no broader release/platform claim |
+| MATLAB | Export runtime and reader validation | Historical R2026a Update 4 and separate newer Update 5 evidence on Windows; no broader release/platform claim |
 | PGFPlots | Generated TeX rendering | M2 renderer emits `compat=1.18`; validation used 1.18.x |
 | TikZ/PGF | Generated TeX rendering | Required by PGFPlots and inherited exporter output |
-| TeX Live | Validation tool distribution | Validation performed with TeX Live 2026 |
+| TeX Live | Validation tool distribution | Historical TeX Live 2026; later local TeX Live 2025/Debian, including a Windows-MATLAB-to-Linux compiler bridge |
 | LuaLaTeX | M3 workflow compiler and primary validation compiler | Discovered through `PATH`; validated for M2/M3 matrices |
 | pdfLaTeX | Compatibility validation compiler | Validated with documented raw-Unicode limitation |
 | `standalone` | M3 workflow and standalone test/PDF documents | Required by current standalone renderer output |
@@ -29,6 +29,13 @@ Octave graphics APIs. The M3 workflow needs a runtime reader to create IR from a
 figure and LuaLaTeX plus PGFPlots/TikZ/`standalone` to compile the final PDF.
 Python, `latexmk`, and PDF/raster tooling are not normal M3 export-runtime
 dependencies.
+
+MATLAB requires its JVM for safe product-path inspection. Synthetic native
+boxplot construction depends on the installed `boxplot` capability; the test
+environment does not prove a base-only MATLAB installation. The current
+[environment contract](../ENVIRONMENT_CONTRACT.md) distinguishes export,
+validation and compiler dependencies and documents the absence of a built-in
+process timeout.
 
 ## Reproducibility policy
 

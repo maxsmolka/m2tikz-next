@@ -8,6 +8,10 @@ and one canonical replacement; additive fields/options must preserve defaults.
 Consumers should accept additional result fields and handle unfamiliar failure
 codes conservatively. This is not a claim of complete graphics coverage.
 
+The [0.8.0 feature-freeze policy](release/FEATURE_FREEZE_0_8_0.md) further
+restricts planned work before 1.0. Preserving compatibility is necessary but
+does not by itself authorize unrelated additive options or graphics families.
+
 `m2t2.*`, `m2t.internal.*`, `m2t.profile.*`, `m2t.planning.*`, renderer options
 and JSON helpers are implementation interfaces, not additional public entry
 points. The inherited `matlab2tikz(...)` API is separate; no fallback uses it.

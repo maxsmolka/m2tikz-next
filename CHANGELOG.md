@@ -8,6 +8,10 @@ versions are not m2tikz-next releases.
 
 ### Added
 
+- 0.8.0 feature-freeze preparation: bounded post-freeze policy, reviewed
+  support/evidence statements and explicitly draft release notes. Latest
+  published version and citation remain 0.5.0; no tag or release is created.
+
 - M7.3: observed environment/path/encoding/process contract, twelve focused
   portability cases and shared cross-runtime JSON/TeX byte goldens. Installation
   guidance separates native runtime, bridged compiler and external-test evidence.

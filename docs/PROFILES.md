@@ -50,8 +50,10 @@ analysis with `M2T:PROFILE_GEOMETRY_INVALID`.
 
 ## What is preserved
 
-For untiled figures the transform changes only FigureIR physical size; relative
-axes, overlay, subplot, colorbar and shared-element placements remain unchanged.
+For untiled figures the transform changes physical size and, only when needed,
+uses one common affine placement map to reserve physical title/label/tick and
+colorbar gutters. Relative axes/overlay/subplot arrangements are retained;
+exact normalized rectangles can change. Sufficient existing margins are kept.
 Explicit tiled layouts additionally use the documented per-cell text-gutter
 policy below; their scientific data and logical ownership remain unchanged.
 The render configuration applies portable TeX-native font sizes. It preserves:
@@ -63,8 +65,9 @@ The render configuration applies portable TeX-native font sizes. It preserves:
 - series order, legend membership, ownership, order, and location;
 - color mapping and colorbar limits, ticks, scale, direction, and ownership;
 - line widths, marker sizes, colors, and other supported series styling;
-- axes-data text coordinates and figure-normalized arrow endpoints. Resizing
-  transforms only FigureIR geometry; explicit font size, line width, color,
+- axes-data text coordinates; figure-normalized arrow endpoints follow the
+  same untiled placement map as axes, retaining their relative relationship.
+  Resizing transforms only FigureIR geometry; explicit font size, line width, color,
   rotation, alignment, and arrow-head dimensions remain style quantities;
 - grouped-bar category centers, relative group offsets, widths, and baselines.
   Numeric data geometry remains in axes coordinates while edge width and colors
@@ -75,8 +78,8 @@ The render configuration applies portable TeX-native font sizes. It preserves:
 Known core text roles use the table above. User-authored axes annotations keep
 their explicit source font size because it may encode intentional emphasis.
 The profile does not relocate or reflow legends, clamp line widths or markers,
-reduce outliers, or choose a width automatically. Colorbars keep relative
-placements for untiled figures and follow their owning axes in tiled profiles.
+reduce outliers, or choose a width automatically. Colorbars share the common
+untiled placement map and follow their owning axes in tiled profiles.
 The normative policy and figure-family width guidance are in
 [PUBLICATION_PROFILE.md](PUBLICATION_PROFILE.md); its rationale is recorded
 in [ADR-0019](adr/ADR-0019-calibrated-publication-profile.md).

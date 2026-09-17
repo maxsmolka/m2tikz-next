@@ -1,5 +1,19 @@
 # MATLAB validation matrix
 
+## Current publication-profile qualification
+
+Publication geometry is revalidated with **MATLAB R2026a Update 5 on Windows**:
+P01-P13 plus default controls, actual compiled PDF glyph/page bounds and visual
+review, including native manual/tiled/shared/dual-Y cases. The 85 mm short-title
+cropping defect supersedes the older publication-specific acceptance: earlier
+compilation/width checks did not detect cropped title glyphs. See the
+[current geometry contract](PUBLICATION_PROFILE.md) and the focused fix report.
+Native MATLAB uses the observed Linux LuaLaTeX bridge; no other MATLAB version
+or native Windows TeX environment is asserted. Other historical results below
+remain historical rather than being silently relabeled Update 5.
+
+## Milestone and historical evidence
+
 M7.1 adds 18 portable stored-IR contract cases and nine real PDF compilations
 in both native MATLAB R2026a Update 5 and Octave 11.3. Nine canonical JSON
 goldens match byte-for-byte across these observed runtimes. Native MATLAB
@@ -41,7 +55,7 @@ to the historical Update 4 column below. See [DUAL_Y_AXES.md](DUAL_Y_AXES.md).
 | Colorbar | validated | validated | validated | F15, F16 |
 | Shared elements | IR/renderer validated | IR/renderer validated | partial | F17 |
 | Scalar images | validated | validated | validated | F18-F22, M3.3 H1-H18 |
-| Publication profile | validated | validated | validated | F23, M3.1 public profile suite |
+| Publication profile (historical) | earlier compile/width checks | earlier compile/width checks | superseded for current geometry by Update 5 qualification above | F23, M3.1; current P01-P13 glyph/page regression |
 | Figure sets | validated | validated | validated | F24, M3.2 S1-S16 |
 | Hybrid image backend | validated | validated | validated | F25, M3.4 R1-R24 |
 | Automatic backend planner | validated | validated | validated | F26, M3.5 P1-P24 |

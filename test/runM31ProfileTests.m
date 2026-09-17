@@ -82,9 +82,16 @@ function detail = multipleAxes(root)
     transformed = m2t.profile.apply(analysis.ir, m2t.profile.getProfile('publication'), []);
     assertScientificContentPreserved(analysis.ir, transformed.ir);
     assert(numel(transformed.ir.axes) == 2);
-    for k = 1:2, assert(isequaln(analysis.ir.axes{k}.placement, transformed.ir.axes{k}.placement)); end
+    firstBefore=analysis.ir.axes{1}.placement;firstAfter=transformed.ir.axes{1}.placement;
+    sx=firstAfter.width/firstBefore.width;sy=firstAfter.height/firstBefore.height;
+    dx=firstAfter.x-sx*firstBefore.x;dy=firstAfter.y-sy*firstBefore.y;
+    secondBefore=analysis.ir.axes{2}.placement;secondAfter=transformed.ir.axes{2}.placement;
+    assert(abs(secondAfter.x-(sx*secondBefore.x+dx))<1e-12);
+    assert(abs(secondAfter.y-(sy*secondBefore.y+dy))<1e-12);
+    assert(abs(secondAfter.width-sx*secondBefore.width)<1e-12);
+    assert(abs(secondAfter.height-sy*secondBefore.height)<1e-12);
     result = m2t.export(fig, fullfile(root, 'multiple-axes'), 'Profile', 'publication');
-    assertProfileSuccess(result, 'single-column'); detail = 'two relative placements preserved';
+    assertProfileSuccess(result, 'single-column'); detail = 'common affine placement map preserves manual relationships';
     clear cleanup;
 end
 
@@ -176,6 +183,8 @@ end
 function assertScientificContentPreserved(source, transformed)
     sourceSize = source.size; transformedSize = transformed.size;
     assert(~isequal(sourceSize, transformedSize)); transformed.size = sourceSize;
+    for k=1:numel(source.axes),transformed.axes{k}.placement=source.axes{k}.placement;end
+    for k=1:numel(source.elements),transformed.elements{k}.placement=source.elements{k}.placement;end
     assert(isequaln(source, transformed));
 end
 

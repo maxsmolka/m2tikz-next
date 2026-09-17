@@ -6,7 +6,10 @@ Accepted.
 
 M6.3 extends relative-layout handling for explicit tiled grids through
 [ADR-0022](ADR-0022-fixed-tiled-layout-semantics.md). Typography and untiled
-calibration below remain unchanged.
+calibration below remain unchanged. The subsequent publication-title fix adds
+physical untiled gutters while preserving the common relative arrangement;
+see [the current geometry contract](../PUBLICATION_PROFILE.md). It does not
+change widths, typography, scientific styling or aspect limits.
 
 ## Context
 

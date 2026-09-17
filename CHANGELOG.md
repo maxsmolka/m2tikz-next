@@ -54,6 +54,11 @@ versions are not m2tikz-next releases.
 
 ### Fixed
 
+- Publication-profile short titles could be cropped at 85 mm despite successful
+  compilation. Untiled geometry now reserves physical text/colorbar gutters
+  without changing typography, 85/170 mm widths or scientific data. P01-P13 and
+  default controls check actual PDF glyph bounds and title/plot separation.
+
 - M7.3: text products use explicit lossless UTF-8 encoding, including empty
   writes; PNG encoder/write failures use the existing stable diagnostic and
   normalized output checks byte count and close status. No new public options.

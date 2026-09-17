@@ -2,7 +2,10 @@
 
 M6.3 extends the original geometry-only transform for explicit tiled grids;
 see [ADR-0022](ADR-0022-fixed-tiled-layout-semantics.md). The original decision
-below remains the untiled baseline.
+below is the historical baseline. The publication-title correctness fix now
+extends untiled geometry with physical gutters through a common affine map;
+see [the current contract](../PUBLICATION_PROFILE.md). It supersedes the old
+"physical size only" statement below, not the architectural layer boundary.
 
 - Status: Accepted for M3.1 development
 - Date: 2026-08-11

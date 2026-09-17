@@ -15,7 +15,7 @@ scientific-export path. Major additions include:
 - layered reader/IR/renderer tests, legacy semantic comparisons, TeX matrices,
   PDF/raster geometry validation, and performance measurements.
 
-Development functionality additionally includes rich per-point scatter,
+Version 0.8.0 additionally includes rich per-point scatter,
 bounded RGB/alpha images, fixed MATLAB tiled layouts, explicit dual Y axes,
 and bounded rich scatter3/wire meshes with explicit camera and ordering limits.
 These are not retroactive claims about the released 0.5.0 package.
@@ -26,6 +26,6 @@ elements have narrower runtime coverage than their IR/renderer model.
 
 The inherited `matlab2tikz(...)` API is preserved and is not silently
 redirected. The public modern entry points are `m2t.export(...)` and
-`m2t.exportSet(...)`; `m2t2.*` remains internal/experimental. MATLAB validation
-retains the historical MATLAB R2026a Update 4 on Windows boundary, with separate
-Update 5 evidence for later bounded additions in the [matrix](../MATLAB_VALIDATION_MATRIX.md).
+`m2t.exportSet(...)`; `m2t2.*` remains internal/experimental. Current release
+validation uses MATLAB R2026a Update 5 on Windows; historical Update 4 evidence
+is retained separately in the [matrix](../MATLAB_VALIDATION_MATRIX.md).

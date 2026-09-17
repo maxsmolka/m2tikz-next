@@ -13,6 +13,7 @@ $documents = @(
     'docs/design/DIAGNOSTICS.md','docs/RUNTIME_COMPATIBILITY.md',
     'docs/ENVIRONMENT_CONTRACT.md','test/README.md',
     'docs/release/FEATURE_FREEZE_0_8_0.md','docs/release/RELEASE_NOTES_0_8_0_DRAFT.md',
+    'docs/release/RELEASE_NOTES_0_8_0.md',
     'docs/release/VERSIONING.md','docs/release/DEPENDENCIES.md',
     'docs/PUBLICATION_PROFILE.md','docs/adr/ADR-0008-publication-profiles.md',
     'docs/adr/ADR-0019-calibrated-publication-profile.md',

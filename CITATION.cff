@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use m2tikz-next, cite this software and retain the matlab2tikz attribution described in NOTICE.md."
 title: "m2tikz-next"
 type: software
-version: "0.5.0"
+version: "0.8.0"
 authors:
   - name: "m2tikz-next contributors"
 abstract: "A modern, validated scientific figure export pipeline derived from matlab2tikz."

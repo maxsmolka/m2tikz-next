@@ -1,7 +1,7 @@
 # m2tikz-next
 
-> Latest release: 0.5.0 — public pre-1.0 scientific-export preview/beta.
-> Development is prepared as the 0.8.0 feature-freeze candidate, not a published 0.8.0 release.
+> Latest release: [0.8.0](https://github.com/maxsmolka/m2tikz-next/releases/tag/v0.8.0) — feature-freeze / pre-1.0 acceptance release.
+> Test the immutable `v0.8.0` tag, not moving `main`.
 > See the [freeze policy](docs/release/FEATURE_FREEZE_0_8_0.md) and current project status.
 
 m2tikz-next is a modern, validated scientific figure export pipeline derived
@@ -12,8 +12,8 @@ faithfully. It preserves upstream history and attribution but is an independent
 project, not an official matlab2tikz release or successor.
 
 The current validation boundary is GNU Octave 11.3 in hosted Linux CI and
-MATLAB R2026a Update 4 on Windows, with newer milestone evidence separately
-recorded for Update 5 in the [validation matrix](docs/MATLAB_VALIDATION_MATRIX.md).
+MATLAB R2026a Update 5 on Windows. Historical Update 4 milestone evidence remains
+in the [validation matrix](docs/MATLAB_VALIDATION_MATRIX.md).
 The original preview used LuaLaTeX, TeX Live 2026 and PGFPlots 1.18.x;
 new local milestones also use TeX Live 2025/Debian. See [Installation](docs/INSTALLATION.md) for
 the complete setup.
@@ -46,6 +46,7 @@ path:
 ```console
 git clone https://github.com/maxsmolka/m2tikz-next.git
 cd m2tikz-next
+git checkout --detach v0.8.0
 ```
 
 ```matlab
@@ -132,7 +133,8 @@ plans and text.
 
 ## Current limitations
 
-Version 0.5.0 is pre-1.0: APIs and schemas may still change. Unsupported or
+Version 0.8.0 is pre-1.0 with an explicit API-freeze candidate contract,
+not production-complete or universal MATLAB graphics support. Unsupported or
 non-general areas include scatter transparency, dynamic/nested
 tiled layouts, dual-axis variants outside [the bounded contract](docs/DUAL_Y_AXES.md),
 polar plots, arbitrary annotations and patch semantics, stacked or
@@ -171,7 +173,8 @@ Generated validation products stay below ignored `.audit/` directories.
 - [Figure sets](docs/FIGURE_SETS.md)
 - [Image backends](docs/IMAGE_BACKENDS.md)
 - [Workflow and diagnostics](docs/WORKFLOW.md)
-- [0.5.0 release notes](docs/release/RELEASE_NOTES_0_5_0.md)
+- [0.8.0 release notes](docs/release/RELEASE_NOTES_0_8_0.md)
+- [Historical 0.5.0 release notes](docs/release/RELEASE_NOTES_0_5_0.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
 

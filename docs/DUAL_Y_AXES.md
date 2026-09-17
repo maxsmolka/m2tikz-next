@@ -1,7 +1,7 @@
 # Dual Y axes
 
-M6.4 adds a bounded native MATLAB `yyaxis` contract. It is an unreleased
-development feature, not a claim about the released 0.5.0 package or native
+M6.4 adds a bounded native MATLAB `yyaxis` contract, included in 0.8.0.
+This is not a retroactive claim about the released 0.5.0 package or native
 Octave support. The public calls and options are unchanged.
 
 ## Supported contract

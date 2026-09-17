@@ -1,10 +1,10 @@
 # Scientific export workflow
 
-> `m2t.export` is the primary public workflow. The latest release is 0.5.0;
-> development has reached the [API-freeze candidate](API.md). Breaking public
+> `m2t.export` is the primary public workflow. The latest release is 0.8.0;
+> it retains the [API-freeze candidate](API.md). Breaking public
 > changes now need exceptional justification and an explicit migration policy.
 
-Validated with MATLAB R2026a Update 4 on Windows.
+Current release validation uses MATLAB R2026a Update 5 on Windows.
 The recorded claim is limited to that release and environment; see
 [MATLAB_VALIDATION_MATRIX.md](MATLAB_VALIDATION_MATRIX.md).
 

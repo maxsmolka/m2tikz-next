@@ -1,7 +1,7 @@
 # Public API freeze candidate
 
 M7.0 designates the existing `m2t.export` and `m2t.exportSet` surface as the
-**1.0 API-freeze candidate**. The latest released version remains 0.5.0.
+**1.0 API-freeze candidate**. The latest released version is 0.8.0.
 There is no breaking cleanup or new alias in this milestone. Breaking changes
 after this candidate require exceptional justification, an ADR, migration notes
 and one canonical replacement; additive fields/options must preserve defaults.

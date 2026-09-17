@@ -105,6 +105,9 @@ jobs:
       - name: Validate environment contract and cross-runtime golden bytes
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM73EnvironmentTests(fullfile('.audit','m73-environment'),false);"
+      - name: Validate publication geometry and inert default controls
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runPublicationGeometryTests(fullfile('.audit','publication-geometry-core'),false);"
 
   tex-preview:
     runs-on: ubuntu-latest
@@ -114,7 +117,9 @@ jobs:
         shell: bash
         run: |
           sudo apt-get update
-          sudo apt-get install --yes latexmk texlive-latex-extra texlive-latex-recommended texlive-luatex texlive-pictures python3-yaml
+          sudo apt-get install --yes latexmk texlive-latex-extra texlive-latex-recommended texlive-luatex texlive-pictures python3-yaml python3-venv
+          python3 -m venv "$RUNNER_TEMP/publication-geometry-venv"
+          "$RUNNER_TEMP/publication-geometry-venv/bin/python" -m pip install pdfplumber==0.11.9
           docker pull "$OCTAVE_IMAGE"
           mkdir -p "$RUNNER_TEMP/m3-octave-tex-image"
           cat > "$RUNNER_TEMP/m3-octave-tex-image/Dockerfile" <<EOF
@@ -185,3 +190,8 @@ jobs:
       - name: Compile Unicode and spaced paths with environment diagnostics
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM73EnvironmentTests(fullfile('.audit','m73-tex'),true);"
+      - name: Check publication page widths and unclipped title glyphs
+        shell: bash
+        run: |
+          octave-cli --quiet --eval "addpath('test'); runPublicationGeometryTests(fullfile('.audit','publication-geometry'),true);"
+          "$RUNNER_TEMP/publication-geometry-venv/bin/python" test/checkPublicationPdfGeometry.py .audit/publication-geometry

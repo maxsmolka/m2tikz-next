@@ -27,7 +27,10 @@ It is separate from the unchanged public TeX/manifest serialization paths.
    default is vector; explicit hybrid and opt-in auto are supported. RGB and
    nonopaque image alpha require hybrid. Policy decisions carry reason codes.
 4. The optional publication profile transforms physical layout and render
-   configuration while preserving normalized scientific data.
+   configuration while preserving normalized scientific data. Fixed-size text
+   uses physical gutters: explicit tiled cells or a common affine untiled
+   placement map. The renderer remains profile-name-unaware; no runtime text
+   handles or source font extents enter profile decisions.
 5. The renderer produces a deterministic PGFPlots plan: standalone TeX and,
    where required, image-only PNG assets. It cannot inspect graphics handles.
 6. The workflow writes products, compiles with LuaLaTeX in temporary staging,

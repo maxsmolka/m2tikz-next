@@ -46,7 +46,7 @@ function summary = runPublicationProfileTests(outputDirectory)
         ir=lineIr();none=m2t.profile.apply(ir,m2t.profile.getProfile('none'),[]);
         calibrated=m2t.profile.apply(ir,m2t.profile.publication(),'single-column');
         assert(none.success&&calibrated.success);assert(isequaln(none.ir,ir));assertSemanticEqual(ir,calibrated.ir);
-        d='default is inert; publication transform changes physical size only';
+        d='default is inert; publication transform changes size and required physical gutters only';
     end
     function d=physicalWidth(width,mm)
         f=figure('Visible','off');c=onCleanup(@()closeFigure(f));plot(axes('Parent',f),1:4);
@@ -137,7 +137,12 @@ function ir=surfaceIr()
     a=m2t2.ir.makeAxes();a.kind='m2t2.axes3d';a.dimensionality=3;a.view=[135 20];a.zlim=[-1 1];[x,y]=meshgrid(linspace(-1,1,31));s=m2t2.ir.makeSurfaceSeries();s.x=x;s.y=y;s.z=sin(pi*x).*cos(pi*y);s.c=s.z;a.series={s};for n=1:2,l=m2t2.ir.makeLine3Series();l.id=sprintf('axes-1-series-%d',n+1);l.x=[-1 1];l.y=[0 0]+(n-1)/2;l.z=[.8 .8];a.series{end+1}=l;end;p=m2t2.ir.makePatch3Series();p.id='axes-1-series-4';p.vertices=[0 0 .8;.12 0 .8;0 .12 .8];a.series{end+1}=p;ir=m2t2.ir.makeFigure({a});ir.size=[100 80];
 end
 function tex=renderProfile(ir,width),t=m2t.profile.apply(ir,m2t.profile.publication(),width);assert(t.success);tex=m2t2.render.renderPgfplots(t.ir,true,t.renderConfig);end
-function assertSemanticEqual(a,b),sizeValue=a.size;b.size=sizeValue;assert(isequaln(a,b));end
+function assertSemanticEqual(a,b)
+    b.size=a.size;
+    for k=1:numel(a.axes),b.axes{k}.placement=a.axes{k}.placement;end
+    for k=1:numel(a.elements),b.elements{k}.placement=a.elements{k}.placement;end
+    assert(isequaln(a,b));
+end
 function assertPhysical(path,width),points=pdfSize(path);expected=85;if strcmp(width,'double-column'),expected=170;end;assert(abs(points(1)-expected*72/25.4)<=.05);end
 function d=metric(r,axesCount,seriesCount),d=sprintf('%d axes, %d semantic series, TeX %d bytes, PDF %d bytes',axesCount,seriesCount,fileBytes(r.texPath),fileBytes(r.pdfPath));end
 function value=pdfSize(path)

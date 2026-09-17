@@ -260,6 +260,14 @@ classified with skip reasons; the harness does not install packages.
 
 ## Public API-freeze candidate
 
+`runPublicationGeometryTests(out,true)` exercises P01-P13 and 13 inert default
+controls across title/labels/legend/colorbar/manual/tiled/shared/dual-Y/scatter/
+image-alpha/3-D/no-title cases. `checkPublicationPdfGeometry.py <out>` uses
+pdfplumber to check every text glyph against the compiled page, short-title
+presence/separation and physical width/height. Visual review remains required.
+With `false`, the matrix checks profile/semantic/deterministic contracts without
+a compiler. Native MATLAB and portable-only Octave layout cases are labeled.
+
 `runM73EnvironmentTests(out,false)` validates nine path/encoding/diagnostic
 cases and the shared Windows-MATLAB/Linux-Octave JSON/TeX byte goldens. Pass
 `true` for 12 cases with actual compiler runs, Unicode/spaced/nested output,

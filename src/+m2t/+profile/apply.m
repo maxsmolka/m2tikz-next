@@ -59,6 +59,8 @@ function transformation = apply(ir, profile, width)
             {m2t2.ir.makeLayoutCell(transformed.axes{1}.id,1,1)});
         transformed=m2t.profile.fitTiledMargins(transformed,profile);
         transformed.layout=originalLayout;
+    else
+        transformed=m2t.profile.fitUntiledMargins(transformed,profile);
     end
     transformation.ir = transformed;
     transformation.renderConfig = renderConfig(profile);

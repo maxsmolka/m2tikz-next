@@ -111,6 +111,10 @@ gate reads every PDF text character box, including text outside the visible
 page. It requires full short-title presence, all text glyphs inside the page,
 title/data-area separation for 2D publication cases and expected page dimensions.
 These checks are added to hosted CI with validation-only pdfplumber.
+Ubuntu's runner package repositories do not provide `python3-pdfplumber`;
+the initial provisioning failure was corrected to an isolated validation venv
+with pdfplumber 0.11.9, matching the locally verified checker version. No gate
+is skipped and the system Python environment is not modified by pip.
 Runtime PDF validation remains existence/size/header, not a generic visual
 detector. The bounded synthetic regression reliably detects the known defect.
 

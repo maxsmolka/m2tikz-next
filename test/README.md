@@ -1,5 +1,13 @@
 # Testing m2tikz-next
 
+Post-v0.8.0 legend coverage: `runHorizontalLegendTests(out,true)` checks
+horizontal columns and one-axes upper outside placement, including actual
+overwide-legend rejection. Run `python test/checkHorizontalLegendPdfGeometry.py
+<out>` after real compilation to verify all ten PDF layouts. The native
+reader tests run on R2026b; Octave independently covers portable semantics.
+The external real FIG is never a repository fixture. See
+[legend layout](../docs/LEGENDS.md).
+
 The modern pipeline is validated separately at the runtime-reader, normalized
 IR, renderer, workflow, compiler, and visual levels. Inherited matlab2tikz
 tests are described at the end of this guide.

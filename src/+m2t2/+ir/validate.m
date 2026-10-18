@@ -17,6 +17,10 @@ function validate(ir)
     if numel(unique(axesIds)) ~= numel(axesIds)
         invalid('figure.axes', 'axes ids must be unique');
     end
+    outside=cellfun(@(a)a.legend.visible&&strcmp(a.legend.location,'north_outside'),ir.axes);
+    if any(outside)&&(numel(ir.axes)~=1||ir.axes{1}.dimensionality~=2)
+        invalid('figure.axes','outside legends require one logical 2-D axes');
+    end
     for a = 1:numel(ir.axes)
         relation = ir.axes{a}.overlayOf;
         if isempty(relation), continue; end
@@ -487,7 +491,22 @@ function validateLegend(node, seriesIds, path)
     logicalScalar(node.visible, [path '.visible']);
     enum(node.mode, {'automatic','manual'}, [path '.mode']);
     enum(node.location, {'north_east','north_west','south_east','south_west', ...
-         'north','south','east','west'}, [path '.location']);
+         'north','south','east','west','north_outside'}, [path '.location']);
+    if isfield(node,'box'),enum(node.box,{'on','off'},[path '.box']);end
+    if isfield(node,'layout')
+        requireStruct(node.layout,[path '.layout']);
+        requireFields(node.layout,{'orientation','columns'},[path '.layout']);
+        enum(node.layout.orientation,{'horizontal','vertical'},[path '.layout.orientation']);
+        c=node.layout.columns;
+        if ~(isnumeric(c)&&isreal(c)&&isscalar(c)&&isfinite(c)&&c>=1&&c==fix(c))
+            invalid([path '.layout.columns'],'expected a positive integer');
+        end
+        if strcmp(node.layout.orientation,'vertical')&&c~=1
+            invalid([path '.layout'],'vertical multicolumn legends are unsupported');
+        end
+    elseif strcmp(node.location,'north_outside')
+        invalid([path '.layout'],'outside legends require explicit layout semantics');
+    end
     if ~iscell(node.entries), invalid([path '.entries'], 'expected a cell array'); end
     used = {};
     for k = 1:numel(node.entries)

@@ -6,7 +6,13 @@ versions are not m2tikz-next releases.
 
 ## [Unreleased]
 
-No changes recorded after the 0.8.0 feature freeze.
+### Added
+
+- Bounded horizontal axes legends with explicit columns and `northoutside`
+  placement for one logical 2-D axes, including publication gutters. Entry
+  order, linked series and optional box visibility are preserved. Actual TeX
+  bounds reject overflow instead of accepting cropped output. This external-
+  acceptance correction follows v0.8.0; see [legend layout](docs/LEGENDS.md).
 
 ## [0.8.0]
 

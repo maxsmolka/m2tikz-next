@@ -35,6 +35,7 @@ function ir = fitTiledMargins(ir, profile)
             insetBottom=2*tick+hasLabel*(label+7);
             insetTop=2*tick+~isempty(a.title.value)*(titleSize+8);
         end
+        insetTop=insetTop+m2t.profile.legendTopInset(a.legend,profile);
         for e=1:numel(ir.elements)
             node=ir.elements{e};if labels(e),continue;end
             if ~strcmp(node.kind,'m2t2.colorbar')||~strcmp(node.owner.kind,'axes')

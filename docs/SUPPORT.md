@@ -27,6 +27,11 @@ contracts, [MATLAB validation](MATLAB_VALIDATION_MATRIX.md) and
 
 ## Capability matrix
 
+Post-v0.8.0 development adds horizontal axes legends with explicit columns
+and upper outside placement for one logical 2-D axes, including one-cell tiled
+and supported dual-Y axes. Other outside/multi-axes and vertical multicolumn
+layouts remain unsupported. See [LEGENDS.md](LEGENDS.md) for fit limits.
+
 | Classification | Capability boundary |
 | --- | --- |
 | **Supported** | 2-D line plots and multiline styling; rich 2-D scatter with constant or per-point size, constant or per-point RGB, scalar mapped color, narrow edge/face modes, legends, and axes-owned colorbars; symmetric/asymmetric error bars; linear/logarithmic and reversed axes; custom ticks; multiple/manual axes; deterministic IR migration/replay; publication profiles; explicit figure sets; scalar images/heatmaps with vector output; axes-owned free 2-D text; figure-owned arrows and double arrows. |

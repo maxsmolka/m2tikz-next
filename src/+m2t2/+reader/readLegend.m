@@ -7,14 +7,24 @@ function node = readLegend(legendHandle, series, path, seriesHandles)
     if ~node.visible, return; end
     m2t2.reader.assertSupportedProperties(legendHandle,path,'legend');
     m2t2.reader.assertDecorationChildren(legendHandle,path,'legend');
-    orientation=m2t2.reader.optionalProperty(legendHandle,'Orientation','vertical');
-    if ~strcmpi(orientation,'vertical'),unsupported(path,'Orientation',orientation);end
-    columns=m2t2.reader.optionalProperty(legendHandle,'NumColumns',1);
-    if double(columns)~=1,unsupported(path,'NumColumns',num2str(columns));end
+    orientation=lower(m2t2.reader.optionalProperty(legendHandle,'Orientation','vertical'));
+    if ~any(strcmp(orientation,{'vertical','horizontal'})),unsupported(path,'Orientation',orientation);end
+    labels = labelCells(get(legendHandle, 'String'));
+    defaultColumns=1;if strcmp(orientation,'horizontal'),defaultColumns=max(1,numel(labels));end
+    columns=m2t2.reader.optionalProperty(legendHandle,'NumColumns',defaultColumns);
+    if ~(isnumeric(columns)&&isreal(columns)&&isscalar(columns)&&isfinite(columns)&&columns>=1&&columns==fix(columns))
+        unsupported(path,'NumColumns',num2str(columns));
+    end
+    if strcmp(orientation,'vertical')&&columns~=1,unsupported(path,'NumColumns',num2str(columns));end
     node.location = normalizeLocation(get(legendHandle, 'Location'), path);
+    % Additive semantics only: historical vertical one-column IR stays identical.
+    if strcmp(orientation,'horizontal')||strcmp(node.location,'north_outside')
+        node.layout=struct('orientation',orientation,'columns',double(columns));
+    end
+    box=m2t2.reader.optionalProperty(legendHandle,'Box','on');
+    if strcmp(box,'off'),node.box='off';end
     runtimeInterpreter = m2t2.util.normalizeTextInterpreter( ...
         m2t2.reader.optionalProperty(legendHandle,'Interpreter','none'),[path '.entries']);
-    labels = labelCells(get(legendHandle, 'String'));
     candidates = find(cellfun(@(item) item.visible, series));
     if ~isempty(seriesHandles)
         links=legendLinks(legendHandle,labels,path);candidates=zeros(1,numel(links));
@@ -85,8 +95,8 @@ function values = labelCells(raw)
 end
 
 function value = normalizeLocation(runtimeValue, path)
-    source = {'northeast','northwest','southeast','southwest','north','south','east','west','best'};
-    target = {'north_east','north_west','south_east','south_west','north','south','east','west','north_east'};
+    source = {'northeast','northwest','southeast','southwest','north','south','east','west','best','northoutside'};
+    target = {'north_east','north_west','south_east','south_west','north','south','east','west','north_east','north_outside'};
     index = find(strcmpi(runtimeValue, source), 1);
     if isempty(index), unsupported(path, 'Location', runtimeValue); end
     value = target{index};

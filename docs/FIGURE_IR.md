@@ -46,6 +46,16 @@ legend entries, cells, annotations, samples or pixels. JSON object-key order
 is not semantic. A renderer may perform only the documented explicit scatter3
 depth ordering, preserving equal-depth ties and every aligned point role.
 
+Axes LegendIR optionally records `layout.orientation` (`horizontal` or
+one-column `vertical`) and positive integer `layout.columns`. Absence retains
+historical vertical one-column rendering and canonical JSON bytes. The new
+`north_outside` location requires explicit layout and one logical 2-D axes.
+Optional `box='off'` suppresses the frame; absence retains the historical box.
+Entries remain ordered series-ID/TextIR pairs. This additive presentation
+extension changes no series payloads, schema version or default layout.
+Older implementations do not support it; see
+[ADR-0026](adr/ADR-0026-horizontal-legend-layout.md).
+
 Planner choices/reasons, render plans/assets, profile application metadata,
 diagnostics, workflow timings and manifest status are **not FigureIR fields
 required for replay**. They are produced from IR and explicit configuration.

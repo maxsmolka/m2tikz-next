@@ -102,7 +102,7 @@ function lines = renderAxes(node, axesIndex, figureSize, config, annotations)
     options = [options, tickOptions(node.xticks, 'x'), tickOptions(node.yticks, 'y')];
     if node.dimensionality == 3, options = [options, tickOptions(node.zticks, 'z')]; end
     if node.legend.visible
-        options{end + 1} = ['legend pos=' legendPosition(node.legend.location)];
+        options = [options, m2t2.render.legendOptions(node,axesIndex,config)];
     end
     if isfield(config,'axesOptions'),options=[options,config.axesOptions];end
     lines{end + 1} = [bs 'begin{axis}['];
@@ -140,6 +140,7 @@ function lines = renderAxes(node, axesIndex, figureSize, config, annotations)
         lines = [lines, annotationLines]; %#ok<AGROW>
     end
     lines{end + 1} = [bs 'end{axis}'];
+    lines = [lines, m2t2.render.legendBoundsCheck(node,axesIndex,figureSize)];
 end
 
 function line = rgbDefinition(name, color)
@@ -229,10 +230,6 @@ end
 
 function value = booleanText(input)
     if input, value = 'true'; else, value = 'false'; end
-end
-
-function value = legendPosition(location)
-    value = strrep(location, '_', ' ');
 end
 
 function name = colorName(axesIndex, seriesIndex)

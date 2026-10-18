@@ -118,8 +118,8 @@ function propertyAndTextTests(native)
     assert(m2t2.reader.optionalProperty(h,'AbsentSyntheticProperty',99)==99);
     assert(isempty(m2t2.reader.optionalProperty(h,'ZData',99)));
     l=legend(a,h,'line');set(l,'Orientation','horizontal');
-    try,m2t2.reader.readFigure(f);error('M2T:ExpectedFailure','horizontal legend accepted');
-    catch err,assert(strcmp(err.identifier,'M2T2:E007:UnsupportedProperty'));end
+    horizontal=m2t2.reader.readFigure(f);
+    assert(strcmp(horizontal.axes{1}.legend.layout.orientation,'horizontal'));
     set(l,'Orientation','vertical');
     if isprop(l,'NumColumns')
         set(l,'NumColumns',2);

@@ -24,6 +24,10 @@ The [environment contract](ENVIRONMENT_CONTRACT.md) distinguishes Windows
 MATLAB, container/hosted Linux Octave and the actually observed TeX toolchains.
 MATLAB must run with its JVM enabled for safe output-path checks.
 
+R2026b no longer bundles a JRE. Configure a supported OpenJDK/JRE before
+exporting: [MathWorks Java setup](https://www.mathworks.com/help/matlab/matlab_external/configure-your-system-to-use-java.html).
+The safe path checks also apply to R2026b and cannot be bypassed without Java.
+
 ## TeX toolchain
 
 Successful `m2t.export` calls compile standalone PGFPlots documents. The

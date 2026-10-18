@@ -77,6 +77,11 @@ function ir = readFigure(figureHandle)
             'legend could not be assigned to exactly one axes');
     end
 
+    outside=cellfun(@(a)a.legend.visible&&strcmp(a.legend.location,'north_outside'),axesItems);
+    if any(outside)&&(numel(axesItems)~=1||axesItems{1}.dimensionality~=2)
+        error('M2T2:E007:UnsupportedProperty', ...
+            'Outside legends currently require one logical 2-D axes.');
+    end
     ir = m2t2.ir.makeFigure(axesItems);
     ir.size = m2t2.reader.readFigureSize(figureHandle, 'figure.size');
     if isempty(tiledState)

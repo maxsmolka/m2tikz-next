@@ -170,6 +170,7 @@ Generated validation products stay below ignored `.audit/` directories.
 - [Installation](docs/INSTALLATION.md)
 - [Support matrix](docs/SUPPORT.md)
 - [Profiles](docs/PROFILES.md)
+- [Legend layout](docs/LEGENDS.md)
 - [Figure sets](docs/FIGURE_SETS.md)
 - [Image backends](docs/IMAGE_BACKENDS.md)
 - [Workflow and diagnostics](docs/WORKFLOW.md)

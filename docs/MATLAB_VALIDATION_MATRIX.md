@@ -1,5 +1,17 @@
 # MATLAB validation matrix
 
+## Post-v0.8.0 R2026b legend qualification
+
+The bounded horizontal/upper outside legend correction is tested with MATLAB
+R2026b (26.2.0.3386108) on Windows. It covers synthetic linked-entry order,
+six/three/one-column layouts, incomplete rows, titles, one-cell tiled and dual-Y
+integration, caller preservation, actual PDF geometry and overwide rejection.
+The external real FIG stays local. Existing FigureIR canonical goldens remain
+unchanged. See [LEGENDS.md](LEGENDS.md) for scope and regression commands.
+This focused qualification does not imply all historical suites were rerun in
+R2026b or qualify the external tester's R2022a/native Windows TeX environment.
+The JVM is explicitly enabled; native MATLAB uses the existing Linux TeX bridge.
+
 ## 0.8.0 release evidence
 
 The current release gate uses MATLAB R2026a Update 5 on Windows

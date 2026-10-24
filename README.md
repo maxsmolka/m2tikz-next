@@ -1,7 +1,8 @@
 # m2tikz-next
 
 > Latest release: [0.8.0](https://github.com/maxsmolka/m2tikz-next/releases/tag/v0.8.0) — feature-freeze / pre-1.0 acceptance release.
-> Test the immutable `v0.8.0` tag, not moving `main`.
+> Use `v0.8.0` for the original release baseline; use a pinned corrected commit
+> for post-release retests. See the [acceptance guide](docs/validation/EXTERNAL_ACCEPTANCE_TESTING.md).
 > See the [freeze policy](docs/release/FEATURE_FREEZE_0_8_0.md) and current project status.
 
 m2tikz-next is a modern, validated scientific figure export pipeline derived
@@ -14,6 +15,8 @@ project, not an official matlab2tikz release or successor.
 The current validation boundary is GNU Octave 11.3 in hosted Linux CI and
 MATLAB R2026a Update 5 on Windows. Historical Update 4 milestone evidence remains
 in the [validation matrix](docs/MATLAB_VALIDATION_MATRIX.md).
+Post-release legend and profile-gallery work has focused R2026b/Windows
+evidence with a Linux LuaLaTeX bridge, not general R2026b or Windows TeX qualification.
 The original preview used LuaLaTeX, TeX Live 2026 and PGFPlots 1.18.x;
 new local milestones also use TeX Live 2025/Debian. See [Installation](docs/INSTALLATION.md) for
 the complete setup.
@@ -48,6 +51,10 @@ git clone https://github.com/maxsmolka/m2tikz-next.git
 cd m2tikz-next
 git checkout --detach v0.8.0
 ```
+
+That checkout is the original release baseline, without the later legend fix
+or profile gallery. To test those additions, follow the acceptance guide's
+pinned post-release commit instructions instead.
 
 ```matlab
 addpath('src');
@@ -146,7 +153,7 @@ exact release and platform stated above; other MATLAB releases are not implied.
 
 ## Examples and validation
 
-[Examples 01–12](examples/README.md) demonstrate line, rich scatter, rich image alpha, error bars,
+[Examples](examples/README.md) include a MATLAB profile-comparison gallery and demonstrate line, rich scatter, rich image alpha, error bars,
 multiple axes, colorbars, publication profiles and figure sets, and vector,
 hybrid, and automatic image backends using generic synthetic data.
 

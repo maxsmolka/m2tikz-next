@@ -12,6 +12,16 @@ This focused qualification does not imply all historical suites were rerun in
 R2026b or qualify the external tester's R2022a/native Windows TeX environment.
 The JVM is explicitly enabled; native MATLAB uses the existing Linux TeX bridge.
 
+## Post-v0.8.0 MATLAB profile gallery smoke test
+
+`runProfileGallerySmokeTests` exercises four synthetic native figures with
+source-size, 85 mm and 170 mm exports: 12 real PDF products, four saved/reopened
+`.fig` sources, profile metadata, six-column legend state, caller preservation,
+unchanged root defaults and figure cleanup. It runs separately from hosted
+Octave CI; see [testing](../test/README.md). Gallery evidence uses R2026b on
+Windows with the existing Linux LuaLaTeX bridge, plus separate PDF geometry
+and visual review. It does not establish R2022a/native Windows MiKTeX support.
+
 ## 0.8.0 release evidence
 
 The current release gate uses MATLAB R2026a Update 5 on Windows

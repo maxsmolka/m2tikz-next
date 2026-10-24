@@ -1,6 +1,7 @@
-function outcome = compileLuaLatex(texPath, pdfPath, compiler)
+function outcome = compileLuaLatex(texPath, pdfPath, compiler, timeoutSeconds)
 %COMPILELUALATEX Compile standalone TeX in an isolated temporary directory.
     if nargin < 3, compiler = 'lualatex'; end
+    if nargin < 4, timeoutSeconds = 300; end
     compiler = textScalar(compiler, 'compiler');
     % Reject malformed arguments before compiler discovery or staging changes.
     quoteArgument(texPath); quoteArgument(pdfPath);
@@ -11,7 +12,12 @@ function outcome = compileLuaLatex(texPath, pdfPath, compiler)
     m2t.internal.assertOwnedPath(failureLog);
 
     versionCommand = [quoteArgument(compiler) ' --version 2>&1'];
-    [available, ~] = system(versionCommand);
+    probe = m2t.internal.runBoundedCommand(versionCommand, min(15, timeoutSeconds));
+    if probe.timedOut || ~isempty(probe.error)
+        outcome = processFailure(outcome, probe, failureLog, 'Compiler discovery');
+        return;
+    end
+    available = probe.exitCode;
     if available ~= 0
         message = sprintf('LuaLaTeX was not found on PATH (command: %s).', compiler);
         outcome.diagnostics(end + 1) = m2t.internal.makeDiagnostic( ...
@@ -43,10 +49,18 @@ function outcome = compileLuaLatex(texPath, pdfPath, compiler)
         ' -no-shell-escape -interaction=nonstopmode -halt-on-error -file-line-error' ...
         ' -output-directory=' quoteArgument(buildDirectory) ...
         ' ' quoteArgument(texPath) ' 2>&1'];
-    [exitCode, processOutput] = system(command);
+    process = m2t.internal.runBoundedCommand(command, timeoutSeconds);
+    exitCode = process.exitCode;
+    processOutput = process.output;
     [~, name] = fileparts(texPath);
     engineLog = fullfile(buildDirectory, [name '.log']);
     logText = readIfPresent(engineLog);
+
+    if process.timedOut || ~isempty(process.error)
+        process.output = combineLogs(processOutput, logText);
+        outcome = processFailure(outcome, process, failureLog, 'Compilation');
+        return;
+    end
 
     if exitCode ~= 0
         combined = combineLogs(processOutput, logText);
@@ -84,6 +98,24 @@ function outcome = compileLuaLatex(texPath, pdfPath, compiler)
     end
     outcome.success = true;
     clear cleanup;
+end
+
+function outcome = processFailure(outcome, process, failureLog, stage)
+    if process.timedOut
+        code = 'M2T:C006:CompilerTimeout';
+        message = [stage ' exceeded its process time limit; the local process group/job was terminated.'];
+    else
+        code = 'M2T:C007:ProcessSupervisorFailed';
+        message = [stage ' could not be supervised: ' process.error];
+    end
+    try
+        m2t.internal.writeTextFile(failureLog, [message sprintf('\n') process.output]);
+        outcome.logPath = failureLog;
+        message = [message ' Log: ' failureLog];
+    catch
+        outcome.logPath = '';
+    end
+    outcome.diagnostics(end + 1) = m2t.internal.makeDiagnostic('error', code, message, 'compile');
 end
 
 function value = quoteArgument(value)
@@ -139,6 +171,11 @@ function value = firstTexError(logText)
             value = strtrim(lines{k});
             return
         end
+    end
+    compact = regexprep(lower(logText), '\s', '');
+    if ~isempty(strfind(compact, 'undefinedcontrolsequence')) %#ok<STREMP>
+        value = 'Undefined control sequence.';
+        return;
     end
     normalized = regexprep(logText, '\s+', ' ');
     if ~isempty(regexpi(normalized, 'no writeable cache path', 'once'))

@@ -88,6 +88,10 @@ invented RGB colorbar.
 - `M2T:E006:UnsafeOutputProduct` rejects redirected products, directory/file
   conflicts, unknown/nested asset content or unavailable safe path inspection.
 - `M2T:C005:UnsafeProcessArgument` rejects unsafe compiler arguments.
+- `M2T:C006:CompilerTimeout` reports an expired discovery/compilation budget.
+- `M2T:C007:ProcessSupervisorFailed` rejects missing/failed process supervision;
+  no unbounded compiler fallback is used. Both retain `compile_failed` at the
+  public workflow level. See [the environment contract](../ENVIRONMENT_CONTRACT.md).
 - `M2T2:E055:UnsafeAssetReference` rejects unsafe relative hybrid asset names.
 
 Figure-set preflight maps product collisions to `M2T:SET_OUTPUT_EXISTS` and

@@ -1,7 +1,7 @@
 # Public API freeze candidate
 
 M7.0 designates the existing `m2t.export` and `m2t.exportSet` surface as the
-**1.0 API-freeze candidate**. The latest released version is 0.8.0.
+**1.0 API-freeze candidate**. The latest released version is 0.8.1.
 There is no breaking cleanup or new alias in this milestone. Breaking changes
 after this candidate require exceptional justification, an ADR, migration notes
 and one canonical replacement; additive fields/options must preserve defaults.
@@ -123,7 +123,11 @@ LuaLaTeX must be on PATH. Compilation uses temporary staging, no shell escape,
 and retains a failure log when possible. MATLAB path inspection needs the JVM.
 The compiler is not sandboxed: export trusted content only; see
 [SECURITY.md](../SECURITY.md). Source figures are not closed or restyled.
-Calls are synchronous without a built-in process timeout. Generated text is
+Calls remain synchronous. Since 0.8.1, internal compiler budgets are 15 seconds
+for discovery and 300 seconds per compilation, with `M2T:C006:CompilerTimeout`
+on expiration or `M2T:C007:ProcessSupervisorFailed` if supervision is unavailable.
+POSIX requires Python 3; Windows uses Windows PowerShell/.NET. These are not new
+public options or a total export deadline. Generated text is
 explicit UTF-8 without BOM; PNG write/encoding failures use the existing
 `M2T2:E_PNG_WRITE_FAILED` diagnostic rather than vendor-specific encoder codes.
 See [the environment contract](ENVIRONMENT_CONTRACT.md) for paths, locale,

@@ -9,8 +9,9 @@ Choose one figure runtime:
 
 - **GNU Octave:** version 11.3 is exercised by hosted Linux CI and local
   validation.
-- **MATLAB:** current release validated with MATLAB R2026a Update 5 on Windows. No other MATLAB
-  release or operating system is implied by that statement.
+- **MATLAB:** broad historical release evidence uses R2026a Update 5 on Windows;
+  focused legend/gallery/timeout patch evidence uses R2026b on Windows. These
+  observations do not qualify all workflows on every version or platform.
 
 Both runtimes use the same public `m2t.*` workflow. Platform packages or vendor
 installers may be used, but the commands must be discoverable on `PATH` for the
@@ -27,6 +28,19 @@ MATLAB must run with its JVM enabled for safe output-path checks.
 R2026b no longer bundles a JRE. Configure a supported OpenJDK/JRE before
 exporting: [MathWorks Java setup](https://www.mathworks.com/help/matlab/matlab_external/configure-your-system-to-use-java.html).
 The safe path checks also apply to R2026b and cannot be bypassed without Java.
+
+## Process supervision (new in 0.8.1)
+
+- Linux/POSIX: install **Python 3** using your platform's package manager and
+  verify `python3 --version`. Its standard library is sufficient; no pip
+  packages are needed for export.
+- Windows: built-in **Windows PowerShell/.NET** supplies the supervisor. Python
+  is not required for Windows export. Local policies must permit its repository
+  helper script and Add-Type; supervision failures report C007, not an
+  unbounded fallback. Do not weaken execution/security policies automatically.
+
+Budgets are 15 seconds for the compiler version probe and 300 seconds per
+compilation. These do not bound total export time or detached/remote jobs.
 
 ## TeX toolchain
 
@@ -108,7 +122,10 @@ diagnostics beside them. Existing products are preserved by default; pass
 Inspect both `result.diagnostics` and the rendered PDF. Missing LuaLaTeX,
 compilation failure and missing/invalid PDFs have distinct codes. Logs are
 local and may include sensitive paths or labels. Export calls are synchronous
-without a built-in timeout; supervise untrusted or unusually slow jobs outside
+with internal compiler deadlines (15-second discovery, 300-second compilation);
+POSIX requires Python 3 on PATH for supervision. Windows uses its built-in
+Windows PowerShell/.NET and does not require Python for export. Still supervise
+untrusted or unusually slow jobs outside
 the API. Only trusted TeX/LaTeX-interpreted labels should be exported.
 
 Use `fullfile` for output folders. Spaces and the observed `äöü` path cases are

@@ -6,6 +6,26 @@ versions are not m2tikz-next releases.
 
 ## [Unreleased]
 
+## [0.8.1]
+
+Pre-1.0 acceptance patch; external R2022a/Windows MiKTeX testing remains pending.
+
+### Fixed
+
+- Bound compiler discovery to 15 seconds and each compilation to 300 seconds.
+  Internal process-group/Job supervision terminates local children, rejects
+  partial staged PDFs, restores compiler state and retains timeout logs.
+  C006 identifies actual expiration; C007 fails closed if supervision is
+  unavailable. Ordinary exit codes are not mistaken for timeouts.
+- Recognize undefined-control-sequence errors even when TeX wraps a word.
+
+### Environment
+
+- POSIX export now requires Python 3 on PATH (standard library only) for
+  process supervision. Windows uses built-in Windows PowerShell/.NET without
+  Python. No automatic installation or unbounded fallback is performed. No
+  public timeout option is added; see the environment contract and ADR-0027.
+
 ### Added
 
 - Executable MATLAB profile gallery with four synthetic figure types, each

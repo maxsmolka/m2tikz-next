@@ -75,6 +75,9 @@ function summary = runCompilerTimeoutTests(out)
         unavailable = m2t.internal.compileLuaLatex(tex, pdf, compiler, 1);
         assert(~unavailable.success);
         assert(strcmp(unavailable.diagnostics(1).code, 'M2T:C007:ProcessSupervisorFailed'));
+        missing = m2t.internal.compileLuaLatex(tex, pdf, fullfile(out, 'absent-compiler'), 1);
+        assert(~missing.success);
+        assert(strcmp(missing.diagnostics(1).code, 'M2T:C001:CompilerNotFound'));
         clear restorePath;
     end
     % A child that inherited the group/job must not survive its parent timeout.

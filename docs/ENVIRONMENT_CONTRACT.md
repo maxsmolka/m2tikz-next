@@ -99,6 +99,8 @@ Job; POSIX uses **Python 3 on PATH** (standard library only) and a new process
 session/group. Missing/failed supervision reports `M2T:C007:ProcessSupervisorFailed`;
 there is no unbounded fallback. Ordinary compiler exit codes, including 124/137,
 are distinct from a deadline. See [ADR-0027](adr/ADR-0027-compiler-deadlines.md).
+On POSIX a shell-builtin name lookup precedes supervision, without executing
+the compiler; an absent compiler retains C001 even when Python is also absent.
 
 These are internal fixed budgets, not new public options or a whole-export
 wall-clock guarantee. Supervisor startup, OS scheduling/termination, reading and

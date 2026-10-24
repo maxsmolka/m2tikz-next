@@ -11,6 +11,15 @@ function outcome = compileLuaLatex(texPath, pdfPath, compiler, timeoutSeconds)
     failureLog = [stripExtension(pdfPath) '.compile.log'];
     m2t.internal.assertOwnedPath(failureLog);
 
+    % Preserve C001 when both compiler and POSIX supervisor are absent (for
+    % example an intentionally empty PATH). This shell builtin only resolves
+    % the name; it never executes an unsupervised compiler/version probe.
+    if ~ispc && system(['command -v ' quoteArgument(compiler) ' >/dev/null 2>&1']) ~= 0
+        outcome.diagnostics(end + 1) = m2t.internal.makeDiagnostic( ...
+            'error', 'M2T:C001:CompilerNotFound', ...
+            sprintf('LuaLaTeX was not found on PATH (command: %s).', compiler), 'compile');
+        return;
+    end
     versionCommand = [quoteArgument(compiler) ' --version 2>&1'];
     probe = m2t.internal.runBoundedCommand(versionCommand, min(15, timeoutSeconds));
     if probe.timedOut || ~isempty(probe.error)

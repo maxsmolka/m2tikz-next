@@ -1,10 +1,11 @@
 # Project status
 
-Latest released version: **0.8.0**, the feature-freeze / pre-1.0 acceptance
-release. It includes M7.2, M7.3, the publication-title clipping fix and the
-external acceptance package. See [CHANGELOG.md](CHANGELOG.md).
+Latest released version: **0.8.1**, the pre-1.0 acceptance patch following the
+0.8.0 feature freeze. It includes the horizontal legend fix, profile gallery,
+native MATLAB smoke test and internal compiler deadlines. See
+[release notes](docs/release/RELEASE_NOTES_0_8_1.md) and [CHANGELOG.md](CHANGELOG.md).
 
-## Development after v0.8.0 (not a new release)
+## Corrections since v0.8.0
 
 - PR #21 added bounded horizontal/multicolumn legends above one logical 2-D
   axes, including publication spacing and explicit overflow failure. This is
@@ -16,11 +17,15 @@ external acceptance package. See [CHANGELOG.md](CHANGELOG.md).
 - Focused development evidence uses MATLAB R2026b on Windows and a Linux
   LuaLaTeX bridge. Hosted CI is still Octave/Linux; neither this evidence nor
   compilation success qualifies MATLAB R2022a or native Windows MiKTeX.
+- Compiler discovery/compilation have internal 15/300-second process budgets,
+  owned process-group/Job cleanup and distinct timeout/supervisor diagnostics.
+  POSIX needs Python 3; Windows uses Windows PowerShell/.NET. The public API
+  options and schemas are unchanged; this is not an end-to-end timing promise.
 
 External testing should [pin the intended release or corrected commit](docs/validation/EXTERNAL_ACCEPTANCE_TESTING.md).
 Still pending: external scientific/visual acceptance on the tester's actual
-runtime and TeX installation, feedback triage and a separately authorized
-follow-up release. No release/tag or broad runtime-support claim is changed.
+runtime and TeX installation and feedback triage before RC readiness. The patch
+does not complete external acceptance or broaden runtime-support claims.
 
 ## Current contract
 

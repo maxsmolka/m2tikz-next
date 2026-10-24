@@ -56,6 +56,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes python3-yaml
           docker pull "$OCTAVE_IMAGE"
+          mkdir -p "$RUNNER_TEMP/octave-supervised-image"
+          cat > "$RUNNER_TEMP/octave-supervised-image/Dockerfile" <<EOF
+          FROM $OCTAVE_IMAGE
+          RUN apt-get update \
+              && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends python3 \
+              && rm -rf /var/lib/apt/lists/*
+          EOF
+          docker build --tag m2tikz-next-ci:octave-supervised "$RUNNER_TEMP/octave-supervised-image"
           mkdir -p "$RUNNER_TEMP/octave-11.3-bin"
           cat > "$RUNNER_TEMP/octave-11.3-bin/octave-cli" <<'EOF'
           #!/usr/bin/env bash
@@ -65,7 +73,7 @@ jobs:
             --env HOME=/tmp \
             --volume "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" \
             --workdir "$GITHUB_WORKSPACE" \
-            "$OCTAVE_IMAGE" octave "$@"
+            m2tikz-next-ci:octave-supervised octave "$@"
           EOF
           chmod +x "$RUNNER_TEMP/octave-11.3-bin/octave-cli"
           echo "$RUNNER_TEMP/octave-11.3-bin" >> "$GITHUB_PATH"
@@ -78,6 +86,9 @@ jobs:
       - name: Validate output and asset security boundaries
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runS1SecurityTests(fullfile('.audit','s1-security'));"
+      - name: Validate compiler deadlines and owned process cleanup
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runCompilerTimeoutTests(fullfile('.audit','compiler-timeout'));"
       - name: Validate portable explicit tiled-layout IR
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runM63TiledIrTests(fullfile('.audit','m63-tiled-ir'));"
@@ -132,7 +143,7 @@ jobs:
           FROM $OCTAVE_IMAGE
           RUN apt-get update \
               && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
-                 poppler-utils texlive-latex-extra texlive-luatex texlive-pictures \
+                 python3 poppler-utils texlive-latex-extra texlive-luatex texlive-pictures \
               && rm -rf /var/lib/apt/lists/*
           EOF
           docker build --tag m2tikz-next-ci:octave-tex \

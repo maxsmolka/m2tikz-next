@@ -91,12 +91,24 @@ Missing executable yields `M2T:C001:CompilerNotFound`. The public workflow then
 checks PDF existence, nonempty length and `%PDF` header, with distinct V001,
 V002 and V004 diagnostics. These minimal checks are not a full PDF parser.
 
-There is **no built-in process timeout or cancellation option**. A hung compiler
-can block the synchronous call. CI/job-level limits and externally supervised
-test sessions must enforce time budgets. Do not describe this as bounded-time
-execution or silently add a new option to the frozen API. Temporary cleanup is
-best effort after abrupt process termination; review local temporary products
-before retrying. Concurrent calls must not share an output base.
+Since 0.8.1, compiler discovery has a 15-second child-process budget and each
+compilation has a 300-second budget. Deadlines report `M2T:C006:CompilerTimeout`,
+retain a log when writable, restore environment/staging and never copy a partial
+staged PDF. Windows PowerShell/.NET starts a suspended process in a kill-on-close
+Job; POSIX uses **Python 3 on PATH** (standard library only) and a new process
+session/group. Missing/failed supervision reports `M2T:C007:ProcessSupervisorFailed`;
+there is no unbounded fallback. Ordinary compiler exit codes, including 124/137,
+are distinct from a deadline. See [ADR-0027](adr/ADR-0027-compiler-deadlines.md).
+On POSIX a shell-builtin name lookup precedes supervision, without executing
+the compiler; an absent compiler retains C001 even when Python is also absent.
+
+These are internal fixed budgets, not new public options or a whole-export
+wall-clock guarantee. Supervisor startup, OS scheduling/termination, reading and
+rendering take additional time; each figure-set entry has its own budgets.
+There is no public cancellation API. Detached POSIX sessions, remotely launched
+WSL/container/service work and resource/disk exhaustion are outside the local
+process-group/Job boundary. This is not a sandbox. External job limits are still
+appropriate; concurrent calls must not share an output base.
 
 PNG encoder/open/normalization failures use the existing
 `M2T2:E_PNG_WRITE_FAILED` code; completed writes check byte count and close status.

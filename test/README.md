@@ -1,5 +1,16 @@
 # Testing m2tikz-next
 
+## Compiler deadline regressions (0.8.1)
+
+`addpath('test'); runCompilerTimeoutTests();` starts deliberately hung fake
+discovery/build processes with one-second internal budgets. It checks timeout
+diagnostics/logs, owned-child termination, no copied partial PDF, staging and
+environment cleanup, large output and normal 0/124/137 exits. POSIX additionally
+tests missing Python supervision. It runs in hosted Octave CI and separately
+on native Windows MATLAB. Each run uses new ignored evidence, not real data.
+`runM3CompilerTests`, public API and M7.3 environment regressions retain real
+successful/invalid TeX, Unicode/spaced paths and product checks.
+
 ## Native MATLAB profile gallery smoke test
 
 ```matlab

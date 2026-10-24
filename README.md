@@ -1,8 +1,8 @@
 # m2tikz-next
 
-> Latest release: [0.8.0](https://github.com/maxsmolka/m2tikz-next/releases/tag/v0.8.0) — feature-freeze / pre-1.0 acceptance release.
-> Use `v0.8.0` for the original release baseline; use a pinned corrected commit
-> for post-release retests. See the [acceptance guide](docs/validation/EXTERNAL_ACCEPTANCE_TESTING.md).
+> Latest release: [0.8.1](https://github.com/maxsmolka/m2tikz-next/releases/tag/v0.8.1) — pre-1.0 acceptance patch.
+> Use `v0.8.1` for current acceptance testing; `v0.8.0` remains the historical
+> baseline. See the [acceptance guide](docs/validation/EXTERNAL_ACCEPTANCE_TESTING.md).
 > See the [freeze policy](docs/release/FEATURE_FREEZE_0_8_0.md) and current project status.
 
 m2tikz-next is a modern, validated scientific figure export pipeline derived
@@ -49,12 +49,13 @@ path:
 ```console
 git clone https://github.com/maxsmolka/m2tikz-next.git
 cd m2tikz-next
-git checkout --detach v0.8.0
+git checkout --detach v0.8.1
 ```
 
-That checkout is the original release baseline, without the later legend fix
-or profile gallery. To test those additions, follow the acceptance guide's
-pinned post-release commit instructions instead.
+This patch includes the horizontal legend correction, MATLAB profile gallery
+and compiler deadlines. POSIX export now requires Python 3 on PATH for process
+supervision; Windows uses Windows PowerShell/.NET without Python. No supervisor
+is installed automatically. See [installation](docs/INSTALLATION.md).
 
 ```matlab
 addpath('src');
@@ -140,7 +141,7 @@ plans and text.
 
 ## Current limitations
 
-Version 0.8.0 is pre-1.0 with an explicit API-freeze candidate contract,
+Version 0.8.1 is pre-1.0 with an explicit API-freeze candidate contract,
 not production-complete or universal MATLAB graphics support. Unsupported or
 non-general areas include scatter transparency, dynamic/nested
 tiled layouts, dual-axis variants outside [the bounded contract](docs/DUAL_Y_AXES.md),
@@ -182,6 +183,7 @@ Generated validation products stay below ignored `.audit/` directories.
 - [Image backends](docs/IMAGE_BACKENDS.md)
 - [Workflow and diagnostics](docs/WORKFLOW.md)
 - [0.8.0 release notes](docs/release/RELEASE_NOTES_0_8_0.md)
+- [0.8.1 acceptance patch](docs/release/RELEASE_NOTES_0_8_1.md)
 - [Historical 0.5.0 release notes](docs/release/RELEASE_NOTES_0_5_0.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)

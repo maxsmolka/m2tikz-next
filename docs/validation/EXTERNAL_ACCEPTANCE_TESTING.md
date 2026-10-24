@@ -34,7 +34,10 @@ from the PR, then `git fetch origin` and `git checkout --detach <FULL_COMMIT_SHA
 (replace the placeholder). Do not mix results from different revisions in one
 session or describe moving `main` as an immutable test reference. Keep local
 changes; do not use reset/clean commands to force a checkout. The latest
-released version remains 0.8.0 until a separately authorized release is made.
+patch release is **v0.8.1**, containing the legend fix, gallery and compiler
+deadlines. Use `git fetch origin`, `git checkout --detach v0.8.1` and record
+`git rev-parse HEAD` for its acceptance session. v0.8.0 remains the historical
+baseline, not the reference for these fixes.
 
 ## Scope and observed environments
 
@@ -74,7 +77,10 @@ qualify MATLAB R2022a, native Windows MiKTeX, or all features on R2026b.
    test with an explicit local note.
 
 Only process trusted source figures/text and trusted TeX. This workflow invokes
-a local compiler and is not a sandbox. It has no built-in compiler timeout.
+a local compiler and is not a sandbox. Since v0.8.1 it enforces internal
+15-second discovery and 300-second per-compilation process budgets; POSIX needs
+Python 3. Supervisor startup and noncompiler stages add time. Detached/remote
+work is not covered. See the [environment contract](../ENVIRONMENT_CONTRACT.md).
 An externally terminated session may leave partial products/results; inspect
 them locally and start a new session ID rather than overwriting evidence.
 

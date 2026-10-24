@@ -90,6 +90,7 @@ changing their serialized scientific values or order.
 - [Dual Y axes](docs/adr/ADR-0023-dual-y-axis-semantics.md)
 - [Bounded scientific 3-D](docs/adr/ADR-0024-bounded-scientific-3d.md)
 - [Horizontal legend layout](docs/adr/ADR-0026-horizontal-legend-layout.md)
+- [Compiler process deadlines](docs/adr/ADR-0027-compiler-deadlines.md)
 
 The architecture, profile, set, hybrid, planner, and validation invariants run
 in the `repository-policy` CI job. [Testing](test/README.md) explains the

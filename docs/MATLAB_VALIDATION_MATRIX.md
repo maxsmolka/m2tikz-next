@@ -1,5 +1,15 @@
 # MATLAB validation matrix
 
+## 0.8.1 compiler deadline qualification
+
+`runCompilerTimeoutTests` runs on native Windows MATLAB R2026b and Linux Octave
+11.3: hung discovery/build, partial staged PDFs, child termination, cleanup,
+environment restoration, normal exit codes and large output. POSIX also checks
+missing Python supervision. Real compiler, public API, environment/path and
+gallery regressions are separate from fake-process tests. Native real TeX
+compilation still uses the Linux bridge; this does not qualify R2022a or native
+Windows MiKTeX. See [compiler deadline ADR](adr/ADR-0027-compiler-deadlines.md).
+
 ## Post-v0.8.0 R2026b legend qualification
 
 The bounded horizontal/upper outside legend correction is tested with MATLAB

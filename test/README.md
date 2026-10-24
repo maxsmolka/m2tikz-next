@@ -1,5 +1,27 @@
 # Testing m2tikz-next
 
+## Native MATLAB profile gallery smoke test
+
+```matlab
+addpath('test');
+summary = runProfileGallerySmokeTests();
+```
+
+This runs the [gallery](../examples/13-profile-gallery/README.md) with hidden
+figures and real LuaLaTeX compilation: four figure types times three export
+variants. It asserts all 12 export results and products, source/profile size
+metadata, four saved/reopened `.fig` files, six-column legend state, caller
+figure preservation, unchanged root defaults and no figure leaks. Every run
+uses a new directory below `.audit/profile-gallery-smoke/`. It does not delete
+previous evidence. PDF geometry/visual review is a separate check, not implied
+by compilation success or profile metadata alone.
+
+Run this test manually on native MATLAB with a JVM and working LuaLaTeX.
+Hosted CI remains Octave/Linux and does **not** execute this MATLAB-only test;
+it must not be treated as MATLAB runtime qualification. Observed gallery
+evidence is R2026b/Windows with the local Linux compiler bridge, not R2022a or
+native Windows MiKTeX.
+
 Post-v0.8.0 legend coverage: `runHorizontalLegendTests(out,true)` checks
 horizontal columns and one-axes upper outside placement, including actual
 overwide-legend rejection. Run `python test/checkHorizontalLegendPdfGeometry.py
@@ -16,7 +38,10 @@ tests are described at the end of this guide.
 
 Validated with MATLAB R2026a Update 4 on Windows.
 
-This is the recorded MATLAB boundary. GNU Octave 11.3 is the hosted Linux CI
+That is historical preview evidence; release validation uses R2026a Update 5,
+and post-release legend/gallery work has focused R2026b evidence. See the
+matrix below for scope rather than treating this as universal qualification.
+GNU Octave 11.3 is the hosted Linux CI
 baseline. Native reader evidence applies to the runtime where it was collected;
 portable IR/renderer fixtures cannot establish native graphics support.
 TeX/PDF compilation and visual review provide additional, distinct evidence.

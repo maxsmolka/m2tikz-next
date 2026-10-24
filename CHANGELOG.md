@@ -8,11 +8,22 @@ versions are not m2tikz-next releases.
 
 ### Added
 
+- Executable MATLAB profile gallery with four synthetic figure types, each
+  exported without a profile and at publication widths 85/170 mm. A native
+  MATLAB smoke test compiles all 12 variants and checks saved `.fig` sources,
+  profile metadata and figure lifecycle. Generated products remain local.
+
 - Bounded horizontal axes legends with explicit columns and `northoutside`
   placement for one logical 2-D axes, including publication gutters. Entry
   order, linked series and optional box visibility are preserved. Actual TeX
   bounds reject overflow instead of accepting cropped output. This external-
   acceptance correction follows v0.8.0; see [legend layout](docs/LEGENDS.md).
+
+### Documentation
+
+- Distinguish immutable v0.8.0 baseline tests from pinned post-release
+  correction retests; record focused R2026b development evidence separately
+  from release validation and pending R2022a/Windows MiKTeX acceptance.
 
 ## [0.8.0]
 

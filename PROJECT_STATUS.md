@@ -4,6 +4,24 @@ Latest released version: **0.8.0**, the feature-freeze / pre-1.0 acceptance
 release. It includes M7.2, M7.3, the publication-title clipping fix and the
 external acceptance package. See [CHANGELOG.md](CHANGELOG.md).
 
+## Development after v0.8.0 (not a new release)
+
+- PR #21 added bounded horizontal/multicolumn legends above one logical 2-D
+  axes, including publication spacing and explicit overflow failure. This is
+  not in the immutable v0.8.0 tag; see [legend layout](docs/LEGENDS.md).
+- The [MATLAB profile gallery](examples/13-profile-gallery/README.md) compares
+  four synthetic figures without a profile, at 85 mm and at 170 mm, producing
+  12 exports and four editable `.fig` sources. The native MATLAB smoke test
+  checks products, size metadata, saved sources and caller/figure lifecycle.
+- Focused development evidence uses MATLAB R2026b on Windows and a Linux
+  LuaLaTeX bridge. Hosted CI is still Octave/Linux; neither this evidence nor
+  compilation success qualifies MATLAB R2022a or native Windows MiKTeX.
+
+External testing should [pin the intended release or corrected commit](docs/validation/EXTERNAL_ACCEPTANCE_TESTING.md).
+Still pending: external scientific/visual acceptance on the tester's actual
+runtime and TeX installation, feedback triage and a separately authorized
+follow-up release. No release/tag or broad runtime-support claim is changed.
+
 ## Current contract
 
 The public APIs are `m2t.export` and `m2t.exportSet`. They provide deterministic

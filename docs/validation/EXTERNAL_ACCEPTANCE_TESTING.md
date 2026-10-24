@@ -1,8 +1,13 @@
 # External real-world MATLAB acceptance
 
 The 0.8.0 feature-freeze release is ready for evaluation, not a promise that your
-MATLAB version or scientific figures are supported. Test **`v0.8.0`**, not moving
-`main`, and record the resolved commit SHA:
+MATLAB version or scientific figures are supported. Choose and record an
+immutable reference for each session; distinguish the original release
+baseline from a targeted correction retest.
+
+## Original release baseline
+
+Use **`v0.8.0`** to reproduce the original feature-freeze release:
 
 ```console
 git clone https://github.com/maxsmolka/m2tikz-next.git
@@ -10,6 +15,28 @@ cd m2tikz-next
 git checkout --detach v0.8.0
 git rev-parse HEAD
 ```
+
+## Targeted post-release retest
+
+The horizontal/six-column upper outside legend correction is **not** in
+`v0.8.0`. For that correction, use the merged commit below (PR #21), rather
+than returning to the old tag:
+
+```console
+git fetch origin
+git checkout --detach 4f43c8a74a1bfae6deb269e273c3c651b4441fac
+git rev-parse HEAD
+```
+
+For later corrections or the [profile gallery](../../examples/13-profile-gallery/README.md),
+use the exact approved merged commit containing that work. Obtain its full SHA
+from the PR, then `git fetch origin` and `git checkout --detach <FULL_COMMIT_SHA>`
+(replace the placeholder). Do not mix results from different revisions in one
+session or describe moving `main` as an immutable test reference. Keep local
+changes; do not use reset/clean commands to force a checkout. The latest
+released version remains 0.8.0 until a separately authorized release is made.
+
+## Scope and observed environments
 
 The publication-title clipping fix is included in this package's baseline.
 Titles still belong in the manual checklist: passing compilation is not a
@@ -22,6 +49,11 @@ see [runtime compatibility](../RUNTIME_COMPATIBILITY.md) and the
 [environment contract](../ENVIRONMENT_CONTRACT.md). Another MATLAB release is
 **new evidence only after an actual run**, never merely because this package
 was provided. Native Windows TeX remains a separate unverified environment.
+
+Post-release legend and gallery work has focused native MATLAB R2026b/Windows
+evidence using a Linux LuaLaTeX bridge; see [legend layout](../LEGENDS.md) and
+the [gallery](../../examples/13-profile-gallery/README.md). This does not
+qualify MATLAB R2022a, native Windows MiKTeX, or all features on R2026b.
 
 ## Select and prepare locally
 

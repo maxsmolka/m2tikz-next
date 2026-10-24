@@ -1,5 +1,10 @@
 # Examples
 
+For an interactive MATLAB comparison of four figure types without a profile,
+at single-column 85 mm and at double-column 170 mm, run the
+[profile gallery](13-profile-gallery/README.md). It generates 12 PDFs and four
+editable `.fig` sources with one function call.
+
 These examples generate standalone TeX below the ignored
 `.audit/public-preview/examples/` directory by default. Run them from the
 repository root with GNU Octave:
@@ -45,5 +50,8 @@ per-pixel alpha mask while axes, labels, and title remain vector output.
 
 The public workflow uses `m2t.export` and `m2t.exportSet`. The `m2t2.*`
 implementation interfaces and IR schema remain internal/experimental. The
-modern pipeline is validated with MATLAB R2026a Update 4 on Windows; that
-release-specific result does not imply compatibility with all MATLAB versions.
+historical preview was validated with MATLAB R2026a Update 4 on Windows;
+release validation uses Update 5. The new MATLAB gallery has focused R2026b
+evidence with a Linux compiler bridge. These observations do not imply
+compatibility with all MATLAB versions or native Windows TeX; see the
+[validation matrix](../docs/MATLAB_VALIDATION_MATRIX.md).

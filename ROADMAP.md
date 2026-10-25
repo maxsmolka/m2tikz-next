@@ -1,6 +1,6 @@
 # Roadmap to 1.0
 
-Latest release: 0.8.1, an acceptance patch under the 0.8.0 feature freeze. This roadmap defines
+Latest release: 0.8.2, an acceptance patch under the 0.8.0 feature freeze. This roadmap defines
 ordered acceptance work, not release dates or claims that planned features are
 already supported. Each milestone requires its own review and successful
 `repository-policy`, `octave-tests`, and `tex-preview` checks before merge.

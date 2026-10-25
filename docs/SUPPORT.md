@@ -29,8 +29,14 @@ contracts, [MATLAB validation](MATLAB_VALIDATION_MATRIX.md) and
 
 Post-v0.8.0 development adds horizontal axes legends with explicit columns
 and upper outside placement for one logical 2-D axes, including one-cell tiled
-and supported dual-Y axes. Other outside/multi-axes and vertical multicolumn
+and supported dual-Y axes. East/west outside, multi-axes outside and vertical multicolumn
 layouts remain unsupported. See [LEGENDS.md](LEGENDS.md) for fit limits.
+
+Version 0.8.2 also accepts lower `southoutside` placement under the
+same one-logical-2-D boundary, including two-row legends. Publication profiles
+reserve bottom space; source-size exports require existing source margin.
+East/west/manual/shared/multi-axes/3-D outside legends remain unsupported.
+The immutable v0.8.1 release does not include lower placement.
 
 | Classification | Capability boundary |
 | --- | --- |

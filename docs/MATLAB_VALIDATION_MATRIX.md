@@ -1,5 +1,21 @@
 # MATLAB validation matrix
 
+## 0.8.2 lower-legend qualification
+
+MATLAB R2026b on Windows reads a six-entry/three-column `southoutside` legend
+in explicit linked order and exports it through the public API at source size,
+85 mm and 170 mm without changing caller legend/data/geometry. Nine additional
+portable IR/PDF layouts run on MATLAB and Octave 11.3; all 21 lower PDFs pass
+glyph/page, row/order and X-label/tick separation checks plus visual review.
+The nine portable TeX cases match across runtimes. Two expected overflow cases
+per runtime reject source-margin/legend-width violations without accepting a
+partial PDF. Existing upper layouts retain their prior bytes (ten cases) and
+pass 20 compiled PDF checks across both runtimes. Native profile 13/13,
+unsupported 50/50 and IR 18/18 regression checks pass separately. Native real
+compilation uses the Linux LuaLaTeX bridge, not Windows MiKTeX. This does not
+qualify external R2022a/MiKTeX or native Octave multicolumn reading when that
+runtime lacks `NumColumns`. See [legend layout](LEGENDS.md).
+
 ## 0.8.1 compiler deadline qualification
 
 `runCompilerTimeoutTests` runs on native Windows MATLAB R2026b and Linux Octave

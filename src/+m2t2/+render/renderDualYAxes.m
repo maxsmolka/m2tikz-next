@@ -3,6 +3,7 @@ function lines = renderDualYAxes(node, axesIndex, figureSize, config)
 %   Decorate once, then emit data in original order, then the linked legend.
     right=node.dualY.right; leftColor=node.dualY.leftColor;
     config.outsideLegendHasTitle=~isempty(node.title.value);
+    config.outsideLegendHasXLabel=~isempty(node.xlabel.value);
     node=rmfield(node,'dualY'); left=node; other=node;
     other.ylim=right.limits;other.yscale=right.scale;other.ydirection=right.direction;
     other.yticks=right.ticks;other.ylabel=right.label;

@@ -50,6 +50,8 @@ Axes LegendIR optionally records `layout.orientation` (`horizontal` or
 one-column `vertical`) and positive integer `layout.columns`. Absence retains
 historical vertical one-column rendering and canonical JSON bytes. The new
 `north_outside` location requires explicit layout and one logical 2-D axes.
+Version 0.8.2 also accepts `south_outside` under the same boundary;
+older implementations reject that value. See [ADR-0028](adr/ADR-0028-lower-outside-legends.md).
 Optional `box='off'` suppresses the frame; absence retains the historical box.
 Entries remain ordered series-ID/TextIR pairs. This additive presentation
 extension changes no series payloads, schema version or default layout.

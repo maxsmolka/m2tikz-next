@@ -18,7 +18,7 @@ function node = readLegend(legendHandle, series, path, seriesHandles)
     if strcmp(orientation,'vertical')&&columns~=1,unsupported(path,'NumColumns',num2str(columns));end
     node.location = normalizeLocation(get(legendHandle, 'Location'), path);
     % Additive semantics only: historical vertical one-column IR stays identical.
-    if strcmp(orientation,'horizontal')||strcmp(node.location,'north_outside')
+    if strcmp(orientation,'horizontal')||any(strcmp(node.location,{'north_outside','south_outside'}))
         node.layout=struct('orientation',orientation,'columns',double(columns));
     end
     box=m2t2.reader.optionalProperty(legendHandle,'Box','on');
@@ -95,8 +95,8 @@ function values = labelCells(raw)
 end
 
 function value = normalizeLocation(runtimeValue, path)
-    source = {'northeast','northwest','southeast','southwest','north','south','east','west','best','northoutside'};
-    target = {'north_east','north_west','south_east','south_west','north','south','east','west','north_east','north_outside'};
+    source = {'northeast','northwest','southeast','southwest','north','south','east','west','best','northoutside','southoutside'};
+    target = {'north_east','north_west','south_east','south_west','north','south','east','west','north_east','north_outside','south_outside'};
     index = find(strcmpi(runtimeValue, source), 1);
     if isempty(index), unsupported(path, 'Location', runtimeValue); end
     value = target{index};

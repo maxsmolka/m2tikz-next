@@ -118,7 +118,9 @@ function nativeReader(native)
     expected=arrayfun(@(j)sprintf('axes-1-series-%d',j),order,'UniformOutput',false);assert(isequal(actual,expected));
     assert(strcmp(ir.axes{1}.legend.box,'off'));
     set(l,'Location','southoutside');
-    try,m2t2.reader.readFigure(f);error('M2T:ExpectedFailure','southoutside accepted');
+    lower=m2t2.reader.readFigure(f);assert(strcmp(lower.axes{1}.legend.location,'south_outside'));
+    set(l,'Location','eastoutside');
+    try,m2t2.reader.readFigure(f);error('M2T:ExpectedFailure','eastoutside accepted');
     catch err,assert(strcmp(err.identifier,'M2T2:E007:UnsupportedProperty'));end
     clear guard;
 end

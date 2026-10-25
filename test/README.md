@@ -1,5 +1,13 @@
 # Testing m2tikz-next
 
+Lower legends (0.8.2): `runSouthOutsideLegendTests(out,true)` covers nine
+portable lower layouts and three additional native MATLAB public exports.
+Run `python test/checkHorizontalLegendPdfGeometry.py <out>` on its manifest to
+check real page/glyph bounds, two-row order and plot/X-label/title separation.
+Source-margin/width overflows must fail, and callers must remain unchanged.
+Pass `false` for semantics-only checks; native multicolumn reader coverage is
+MATLAB-specific. The existing ten upper-layout PDFs remain regression controls.
+
 ## Compiler deadline regressions (0.8.1)
 
 `addpath('test'); runCompilerTimeoutTests();` starts deliberately hung fake

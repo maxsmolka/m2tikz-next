@@ -17,7 +17,7 @@ function validate(ir)
     if numel(unique(axesIds)) ~= numel(axesIds)
         invalid('figure.axes', 'axes ids must be unique');
     end
-    outside=cellfun(@(a)a.legend.visible&&strcmp(a.legend.location,'north_outside'),ir.axes);
+    outside=cellfun(@(a)a.legend.visible&&any(strcmp(a.legend.location,{'north_outside','south_outside'})),ir.axes);
     if any(outside)&&(numel(ir.axes)~=1||ir.axes{1}.dimensionality~=2)
         invalid('figure.axes','outside legends require one logical 2-D axes');
     end
@@ -491,7 +491,7 @@ function validateLegend(node, seriesIds, path)
     logicalScalar(node.visible, [path '.visible']);
     enum(node.mode, {'automatic','manual'}, [path '.mode']);
     enum(node.location, {'north_east','north_west','south_east','south_west', ...
-         'north','south','east','west','north_outside'}, [path '.location']);
+         'north','south','east','west','north_outside','south_outside'}, [path '.location']);
     if isfield(node,'box'),enum(node.box,{'on','off'},[path '.box']);end
     if isfield(node,'layout')
         requireStruct(node.layout,[path '.layout']);
@@ -504,7 +504,7 @@ function validateLegend(node, seriesIds, path)
         if strcmp(node.layout.orientation,'vertical')&&c~=1
             invalid([path '.layout'],'vertical multicolumn legends are unsupported');
         end
-    elseif strcmp(node.location,'north_outside')
+    elseif any(strcmp(node.location,{'north_outside','south_outside'}))
         invalid([path '.layout'],'outside legends require explicit layout semantics');
     end
     if ~iscell(node.entries), invalid([path '.entries'], 'expected a cell array'); end

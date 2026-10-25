@@ -18,6 +18,7 @@ function ir = fitUntiledMargins(ir, profile)
                 3*tick+hasLabel*(label+5),2*tick+~isempty(a.title.value)*(title+8)];
         end
         inset(4)=inset(4)+m2t.profile.legendTopInset(a.legend,profile);
+        inset(2)=inset(2)+m2t.profile.legendBottomInset(a.legend,profile);
         gutters(end+1,:)=inset; %#ok<AGROW>
     end
     for k=1:numel(ir.elements)

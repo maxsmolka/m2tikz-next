@@ -91,6 +91,7 @@ changing their serialized scientific values or order.
 - [Bounded scientific 3-D](docs/adr/ADR-0024-bounded-scientific-3d.md)
 - [Horizontal legend layout](docs/adr/ADR-0026-horizontal-legend-layout.md)
 - [Compiler process deadlines](docs/adr/ADR-0027-compiler-deadlines.md)
+- [Lower outside legends](docs/adr/ADR-0028-lower-outside-legends.md)
 
 The architecture, profile, set, hybrid, planner, and validation invariants run
 in the `repository-policy` CI job. [Testing](test/README.md) explains the

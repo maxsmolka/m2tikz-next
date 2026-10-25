@@ -6,6 +6,20 @@ versions are not m2tikz-next releases.
 
 ## [Unreleased]
 
+## [0.8.2]
+
+Pre-1.0 acceptance patch for lower legends; external R2022a/Windows MiKTeX
+qualification remains pending.
+
+### Added
+
+- Lower `southoutside` legends for one logical 2-D axes, including horizontal
+  two-row layouts, source-size export, publication lower gutters and supported
+  single-cell tiled/dual-Y integration. Actual overflow remains a compilation
+  failure; source data/geometry are never silently changed to make it fit.
+  Native/portable regression PDFs check row order, dimensions and X-label/page
+  clearance. This is not in v0.8.1; see [legend layout](docs/LEGENDS.md).
+
 ## [0.8.1]
 
 Pre-1.0 acceptance patch; external R2022a/Windows MiKTeX testing remains pending.

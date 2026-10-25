@@ -21,11 +21,11 @@ pretense of production-complete 1.0 maturity.
 
 ## Independent version domains
 
-The current release is the [0.8.1 acceptance patch](RELEASE_NOTES_0_8_1.md),
-identified by immutable annotated tag `v0.8.1`. Citation and latest-release
-metadata use 0.8.1; historical 0.5.0/0.8.0 records and tags retain their versions.
+The current release is the [0.8.2 acceptance patch](RELEASE_NOTES_0_8_2.md),
+identified by immutable annotated tag `v0.8.2`. Citation and latest-release
+metadata use 0.8.2; historical 0.5.0/0.8.0/0.8.1 records and tags retain their versions.
 The [0.8.0 feature-freeze policy](FEATURE_FREEZE_0_8_0.md) remains in force.
-Like the 0.5.0 preview, 0.8.1 is marked as a GitHub pre-release; it is not a
+Like the 0.5.0 preview, 0.8.2 is marked as a GitHub pre-release; it is not a
 1.0 stability or production-completeness claim. GitHub-generated source
 archives are used, without generated local validation artifacts.
 After this release, no new major graphics family is planned before 1.0

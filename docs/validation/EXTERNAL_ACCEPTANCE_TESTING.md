@@ -34,10 +34,16 @@ from the PR, then `git fetch origin` and `git checkout --detach <FULL_COMMIT_SHA
 (replace the placeholder). Do not mix results from different revisions in one
 session or describe moving `main` as an immutable test reference. Keep local
 changes; do not use reset/clean commands to force a checkout. The latest
-patch release is **v0.8.1**, containing the legend fix, gallery and compiler
-deadlines. Use `git fetch origin`, `git checkout --detach v0.8.1` and record
+patch release is **v0.8.2**, containing upper/lower legends, the gallery and compiler
+deadlines. Use `git fetch origin`, `git checkout --detach v0.8.2` and record
 `git rev-parse HEAD` for its acceptance session. v0.8.0 remains the historical
 baseline, not the reference for these fixes.
+
+For lower two-row legends, restart MATLAB after updating and follow the
+[v0.8.2 test instructions](../release/RELEASE_NOTES_0_8_2.md). Use separate
+session IDs/output names for source-size, 85 mm and 170 mm runs. On Windows,
+the existing 0.8.1 PowerShell/.NET supervisor prerequisite remains; POSIX still
+requires Python 3. This patch does not itself qualify R2022a or native MiKTeX.
 
 ## Scope and observed environments
 

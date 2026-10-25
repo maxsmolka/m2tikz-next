@@ -8,6 +8,14 @@ function options = legendOptions(node, axesIndex, config)
         gap=6+hasTitle*(points+8);
         options={};
         style={'at={(0.5,1)}','anchor=south',['yshift=' m2t2.util.formatNumber(gap) 'pt']};
+    elseif strcmp(legend.location,'south_outside')
+        tick=config.typography.tickLabelPt;if isempty(tick),tick=10;end
+        label=config.typography.axesLabelPt;if isempty(label),label=10;end
+        hasLabel=~isempty(node.xlabel.value);
+        if isfield(config,'outsideLegendHasXLabel'),hasLabel=config.outsideLegendHasXLabel;end
+        gap=2*tick+hasLabel*(label+5)+6;
+        options={};
+        style={'at={(0.5,0)}','anchor=north',['yshift=-' m2t2.util.formatNumber(gap) 'pt']};
     else
         options={['legend pos=' strrep(legend.location,'_',' ')]};
     end

@@ -1,9 +1,9 @@
 # Project status
 
-Latest released version: **0.8.1**, the pre-1.0 acceptance patch following the
-0.8.0 feature freeze. It includes the horizontal legend fix, profile gallery,
+Latest released version: **0.8.2**, the pre-1.0 acceptance patch following the
+0.8.0 feature freeze. It includes upper/lower horizontal legends, the profile gallery,
 native MATLAB smoke test and internal compiler deadlines. See
-[release notes](docs/release/RELEASE_NOTES_0_8_1.md) and [CHANGELOG.md](CHANGELOG.md).
+[release notes](docs/release/RELEASE_NOTES_0_8_2.md) and [CHANGELOG.md](CHANGELOG.md).
 
 ## Corrections since v0.8.0
 
@@ -28,6 +28,11 @@ runtime and TeX installation and feedback triage before RC readiness. The patch
 does not complete external acceptance or broaden runtime-support claims.
 
 ## Current contract
+
+Version 0.8.2 adds lower `southoutside` legends under the
+existing one-logical-2-D boundary, including two rows and source/publication
+exports. See [legend layout](docs/LEGENDS.md). The v0.8.1 tag is unchanged and
+does not contain this lower placement.
 
 The public APIs are `m2t.export` and `m2t.exportSet`. They provide deterministic
 scientific TeX export, LuaLaTeX compilation, structured diagnostics, optional

@@ -122,6 +122,9 @@ jobs:
       - name: Validate horizontal and upper outside legends
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runHorizontalLegendTests(fullfile('.audit','horizontal-legend-core'),false);"
+      - name: Validate lower two-row legends
+        shell: bash
+        run: octave-cli --quiet --eval "addpath('test'); runSouthOutsideLegendTests(fullfile('.audit','south-legend-core'),false);"
       - name: Validate local external acceptance privacy and classifications
         shell: bash
         run: octave-cli --quiet --eval "addpath('test'); runExternalAcceptanceTests(fullfile('.audit','external-package'),false);"
@@ -220,3 +223,8 @@ jobs:
         run: |
           octave-cli --quiet --eval "addpath('test'); runHorizontalLegendTests(fullfile('.audit','horizontal-legend-tex'),true);"
           "$RUNNER_TEMP/publication-geometry-venv/bin/python" test/checkHorizontalLegendPdfGeometry.py .audit/horizontal-legend-tex
+      - name: Compile and measure lower two-row legends
+        shell: bash
+        run: |
+          octave-cli --quiet --eval "addpath('test'); runSouthOutsideLegendTests(fullfile('.audit','south-legend-tex'),true);"
+          "$RUNNER_TEMP/publication-geometry-venv/bin/python" test/checkHorizontalLegendPdfGeometry.py .audit/south-legend-tex
